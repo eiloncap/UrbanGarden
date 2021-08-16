@@ -8,8 +8,11 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager.widget.ViewPager
+import com.google.android.material.tabs.TabLayout
 import il.co.urbangarden.R
 import il.co.urbangarden.databinding.FragmentHomeBinding
+import il.co.urbangarden.ui.home.ui.main.SectionsPagerAdapter
 
 class HomeFragment : Fragment() {
 
@@ -20,22 +23,23 @@ class HomeFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
+    // When requested, this adapter returns a DemoObjectFragment,
+    // representing an object in the collection.
+    private lateinit var sectionsPagerAdapter: SectionsPagerAdapter
+    private lateinit var viewPager: ViewPager
 
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+    override fun onCreateView(inflater: LayoutInflater,
+                              container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_home, container, false)
+    }
 
-        val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
-        return root
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        sectionsPagerAdapter = SectionsPagerAdapter(childFragmentManager)
+        viewPager = view.findViewById(R.id.view_pager)
+        viewPager.adapter = sectionsPagerAdapter
+        val tabLayout: TabLayout = view.findViewById(R.id.tabs)
+        tabLayout.setupWithViewPager(viewPager)
     }
 
     override fun onDestroyView() {
