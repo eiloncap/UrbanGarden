@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "331586328811",
+    "project_id": "urban-garden-47e43",
+    "storage_bucket": "urban-garden-47e43.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:331586328811:android:2c01928c80fea561e686ae",
+        "android_client_info": {
+          "package_name": "il.co.urbangarden"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "331586328811-6tbciece09foe9bqs99b8496q50llcrv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpPD33Nr9M-UYEdGvZ_GywpSBBIZE3Jjc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "331586328811-6tbciece09foe9bqs99b8496q50llcrv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

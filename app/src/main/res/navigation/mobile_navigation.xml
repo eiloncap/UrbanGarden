@@ -12,13 +12,13 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_camera"
         android:name="il.co.urbangarden.ui.camera.CameraFragment"
         android:label="@string/title_camera"
         tools:layout="@layout/fragment_camera" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_forum"
         android:name="il.co.urbangarden.ui.forum.ForumFragment"
         android:label="@string/title_forum"
         tools:layout="@layout/fragment_forum" />
