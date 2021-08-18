@@ -7,5 +7,8 @@ class MainViewModel: ViewModel() {
 
     lateinit var user: User
 
+    fun capturePhoto(){}
+    fun uploadToFireBase(){}
+    
 
 }
