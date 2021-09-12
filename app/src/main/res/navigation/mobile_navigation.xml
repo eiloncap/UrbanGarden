@@ -21,5 +21,14 @@
         android:id="@+id/navigation_forum"
         android:name="il.co.urbangarden.ui.forum.ForumFragment"
         android:label="@string/title_forum"
-        tools:layout="@layout/fragment_forum" />
+        tools:layout="@layout/fragment_forum" >
+        <action
+            android:id="@+id/action_navigation_forum_to_forumItemFragment2"
+            app:destination="@id/forumItemFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/forumItemFragment2"
+        android:name="il.co.urbangarden.ui.forum.ForumItemFragment"
+        android:label="fragment_forum_item"
+        tools:layout="@layout/fragment_forum_item" />
 </navigation>

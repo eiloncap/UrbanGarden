@@ -1,16 +1,19 @@
 package il.co.urbangarden.ui.forum
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import il.co.urbangarden.R
 import il.co.urbangarden.data.forum.Question
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class QuestionAdapter : RecyclerView.Adapter<QuestionHolder>() {
 
     private val _questions: MutableList<Question> = ArrayList()
-    var onCancelClick: ((Question) -> Unit)? = null
+    var onItemClick: ((Question) -> Unit)? = null
 
     fun setPeople(questions: List<Question>) {
         _questions.clear()
@@ -22,11 +25,11 @@ class QuestionAdapter : RecyclerView.Adapter<QuestionHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuestionHolder {
         val context = parent.context
         val view = LayoutInflater.from(context)
-            .inflate(R.layout.forum_one_line, parent, false)
+            .inflate(R.layout.forum_question_one_line, parent, false)
         val holder = QuestionHolder(view)
 
         holder.view.setOnClickListener {
-            val callback = onCancelClick ?: return@setOnClickListener
+            val callback = onItemClick ?: return@setOnClickListener
             val question = _questions[holder.adapterPosition]
             callback(question)
 //            Log.d("TAG_PRINT_cancel", "cancel_in ${num.number}, id: ${num.workerId}")
@@ -43,7 +46,10 @@ class QuestionAdapter : RecyclerView.Adapter<QuestionHolder>() {
         holder.title.text = question.title
 
         holder.answersNum.text = question.answers.size.toString()
-        holder.date.text = question.date.toString()
+//        holder.date.text = question.date.toString()
+        val dateFormat: DateFormat = SimpleDateFormat("dd-MM-yy")
+        holder.date.text = dateFormat.format(question.date).toString()
+
     }
 
     override fun getItemCount(): Int {

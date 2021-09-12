@@ -5,12 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import il.co.urbangarden.R
 import il.co.urbangarden.data.forum.Question
 import il.co.urbangarden.databinding.FragmentForumBinding
 
@@ -29,23 +30,22 @@ class ForumFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         forumViewModel =
-            ViewModelProvider(this).get(ForumViewModel::class.java)
+            ViewModelProvider(requireActivity()).get(ForumViewModel::class.java)
 
         _binding = FragmentForumBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textNotifications
-        forumViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
+//        val textView: TextView = binding.textNotifications
+//        forumViewModel.text.observe(viewLifecycleOwner, Observer {
+//            textView.text = it
+//        })
 
-//        textView
-        setupListAdapter(
+        setupQuestionListAdapter(
             listOf(
-                Question(image = " ",title = " yoyoyoy yo"),
+                Question(image = " ", title = " yoyoyoy yo"),
                 Question(
                     title = "what is wronng with my fucking plant the hel",
-                    answers = listOf("1", "2", "3")
+                    answers = listOf("1", "2", "3", "asdfjs;alkdjflk alsdfjl; asdlkj  f sdf fdf  fdsf sdf lsdkafj")
                 ),
                 Question(),
                 Question(),
@@ -61,15 +61,26 @@ class ForumFragment : Fragment() {
         _binding = null
     }
 
-    private fun setupListAdapter(questions: List<Question>) {
+    private fun setupQuestionListAdapter(questions: List<Question>) {
         val context = requireContext()
         val adapter = QuestionAdapter()
 
         adapter.setPeople(questions)
         Log.d("TAG_Q", questions.size.toString())
 //
-        adapter.onCancelClick = { question: Question ->
+        adapter.onItemClick = { question: Question ->
             Log.d("TAG_Q", "clicked")
+            forumViewModel.question = question
+
+//            //todo delete
+//            Toast.makeText(
+//                requireActivity(),
+//                question.title,
+//                Toast.LENGTH_LONG
+//            )
+//                .show()
+            // navigate to forum item
+            view?.findNavController()?.navigate(R.id.action_navigation_forum_to_forumItemFragment2)
 
         }
 
