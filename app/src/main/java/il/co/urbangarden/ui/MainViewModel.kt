@@ -13,9 +13,9 @@ import il.co.urbangarden.GlideApp
 import il.co.urbangarden.data.FirebaseObject
 import il.co.urbangarden.data.FirebaseViewableObject
 import il.co.urbangarden.data.location.Location
-import il.co.urbangarden.data.plant.Plant
 import il.co.urbangarden.data.plant.PlantInstance
 import il.co.urbangarden.data.user.User
+import il.co.urbangarden.utils.ImageCropOption
 
 class MainViewModel : ViewModel() {
 
@@ -149,9 +149,12 @@ class MainViewModel : ViewModel() {
             .document(item.uid).set(item)
     }
 
-    fun setImgFromPath(item: FirebaseViewableObject, imageView: ImageView) {
+    fun setImgFromPath(
+        item: FirebaseViewableObject,
+        imageView: ImageView,
+        crop: ImageCropOption = ImageCropOption.NONE
+    ) {
         val userId = user.value?.uid
-        Log.d("eilon", "${userId}/${item.imgFileName}")
         if (userId != null) {
             // Reference to an image file in Firebase Storage
             val storageReference: StorageReference =
@@ -160,7 +163,7 @@ class MainViewModel : ViewModel() {
             // Download directly from StorageReference using Glide
             GlideApp.with(imageView)
                 .load(storageReference)
-                .centerCrop() // just makes the image cropped to square
+                .apply(crop.getGlideTransform())
                 .into(imageView)
         }
     }

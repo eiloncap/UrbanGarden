@@ -14,6 +14,7 @@ import il.co.urbangarden.R
 import il.co.urbangarden.data.plant.Plant
 import il.co.urbangarden.data.plant.PlantInstance
 import il.co.urbangarden.ui.MainViewModel
+import il.co.urbangarden.utils.ImageCropOption
 
 
 class MyPlants : Fragment() {
@@ -31,10 +32,10 @@ class MyPlants : Fragment() {
         fragViewModel = ViewModelProvider(this).get(MyPlantsViewModel::class.java)
 
         // todo: delete
-//        val imageView: ImageView = view.findViewById(R.id.img)
-//        val testPlant = PlantInstance(uid="1994", imgFileName = "photos_test.jpg")
-//        viewModel.uploadObject(testPlant)
-//        viewModel.setImgFromPath(testPlant, imageView)
+        val imageView: ImageView = view.findViewById(R.id.img)
+        val testPlant = PlantInstance(uid="1994", imgFileName = "photos_test.jpg")
+        viewModel.uploadObject(testPlant)
+        viewModel.setImgFromPath(testPlant, imageView, crop=ImageCropOption.SQUARE)
     }
 
     override fun onCreateView(
