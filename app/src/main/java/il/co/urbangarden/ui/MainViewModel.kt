@@ -1,10 +1,19 @@
 package il.co.urbangarden.ui
 
+import android.content.Context
+import android.widget.ImageView
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import il.co.urbangarden.GlideApp
 import il.co.urbangarden.data.location.Location
 import il.co.urbangarden.data.plant.Plant
 import il.co.urbangarden.data.user.User
@@ -12,6 +21,7 @@ import il.co.urbangarden.data.user.User
 class MainViewModel : ViewModel() {
 
     private val userUid = "12345"
+    val storage = FirebaseStorage.getInstance()
     private val db = FirebaseFirestore.getInstance()
     private val _user = MutableLiveData<User>()
     val user: LiveData<User> = _user
@@ -27,6 +37,15 @@ class MainViewModel : ViewModel() {
     }
 
     init {
+//        // Get the Firebase app and all primitives we'll use
+//        val app = FirebaseApp.getInstance()
+//        val database = FirebaseDatabase.getInstance(app)
+//        val auth = FirebaseAuth.getInstance(app)
+//        val storage = FirebaseStorage.getInstance(app)
+//        storage.reference.child("photos_test.jpg").downloadUrl.addOnSuccessListener { it. }
+//        // Get a reference to our chat "room" in the database
+//        val databaseRef = database.getReference("chat")
+
         loadUser()
         loadPlantsList()
         loadLocationsList()
@@ -34,15 +53,18 @@ class MainViewModel : ViewModel() {
     }
 
     private fun loadUser() {
+        _user.value = User(uid = "12345")
         db.collection(USERS_COLLECTION_TAG)
             .document(userUid).get()
             .addOnSuccessListener { d: DocumentSnapshot ->
                 if (d.exists()) {
                     _user.value = d.toObject(User::class.java)
+                    _user.value = User(uid = "12345")
                 }
             }
             .addOnFailureListener {
 //                    TODO: fail case
+                _user.value = User(uid = "12345")
             }
     }
 
