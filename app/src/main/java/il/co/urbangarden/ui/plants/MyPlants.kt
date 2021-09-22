@@ -32,10 +32,10 @@ class MyPlants : Fragment() {
         fragViewModel = ViewModelProvider(this).get(MyPlantsViewModel::class.java)
 
         // todo: delete
-        val imageView: ImageView = view.findViewById(R.id.img)
-        val testPlant = PlantInstance(uid="1994", imgFileName = "photos_test.jpg")
-        viewModel.uploadObject(testPlant)
-        viewModel.setImgFromPath(testPlant, imageView, crop=ImageCropOption.SQUARE)
+//        val imageView: ImageView = view.findViewById(R.id.img)
+//        val testPlant = PlantInstance(uid="1994", imgFileName = "photos_test.jpg")
+//        viewModel.uploadObject(testPlant)
+//        viewModel.setImgFromPath(testPlant, imageView, crop=ImageCropOption.SQUARE)
     }
 
     override fun onCreateView(
