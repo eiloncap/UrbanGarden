@@ -12,6 +12,7 @@ import com.google.firebase.storage.StorageReference
 import il.co.urbangarden.GlideApp
 import il.co.urbangarden.R
 import il.co.urbangarden.data.plant.Plant
+import il.co.urbangarden.data.plant.PlantInstance
 import il.co.urbangarden.ui.MainViewModel
 
 
@@ -30,9 +31,10 @@ class MyPlants : Fragment() {
         fragViewModel = ViewModelProvider(this).get(MyPlantsViewModel::class.java)
 
         // todo: delete
-        val imageView: ImageView = view.findViewById(R.id.img)
-        val testPlant = Plant(imgFileName = "photos_test.jpg")
-        setImgFromPath(testPlant, imageView)
+//        val imageView: ImageView = view.findViewById(R.id.img)
+//        val testPlant = PlantInstance(uid="1994", imgFileName = "photos_test.jpg")
+//        viewModel.uploadObject(testPlant)
+//        viewModel.setImgFromPath(testPlant, imageView)
     }
 
     override fun onCreateView(
@@ -44,23 +46,6 @@ class MyPlants : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-    }
-
-
-    private fun setImgFromPath(plant: Plant, imageView: ImageView) {
-        val userId = viewModel.user.value?.uid
-        Log.d("eilon", "${userId}/${plant.imgFileName}")
-        if (userId != null) {
-            // Reference to an image file in Firebase Storage
-            val storageReference: StorageReference =
-                viewModel.storage.reference.child("${userId}/${plant.imgFileName}")
-
-            // Download directly from StorageReference using Glide
-            GlideApp.with(this)
-                .load(storageReference)
-                .centerCrop() // just makes the image cropped to square
-                .into(imageView)
-        }
     }
 
 }

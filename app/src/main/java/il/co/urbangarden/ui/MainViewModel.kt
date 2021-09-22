@@ -1,21 +1,20 @@
 package il.co.urbangarden.ui
 
-import android.content.Context
+import android.util.Log
 import android.widget.ImageView
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.FirebaseApp
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import il.co.urbangarden.GlideApp
+import il.co.urbangarden.data.FirebaseObject
+import il.co.urbangarden.data.FirebaseViewableObject
 import il.co.urbangarden.data.location.Location
 import il.co.urbangarden.data.plant.Plant
+import il.co.urbangarden.data.plant.PlantInstance
 import il.co.urbangarden.data.user.User
 
 class MainViewModel : ViewModel() {
@@ -25,8 +24,8 @@ class MainViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
     private val _user = MutableLiveData<User>()
     val user: LiveData<User> = _user
-    private val _plantsList = MutableLiveData<List<Plant>>()
-    val plantsList: LiveData<List<Plant>> = _plantsList
+    private val _plantsList = MutableLiveData<List<PlantInstance>>()
+    val plantsList: LiveData<List<PlantInstance>> = _plantsList
     private val _locationsList = MutableLiveData<List<Location>>()
     val locationsList: LiveData<List<Location>> = _locationsList
 
@@ -73,9 +72,9 @@ class MainViewModel : ViewModel() {
             .document(userUid)
             .collection(USER_PLANTS_COLLECTION_TAG).get()
             .addOnSuccessListener {
-                val res = mutableListOf<Plant>()
+                val res = mutableListOf<PlantInstance>()
                 it.forEach { plant ->
-                    res.add(plant.toObject(Plant::class.java))
+                    res.add(plant.toObject(PlantInstance::class.java))
                 }
                 _plantsList.value = res
             }
@@ -112,9 +111,9 @@ class MainViewModel : ViewModel() {
         userDoc.collection(USER_PLANTS_COLLECTION_TAG)
             .addSnapshotListener { value, error ->
                 if (error == null && value != null) {
-                    val res = mutableListOf<Plant>()
+                    val res = mutableListOf<PlantInstance>()
                     value.forEach { plant ->
-                        res.add(plant.toObject(Plant::class.java))
+                        res.add(plant.toObject(PlantInstance::class.java))
                     }
                     _plantsList.value = res
                 }
@@ -132,15 +131,38 @@ class MainViewModel : ViewModel() {
             }
     }
 
-    fun uploadUpdatePlant(plant: Plant) = uploadSomething(plant, plant.uid, USER_PLANTS_COLLECTION_TAG)
-
-    fun uploadUpdateLocation(loc: Location) = uploadSomething(loc, loc.uid, USER_LOCATIONS_COLLECTION_TAG)
-
-    private fun uploadSomething(item: Any, uid: String, collection: String) {
+    fun uploadObject(item: FirebaseObject) {
+        val collection: String = when (item) {
+            is PlantInstance -> {
+                USER_PLANTS_COLLECTION_TAG
+            }
+            is Location -> {
+                USER_LOCATIONS_COLLECTION_TAG
+            }
+            else -> {
+                throw IllegalArgumentException("item should be PlantInstance or Location")
+            }
+        }
         db.collection(USERS_COLLECTION_TAG)
             .document(userUid)
             .collection(collection)
-            .document(uid).set(item)
+            .document(item.uid).set(item)
+    }
+
+    fun setImgFromPath(item: FirebaseViewableObject, imageView: ImageView) {
+        val userId = user.value?.uid
+        Log.d("eilon", "${userId}/${item.imgFileName}")
+        if (userId != null) {
+            // Reference to an image file in Firebase Storage
+            val storageReference: StorageReference =
+                storage.reference.child("${userId}/${item.imgFileName}")
+
+            // Download directly from StorageReference using Glide
+            GlideApp.with(imageView)
+                .load(storageReference)
+                .centerCrop() // just makes the image cropped to square
+                .into(imageView)
+        }
     }
 
 }
