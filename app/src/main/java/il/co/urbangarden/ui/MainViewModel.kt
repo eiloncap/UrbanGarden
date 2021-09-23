@@ -71,6 +71,7 @@ class MainViewModel : ViewModel() {
         loadPlantsList()
         loadLocationsList()
         listenToChanges()
+        Log.d("locationsList", locationsList.value.toString())
     }
 
     private fun loadUser() {
@@ -101,7 +102,7 @@ class MainViewModel : ViewModel() {
                 _plantsList.value = res
             }
             .addOnFailureListener {
-//                    TODO: fail case
+                    Log.d("failer", "fail")
             }
     }
 
@@ -115,6 +116,7 @@ class MainViewModel : ViewModel() {
                     res.add(loc.toObject(Location::class.java))
                 }
                 _locationsList.value = res
+                Log.d("success", _locationsList.value.toString())
             }
             .addOnFailureListener {
 //                    TODO: fail case

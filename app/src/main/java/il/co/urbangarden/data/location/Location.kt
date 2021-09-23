@@ -5,5 +5,7 @@ import il.co.urbangarden.data.FirebaseViewableObject
 data class Location(
     override var uid: String = "",
     override val imgFileName: String = "",
-    var name: String = ""
+    var name: String = "",
+    var sunHours: String = ""
+
 ) : FirebaseViewableObject

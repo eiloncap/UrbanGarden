@@ -9,7 +9,11 @@
         android:id="@+id/navigation_home"
         android:name="il.co.urbangarden.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_locationInfo"
+            app:destination="@id/locationInfo" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_camera"
@@ -22,4 +26,13 @@
         android:name="il.co.urbangarden.ui.forum.ForumFragment"
         android:label="@string/title_forum"
         tools:layout="@layout/fragment_forum" />
+    <fragment
+        android:id="@+id/locationInfo"
+        android:name="il.co.urbangarden.ui.location.LocationInfo"
+        android:label="location_info_fragment"
+        tools:layout="@layout/location_info_fragment" >
+        <action
+            android:id="@+id/action_locationInfo_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
 </navigation>
