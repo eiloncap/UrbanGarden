@@ -61,6 +61,7 @@ class CameraFragment : Fragment() {
     }
 
     private fun openCameraTakePictureAndUploadToDb() {
+        // TODO: init the following launcher at the creation of the fragment
         val resultLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
@@ -76,6 +77,7 @@ class CameraFragment : Fragment() {
             }
         }
 
+        // TODO: call this when you want to start the camera
         if (activity?.packageManager?.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY) == true) {
             val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             resultLauncher.launch(takePictureIntent)
