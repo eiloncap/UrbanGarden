@@ -16,10 +16,32 @@ import il.co.urbangarden.data.location.Location
 import il.co.urbangarden.data.plant.PlantInstance
 import il.co.urbangarden.data.user.User
 import il.co.urbangarden.utils.ImageCropOption
+import com.google.firebase.storage.UploadTask
+
+import android.widget.Toast
+
+import il.co.urbangarden.MainActivity
+
+import com.google.android.gms.tasks.OnFailureListener
+
+import com.google.android.gms.tasks.OnSuccessListener
+
+import android.app.ProgressDialog
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Bitmap.CompressFormat
+import android.net.Uri
+import java.util.*
+import android.provider.MediaStore
+import java.io.ByteArrayOutputStream
+import android.os.Environment
+import java.io.File
+import java.io.FileOutputStream
+
 
 class MainViewModel : ViewModel() {
 
-    private val userUid = "12345"
+    private val userUid = "12345" // TODO: reach only from user.value.uid
     val storage = FirebaseStorage.getInstance()
     private val db = FirebaseFirestore.getInstance()
     private val _user = MutableLiveData<User>()
@@ -52,7 +74,7 @@ class MainViewModel : ViewModel() {
     }
 
     private fun loadUser() {
-        _user.value = User(uid = "12345")
+        _user.value = User(uid = "12345") // TODO: login
         db.collection(USERS_COLLECTION_TAG)
             .document(userUid).get()
             .addOnSuccessListener { d: DocumentSnapshot ->
@@ -158,13 +180,63 @@ class MainViewModel : ViewModel() {
         if (userId != null) {
             // Reference to an image file in Firebase Storage
             val storageReference: StorageReference =
-                storage.reference.child("${userId}/${item.imgFileName}")
+                storage.reference.child("$userId/${item.imgFileName}")
 
             // Download directly from StorageReference using Glide
             GlideApp.with(imageView)
                 .load(storageReference)
                 .apply(crop.getGlideTransform())
                 .into(imageView)
+        }
+    }
+
+    private fun getImageUri(inContext: Context, inImage: Bitmap): Uri? {
+        val bytes = ByteArrayOutputStream()
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path = MediaStore.Images.Media.insertImage(
+            inContext.contentResolver,
+            inImage,
+            "Title",
+            null
+        )
+        return Uri.parse(path)
+    }
+
+    fun uploadImage(imgBitmap: Bitmap?, inContext: Context?, filename: String) {
+        if (imgBitmap != null && inContext != null) {
+            val img = getImageUri(inContext, imgBitmap) ?: return // TODO: deal better
+            // Defining the child of storageReference
+            val ref: StorageReference = storage.reference
+                .child("$userUid/$filename.jpeg") // TODO: set in users directory with UID
+
+            // adding listeners on upload
+            // or failure of image
+            ref.putFile(img)
+                .addOnSuccessListener { // Image uploaded successfully
+                    // TODO: implement
+                    Log.d("eilon", "succeed uploading")
+                }
+                .addOnFailureListener { e -> // Error, Image not uploaded
+                    // TODO: implement
+                    Log.d("eilon", "failure uploading: $e")
+                }
+//                .addOnProgressListener(
+//                    // TODO: implement
+//                    object : OnProgressListener<UploadTask.TaskSnapshot?>() {
+//                        // Progress Listener for loading
+//                        // percentage on the dialog box
+//                        fun onProgress(
+//                            taskSnapshot: UploadTask.TaskSnapshot
+//                        ) {
+//                            val progress = ((100.0
+//                                    * taskSnapshot.bytesTransferred
+//                                    / taskSnapshot.totalByteCount))
+//                            progressDialog.setMessage(
+//                                ("Uploaded "
+//                                        + progress.toInt() + "%")
+//                            )
+//                        }
+//                    })
         }
     }
 
