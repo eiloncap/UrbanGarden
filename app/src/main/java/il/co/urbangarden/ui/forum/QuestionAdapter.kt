@@ -15,10 +15,10 @@ class QuestionAdapter : RecyclerView.Adapter<QuestionHolder>() {
     private val _questions: MutableList<Question> = ArrayList()
     var onItemClick: ((Question) -> Unit)? = null
 
-    fun setPeople(questions: List<Question>) {
+    fun setQuestions(questions: List<Question>) {
         _questions.clear()
         _questions.addAll(questions)
-        _questions.sortBy { it.date }
+        _questions.sortByDescending { it.date }
         notifyDataSetChanged()
     }
 
@@ -34,7 +34,6 @@ class QuestionAdapter : RecyclerView.Adapter<QuestionHolder>() {
             callback(question)
 //            Log.d("TAG_PRINT_cancel", "cancel_in ${num.number}, id: ${num.workerId}")
         }
-
         return holder
     }
 

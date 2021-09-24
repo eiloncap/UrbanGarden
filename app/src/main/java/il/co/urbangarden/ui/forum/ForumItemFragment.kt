@@ -6,14 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import il.co.urbangarden.R
-import il.co.urbangarden.data.forum.Question
 import il.co.urbangarden.databinding.FragmentForumItemBinding
 
 class ForumItemFragment : Fragment() {
@@ -36,10 +32,12 @@ class ForumItemFragment : Fragment() {
         _binding = FragmentForumItemBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.questionViewTitle
+        val questionTitle: TextView = binding.questionViewTitle
+        val question: TextView = binding.questionView
         val recyclerView: RecyclerView = binding.answerViewRecyclerView
 
-        textView.text = forumViewModel.question?.title ?: ""
+        questionTitle.text = forumViewModel.question?.title ?: ""
+        question.text = forumViewModel.question?.question ?: ""
 
         setupAnswerListAdapter(forumViewModel.question!!.answers)
         

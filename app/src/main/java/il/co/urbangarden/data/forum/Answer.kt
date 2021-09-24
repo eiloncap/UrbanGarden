@@ -4,11 +4,8 @@ package il.co.urbangarden.data.forum
 import java.util.*
 import kotlin.collections.ArrayList
 
-data class Question(
+data class Answer(
     val email: String = "",
-    var title: String = "",
-    var question: String = "",
-    var image: String = "",
+    var answer: String = "",
     val date: Date = Date(),
-    var answers: List<String> = ArrayList()
 )

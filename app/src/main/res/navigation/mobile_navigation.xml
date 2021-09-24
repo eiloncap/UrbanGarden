@@ -25,10 +25,18 @@
         <action
             android:id="@+id/action_navigation_forum_to_forumItemFragment2"
             app:destination="@id/forumItemFragment2" />
+        <action
+            android:id="@+id/action_navigation_forum_to_forumNewQuestionFragment"
+            app:destination="@id/forumNewQuestionFragment" />
     </fragment>
     <fragment
         android:id="@+id/forumItemFragment2"
         android:name="il.co.urbangarden.ui.forum.ForumItemFragment"
         android:label="fragment_forum_item"
         tools:layout="@layout/fragment_forum_item" />
+    <fragment
+        android:id="@+id/forumNewQuestionFragment"
+        android:name="il.co.urbangarden.ui.forum.ForumNewQuestionFragment"
+        android:label="fragment_forum_new_question"
+        tools:layout="@layout/fragment_forum_new_question" />
 </navigation>
