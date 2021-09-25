@@ -17,6 +17,12 @@ import il.co.urbangarden.data.FirebaseViewableObject
 import il.co.urbangarden.data.location.Location
 import il.co.urbangarden.databinding.MyLocationsFragmentBinding
 import il.co.urbangarden.ui.MainViewModel
+import androidx.recyclerview.widget.ItemTouchHelper
+
+import il.co.urbangarden.ui.helper.SimpleItemTouchHelperCallback
+
+
+
 
 
 class MyLocations : Fragment() {
@@ -76,6 +82,10 @@ class MyLocations : Fragment() {
         val locationsRecyclerView = binding.recyclerViewMyLocations
         locationsRecyclerView.adapter = adapter
         locationsRecyclerView.layoutManager = GridLayoutManager(context, 2)
+
+        val callback: ItemTouchHelper.Callback = SimpleItemTouchHelperCallback(adapter)
+        val touchHelper = ItemTouchHelper(callback)
+        touchHelper.attachToRecyclerView(locationsRecyclerView)
     }
 
 
@@ -85,6 +95,12 @@ class MyLocations : Fragment() {
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
 
         setUpLocationAdapter(getListOfLocations())
+
+        val locationObserver = Observer<List<Location>> { locations ->
+            setUpLocationAdapter(locations)
+
+        }
+        mainViewModel.locationsList.observe(viewLifecycleOwner, locationObserver)
 
         var addButton: Button = view.findViewById(R.id.add_button)
 

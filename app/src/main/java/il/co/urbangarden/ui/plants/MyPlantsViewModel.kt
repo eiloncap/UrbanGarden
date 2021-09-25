@@ -1,7 +1,8 @@
 package il.co.urbangarden.ui.plants
 
 import androidx.lifecycle.ViewModel
+import il.co.urbangarden.data.plant.PlantInstance
 
 class MyPlantsViewModel : ViewModel() {
-    // TODO: Implement the ViewModel
+    lateinit var plant: PlantInstance
 }

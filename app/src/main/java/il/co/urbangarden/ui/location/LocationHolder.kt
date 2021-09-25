@@ -17,5 +17,4 @@ class LocationHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         image = itemView.findViewById(R.id.image)
         name = itemView.findViewById(R.id.title)
     }
-
 }

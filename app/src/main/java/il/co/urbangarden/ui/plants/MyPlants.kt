@@ -5,48 +5,117 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.storage.StorageReference
-import il.co.urbangarden.GlideApp
+import androidx.navigation.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import il.co.urbangarden.R
+import il.co.urbangarden.data.FirebaseViewableObject
+import il.co.urbangarden.data.location.Location
+import il.co.urbangarden.databinding.MyLocationsFragmentBinding
+import il.co.urbangarden.ui.MainViewModel
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import il.co.urbangarden.data.plant.Plant
 import il.co.urbangarden.data.plant.PlantInstance
-import il.co.urbangarden.ui.MainViewModel
-import il.co.urbangarden.utils.ImageCropOption
+import il.co.urbangarden.databinding.MyPlantsFragmentBinding
+
+import il.co.urbangarden.ui.helper.SimpleItemTouchHelperCallback
+
+
+
 
 
 class MyPlants : Fragment() {
 
+    private lateinit var plantsViewModel: MyPlantsViewModel
+    private lateinit var mainViewModel : MainViewModel
+    private var _binding: MyPlantsFragmentBinding? = null
+
+    private val binding get() = _binding!!
+
     companion object {
         fun newInstance() = MyPlants()
-    }
-
-    private lateinit var viewModel: MainViewModel
-    private lateinit var fragViewModel: MyPlantsViewModel
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        fragViewModel = ViewModelProvider(this).get(MyPlantsViewModel::class.java)
-
-        // todo: delete
-//        val imageView: ImageView = view.findViewById(R.id.img)
-//        val testPlant = PlantInstance(uid="1994", imgFileName = "photos_test.jpg")
-//        viewModel.uploadObject(testPlant)
-//        viewModel.setImgFromPath(testPlant, imageView, crop=ImageCropOption.SQUARE)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.my_plants_fragment, container, false)
+
+        plantsViewModel = ViewModelProvider(requireActivity()).get(MyPlantsViewModel::class.java)
+        mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+
+        _binding = MyPlantsFragmentBinding.inflate(inflater, container, false)
+        val root: View = _binding!!.root
+
+        val plantsObserver = Observer<List<PlantInstance>> { plants ->
+            setUpPlantsAdapter(plants)
+
+        }
+        mainViewModel.plantsList.observe(viewLifecycleOwner, plantsObserver)
+
+        return root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    private fun getListOfPlants(): List<PlantInstance>? {
+        return mainViewModel.plantsList.value
+    }
+
+    private fun setUpPlantsAdapter(plants: List<PlantInstance>?){
+        val context = requireContext()
+        val adapter = PlantAdapter()
+        Log.d("setup", "locationAdapter")
+
+        adapter.setPlantList(plants)
+
+        adapter.onItemClick = { plant: PlantInstance->
+            plantsViewModel.plant = plant
+            view?.findNavController()?.navigate(R.id.action_navigation_home_to_plantInfo)
+        }
+
+        adapter.setImg = { plant: FirebaseViewableObject, img: ImageView ->
+
+            mainViewModel.setImgFromPath(plant, img)
+            Log.d("setImg", "success")
+        }
+
+        val plantsRecyclerView = binding.recyclerViewMyPlants
+        plantsRecyclerView.adapter = adapter
+        plantsRecyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+
+        val callback: ItemTouchHelper.Callback = SimpleItemTouchHelperCallback(adapter)
+        val touchHelper = ItemTouchHelper(callback)
+        touchHelper.attachToRecyclerView(plantsRecyclerView)
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        plantsViewModel = ViewModelProvider(requireActivity()).get(MyPlantsViewModel::class.java)
+        mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+
+        setUpPlantsAdapter(getListOfPlants())
+
+        val plantsObserver = Observer<List<PlantInstance>> { plants ->
+            setUpPlantsAdapter(plants)
+
+        }
+        mainViewModel.plantsList.observe(viewLifecycleOwner, plantsObserver)
+
+        var addButton: Button = view.findViewById(R.id.add_button)
+
+        addButton.setOnClickListener {
+            var newPlant = PlantInstance()
+            plantsViewModel.plant = newPlant
+            view.findNavController().navigate(R.id.action_navigation_home_to_plantInfo)
+        }
+
+
     }
 
 }

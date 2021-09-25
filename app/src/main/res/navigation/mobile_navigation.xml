@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_navigation_home_to_locationInfo"
             app:destination="@id/locationInfo" />
+        <action
+            android:id="@+id/action_navigation_home_to_plantInfo"
+            app:destination="@id/plantInfo" />
     </fragment>
 
     <fragment
@@ -33,6 +36,14 @@
         tools:layout="@layout/location_info_fragment" >
         <action
             android:id="@+id/action_locationInfo_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
+    <fragment
+        android:id="@+id/plantInfo"
+        android:name="il.co.urbangarden.ui.plants.PlantInfo"
+        android:label="PlantInfo" >
+        <action
+            android:id="@+id/action_plantInfo_to_navigation_home"
             app:destination="@id/navigation_home" />
     </fragment>
 </navigation>
