@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -57,6 +58,7 @@ class MyLocations : Fragment() {
     private fun setUpLocationAdapter(locations: List<Location>?){
         val context = requireContext()
         val adapter = LocationAdapter()
+        Log.d("setup", "locationAdapter")
 
         adapter.setLocationList(locations)
 
@@ -66,7 +68,9 @@ class MyLocations : Fragment() {
         }
 
         adapter.setImg = { location: FirebaseViewableObject, img: ImageView ->
+
             mainViewModel.setImgFromPath(location, img)
+            Log.d("setImg", "success")
         }
 
         val locationsRecyclerView = binding.recyclerViewMyLocations
@@ -75,8 +79,22 @@ class MyLocations : Fragment() {
     }
 
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        locationsViewModel = ViewModelProvider(requireActivity()).get(MyLocationsViewModel::class.java)
+        mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+
+        setUpLocationAdapter(getListOfLocations())
+
+        var addButton: Button = view.findViewById(R.id.add_button)
+
+        addButton.setOnClickListener {
+            var newLocation = Location()
+            locationsViewModel.location = newLocation
+            view.findNavController().navigate(R.id.action_navigation_home_to_locationInfo)
+        }
+
+
     }
 
 }

@@ -173,6 +173,24 @@ class MainViewModel : ViewModel() {
             .document(item.uid).set(item)
     }
 
+    fun removeObject(item: FirebaseObject) {
+        val collection: String = when (item) {
+            is PlantInstance -> {
+                USER_PLANTS_COLLECTION_TAG
+            }
+            is Location -> {
+                USER_LOCATIONS_COLLECTION_TAG
+            }
+            else -> {
+                throw IllegalArgumentException("item should be PlantInstance or Location")
+            }
+        }
+        db.collection(USERS_COLLECTION_TAG)
+            .document(userUid)
+            .collection(collection)
+            .document(item.uid).delete()
+    }
+
     fun setImgFromPath(
         item: FirebaseViewableObject,
         imageView: ImageView,
@@ -239,6 +257,7 @@ class MainViewModel : ViewModel() {
 //                            )
 //                        }
 //                    })
+
         }
     }
 

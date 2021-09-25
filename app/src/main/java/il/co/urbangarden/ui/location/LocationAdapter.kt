@@ -1,5 +1,7 @@
 package il.co.urbangarden.ui.location
 
+import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,9 +23,11 @@ class LocationAdapter : RecyclerView.Adapter<LocationHolder>() {
     var setImg: ((FirebaseViewableObject, ImageView) -> Unit)? = null
 
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setLocationList(dataList: List<Location>?) {
         if (dataList != null) {
             this.locationList = dataList
+            notifyDataSetChanged()
         }
     }
 
@@ -50,13 +54,11 @@ class LocationAdapter : RecyclerView.Adapter<LocationHolder>() {
 
         // Get the data model based on position
         val item = locationList[position]
-
         // Set item views based on your views and data model
         if (item != null) {
             holder.name.text = item.name
-            if (setImg != null){
-                setImg?.let { it(item, holder.image) }
-            }
+            Log.d("setImgIsNull", setImg.toString())
+            setImg?.let { it(item , holder.image) }
         }
     }
 

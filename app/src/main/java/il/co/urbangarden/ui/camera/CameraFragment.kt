@@ -74,6 +74,9 @@ class CameraFragment : Fragment() {
                     activity?.baseContext,
                     "test" // TODO: set filename to be documents uid
                 )
+
+//                val imageBitmap = result.data?.extras?.get("data") as Bitmap
+//                imageView.setImageBitmap(imageBitmap)
             }
         }
 
