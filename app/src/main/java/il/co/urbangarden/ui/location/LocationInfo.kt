@@ -57,6 +57,7 @@ class LocationInfo : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
 
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
 
@@ -100,7 +101,8 @@ class LocationInfo : Fragment() {
             locationViewModel.location.sunHours = sunHours.text.toString()
             mainViewModel.uploadObject(locationViewModel.location)
             homeViewModel.tab = 1
-            view.findNavController().navigate(il.co.urbangarden.R.id.action_locationInfo_to_navigation_home)
+            view.findNavController()
+                .navigate(il.co.urbangarden.R.id.action_locationInfo_to_navigation_home)
         }
         //todo share button on click and camera on click
 
@@ -113,12 +115,12 @@ class LocationInfo : Fragment() {
         }
 
         getPlantsButton.setOnClickListener {
-          showDialog().show()
+            showDialog().show()
         }
     }
 
 
-    private fun showDialog() : Dialog {
+    private fun showDialog(): Dialog {
         return this.let {
             val builder = androidx.appcompat.app.AlertDialog.Builder(requireContext())
             // Get the layout inflater
@@ -128,15 +130,20 @@ class LocationInfo : Fragment() {
             val recyclerView: RecyclerView = view.findViewById(R.id.recycler_dialog)
             val adapter = PlantAdapter()
 
+//            var wantedList: List<Plant> = listOf(Plant())
             var wantedList: List<Plant> = ArrayList()
             if (locationViewModel.plantsLiveData.value == null) {
                 locationViewModel.getListOfPlants()
                 locationViewModel.plantsLiveData.observe(requireActivity(),
-            { wantedList = locationViewModel.relevantPlants(locationViewModel.location) })
+                    {
+                        wantedList = locationViewModel.relevantPlants(locationViewModel.location)
+                        adapter.setPlantList(wantedList)
+                    })
             } else {
                 wantedList = locationViewModel.relevantPlants(locationViewModel.location)
+                adapter.setPlantList(wantedList)
             }
-            adapter.setPlantList(wantedList)
+//            adapter.setPlantList(wantedList)
 
             adapter.onItemClick = { plant: Plant ->
                 newPlantDialog(plant).show()
