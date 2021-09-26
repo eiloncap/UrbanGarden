@@ -4,15 +4,19 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import il.co.urbangarden.R
+import il.co.urbangarden.data.forum.Answer
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 
 class AnswersAdapter : RecyclerView.Adapter<AnswerHolder>() {
 
-    private val _answers: MutableList<String> = ArrayList()
+    private val _answers: MutableList<Answer> = ArrayList()
 
-    fun setAnswers(answers: List<String>) {
+    fun setAnswers(answers: List<Answer>) {
         _answers.clear()
         _answers.addAll(answers)
 //        _answers.sortBy { it.date }
+        _answers.sortBy { it.date }
         notifyDataSetChanged()
     }
 
@@ -26,10 +30,9 @@ class AnswersAdapter : RecyclerView.Adapter<AnswerHolder>() {
 
     override fun onBindViewHolder(holder: AnswerHolder, position: Int) {
         val answer = _answers[position]
-        holder.answer.text = answer
-
-
-//        holder.date.text = answer.date.toString()
+        holder.answer.text = answer.answer
+        val dateFormat: DateFormat = SimpleDateFormat("dd-MM-yy")
+        holder.date.text = dateFormat.format(answer.date).toString()
     }
 
     override fun getItemCount(): Int {

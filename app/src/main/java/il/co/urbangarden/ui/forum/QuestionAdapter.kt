@@ -44,7 +44,7 @@ class QuestionAdapter : RecyclerView.Adapter<QuestionHolder>() {
         }
         holder.title.text = question.title
 
-        holder.answersNum.text = question.answers.size.toString()
+        holder.answersNum.text = question.numOfAnswers.toString()
 //        holder.date.text = question.date.toString()
         val dateFormat: DateFormat = SimpleDateFormat("dd-MM-yy")
         holder.date.text = dateFormat.format(question.date).toString()

@@ -9,4 +9,5 @@ import il.co.urbangarden.R
 class AnswerHolder(view: View) : RecyclerView.ViewHolder(view) {
     val view = view
     val answer: TextView = view.findViewById(R.id.question_answer)
+    val date: TextView = view.findViewById(R.id.date)
 }

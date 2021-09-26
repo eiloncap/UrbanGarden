@@ -52,7 +52,7 @@ class ForumNewQuestionFragment : Fragment() {
                 question = question.text.toString(),
                 date = Date()
             )
-            addNewQuestion(newQuestion)
+            forumViewModel.addNewQuestion(newQuestion)
             Log.d("TAG_Q new", title.text.toString())
 //            parentFragmentManager.popBackStack()
 //            parentFragmentManager.popBackStackImmediate()
@@ -63,18 +63,6 @@ class ForumNewQuestionFragment : Fragment() {
 
         return root
     }
-
-    private fun addNewQuestion(question: Question) {
-        val id = UUID.randomUUID().toString()
-//        orderLiveData.value = order
-        Log.d("TAG_Q new id", id)
-        val add = forumViewModel.firebase.collection("Forum").add(question)
-//        val add = firebase.collection("Forum").document(id).set(question)
-        add.addOnSuccessListener {
-            Log.d("TAG_Q SUCS", id)
-        }
-    }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
