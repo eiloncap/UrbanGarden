@@ -21,6 +21,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import il.co.urbangarden.R
 import il.co.urbangarden.data.location.Location
 import il.co.urbangarden.ui.MainViewModel
+import il.co.urbangarden.ui.home.HomeViewModel
 import kotlinx.android.synthetic.main.location_info_fragment.*
 import org.w3c.dom.Text
 
@@ -35,6 +36,10 @@ class LocationInfo : Fragment() {
     }
     private val locationViewModel: MyLocationsViewModel by lazy {
         ViewModelProvider(requireActivity()).get(MyLocationsViewModel::class.java)
+    }
+
+    private val homeViewModel: HomeViewModel by lazy {
+        ViewModelProvider(requireActivity()).get(HomeViewModel::class.java)
     }
 
 
@@ -89,6 +94,7 @@ class LocationInfo : Fragment() {
             locationViewModel.location.imgFileName = imgFileName
             locationViewModel.location.sunHours = sunHours.text.toString()
             mainViewModel.uploadObject(locationViewModel.location)
+            homeViewModel.tab = 1
             view.findNavController().navigate(R.id.action_locationInfo_to_navigation_home)
         }
         //todo share button on click and camera on click

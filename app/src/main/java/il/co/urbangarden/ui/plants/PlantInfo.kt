@@ -21,6 +21,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import il.co.urbangarden.R
 import il.co.urbangarden.data.plant.Plant
 import il.co.urbangarden.ui.MainViewModel
+import il.co.urbangarden.ui.home.HomeViewModel
 import il.co.urbangarden.ui.location.LocationInfo
 import kotlinx.android.synthetic.main.plant_info_fragment.*
 
@@ -35,6 +36,9 @@ class PlantInfo : Fragment() {
     }
     private val plantsViewModel: MyPlantsViewModel by lazy {
         ViewModelProvider(requireActivity()).get(MyPlantsViewModel::class.java)
+    }
+    private val homeViewModel: HomeViewModel by lazy {
+        ViewModelProvider(requireActivity()).get(HomeViewModel::class.java)
     }
 
 
@@ -88,6 +92,7 @@ class PlantInfo : Fragment() {
             plantsViewModel.plant.notes = notes.text.toString()
             plantsViewModel.plant.name = name.text.toString()
             mainViewModel.uploadObject(plantsViewModel.plant)
+            homeViewModel.tab = 0
             view.findNavController().navigate(R.id.action_plantInfo_to_navigation_home)
         }
         //todo share button on click and camera on click
