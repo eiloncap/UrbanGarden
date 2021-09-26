@@ -187,12 +187,12 @@ class MainViewModel : ViewModel() {
         return Uri.fromFile(file)
     }
 
-    fun uploadImage(imgBitmap: Bitmap?, inContext: Context?, filename: String) {
+    fun uploadImage(imgBitmap: Bitmap?, inContext: Context?, filename: String, dir:String=userUid.toString()) {
         if (imgBitmap != null && inContext != null) {
             val img = getImageUri(inContext, imgBitmap) ?: return // TODO: deal better
             // Defining the child of storageReference
             val ref: StorageReference = storage.reference
-                .child("$userUid/$filename.jpeg") // TODO: set in users directory with UID
+                .child("$dir/$filename.jpeg") // TODO: set in users directory with UID
 
             // adding listeners on upload
             // or failure of image
