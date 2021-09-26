@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import il.co.urbangarden.R
 import il.co.urbangarden.data.forum.Answer
@@ -37,7 +38,7 @@ class ForumFragment : Fragment() {
         _binding = FragmentForumBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val addQuestionButton: FloatingActionButton = binding.floatingActionButton
+        val addQuestionButton: ExtendedFloatingActionButton = binding.addNewQuestion
         addQuestionButton.setOnClickListener {
             view?.findNavController()
                 ?.navigate(R.id.action_navigation_forum_to_forumNewQuestionFragment)

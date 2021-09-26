@@ -8,11 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import il.co.urbangarden.R
 import il.co.urbangarden.data.forum.Answer
@@ -39,7 +41,7 @@ class ForumItemFragment : Fragment() {
         _binding = FragmentForumItemBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val addAnswerButton: FloatingActionButton = binding.addNewAnswer
+        val addAnswerButton: ExtendedFloatingActionButton = binding.addNewAnswer
         addAnswerButton.setOnClickListener {
             newAnswerDialog().show()
         }
@@ -105,11 +107,11 @@ class ForumItemFragment : Fragment() {
                     //todo email
                     if (answer.text.toString() != "") {
                         forumViewModel.addNewAnswer(
-                            Answer(
-                                email = "",
-                                answer = answer.text.toString()
-                            )
+                            Answer(email = "", answer = answer.text.toString())
                         )
+                    } else {
+                        Toast.makeText(requireContext(), "Please type something", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
                 .setNegativeButton("Cancel") { dialog, id ->

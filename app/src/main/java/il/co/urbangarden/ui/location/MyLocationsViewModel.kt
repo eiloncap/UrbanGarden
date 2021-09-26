@@ -17,7 +17,7 @@ class MyLocationsViewModel : ViewModel() {
 
     //should do observe
     /**
-     * wantedList = empty
+    wantedList = empty
     if (ViewModel.plantsLiveData.value == null) {
     ViewModel.getListOfPlants()
     ViewModel.plantsLiveData.observe(requireActivity(),

@@ -104,7 +104,6 @@ class LocationInfo : Fragment() {
                 val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                 resultLauncher.launch(takePictureIntent)
             }
-
         }
     }
 
