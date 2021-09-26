@@ -16,6 +16,16 @@ class MyLocationsViewModel : ViewModel() {
     lateinit var location: Location
 
     //should do observe
+    /**
+     * wantedList = empty
+    if (ViewModel.plantsLiveData.value == null) {
+    ViewModel.getListOfPlants()
+    ViewModel.plantsLiveData.observe(requireActivity(),
+    { listOfPlants -> wantedList = relevantPlants(listOfPlants) })
+    } else {
+    wantedList = relevantPlants(ViewModel.plantsLiveData.value!!)
+    }
+    */
     fun relevantPlants(location: Location): List<Plant> {
 //val currySorted = spices.filter { it.contains("curry", true) }.sortedBy { it.length }
         return ArrayList(plantsLiveData.value)
