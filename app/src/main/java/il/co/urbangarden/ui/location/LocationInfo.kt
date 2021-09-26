@@ -150,9 +150,7 @@ class LocationInfo : Fragment() {
             }
 
             adapter.setImg = { plant: FirebaseViewableObject, img: ImageView ->
-
                 mainViewModel.setImgFromPath(plant, img, ImageCropOption.SQUARE)
-                Log.d("setImg", "success")
             }
             recyclerView.adapter = adapter
             recyclerView.layoutManager = LinearLayoutManager(

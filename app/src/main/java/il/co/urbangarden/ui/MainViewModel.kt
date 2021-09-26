@@ -11,7 +11,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -20,19 +19,18 @@ import il.co.urbangarden.GlideApp
 import il.co.urbangarden.data.FirebaseObject
 import il.co.urbangarden.data.FirebaseViewableObject
 import il.co.urbangarden.data.location.Location
+import il.co.urbangarden.data.plant.Plant
 import il.co.urbangarden.data.plant.PlantInstance
-import il.co.urbangarden.data.user.User
 import il.co.urbangarden.utils.ImageCropOption
 import java.io.ByteArrayOutputStream
 import java.io.File
 
 
 class MainViewModel : ViewModel() {
-    private var userUid: String? = Firebase.auth.currentUser?.uid
+    val user = Firebase.auth.currentUser
+    private val userUid: String? = user?.uid
     private val storage = FirebaseStorage.getInstance()
     private val db = FirebaseFirestore.getInstance()
-    private val _user = MutableLiveData<User>()
-    val user: LiveData<User> = _user
     private val _plantsList = MutableLiveData<List<PlantInstance>>()
     val plantsList: LiveData<List<PlantInstance>> = _plantsList
     private val _locationsList = MutableLiveData<List<Location>>()
@@ -45,38 +43,11 @@ class MainViewModel : ViewModel() {
         private const val USER_LOCATIONS_COLLECTION_TAG = "locations"
     }
 
-    init {
-//        // Get the Firebase app and all primitives we'll use
-//        val app = FirebaseApp.getInstance()
-//        val database = FirebaseDatabase.getInstance(app)
-//        val auth = FirebaseAuth.getInstance(app)
-//        val storage = FirebaseStorage.getInstance(app)
-//        storage.reference.child("photos_test.jpg").downloadUrl.addOnSuccessListener { it. }
-//        // Get a reference to our chat "room" in the database
-//        val databaseRef = database.getReference("chat")
-        timesCreated++
-        Log.d("eilon-loc", "VM created!! $timesCreated times")
-    }
-
     fun loadDb() {
-        userUid = Firebase.auth.currentUser?.uid
-        loadUser()
+//        userUid = Firebase.auth.currentUser?.uid
         loadPlantsList()
         loadLocationsList()
         listenToChanges()
-    }
-
-    private fun loadUser() {
-        db.collection(USERS_COLLECTION_TAG)
-            .document(userUid!!).get()
-            .addOnSuccessListener { d: DocumentSnapshot ->
-                if (d.exists()) {
-                    _user.value = d.toObject(User::class.java)
-                }
-            }
-            .addOnFailureListener {
-//                    TODO: fail case
-            }
     }
 
     private fun loadPlantsList() {
@@ -105,7 +76,6 @@ class MainViewModel : ViewModel() {
                     res.add(loc.toObject(Location::class.java))
                 }
                 _locationsList.value = res
-                Log.d("eilon-loc", "_locationsList loaded with $res")
 
             }
             .addOnFailureListener {
@@ -115,12 +85,6 @@ class MainViewModel : ViewModel() {
 
     private fun listenToChanges() {
         val userDoc = db.collection(USERS_COLLECTION_TAG).document(userUid!!)
-
-        userDoc.addSnapshotListener { value, error ->
-            if (error == null && value != null && value.exists()) {
-                _user.value = value.toObject(User::class.java)
-            }
-        }
 
         userDoc.collection(USER_PLANTS_COLLECTION_TAG)
             .addSnapshotListener { value, error ->
@@ -135,7 +99,6 @@ class MainViewModel : ViewModel() {
 
         userDoc.collection(USER_LOCATIONS_COLLECTION_TAG)
             .addSnapshotListener { value, error ->
-                Log.d("eilon-loc", "locations listener activated")
                 if (error == null && value != null) {
                     val res = mutableListOf<Location>()
                     value.forEach { loc ->
@@ -187,11 +150,18 @@ class MainViewModel : ViewModel() {
         imageView: ImageView,
         crop: ImageCropOption = ImageCropOption.NONE
     ) {
+        val dir: String = when (item) {
+            is Plant -> {
+                "Plants"
+            }
+            else -> {
+                userUid!!.toString()
+            }
+        }
 
-        Log.d("eilon", "setImgFromPath was called")
         // Reference to an image file in Firebase Storage
         val storageReference: StorageReference =
-            storage.reference.child("${userUid!!}/${item.imgFileName}")
+            storage.reference.child("$dir/${item.imgFileName}")
 
         // Download directly from StorageReference using Glide
         GlideApp.with(imageView)

@@ -47,7 +47,6 @@ class PlantAdapter: RecyclerView.Adapter<PlantHolder>() {
         // Set item views based on your views and data model
         if (item != null) {
             holder.name.text = item.name
-            Log.d("setImgIsNull", setImg.toString())
             setImg?.let { it(item , holder.image) }
         }
 

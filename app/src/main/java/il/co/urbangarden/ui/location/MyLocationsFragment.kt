@@ -49,19 +49,15 @@ class MyLocationsFragment : Fragment() {
     private fun setUpLocationAdapter(locations: List<Location>?) {
         val context = requireContext()
         val adapter = LocationAdapter()
-        Log.d("setup", "locationAdapter")
 
         adapter.setLocationList(locations)
-
         adapter.onItemClick = { location: Location ->
             locationsViewModel.location = location
             view?.findNavController()?.navigate(R.id.action_navigation_home_to_locationInfo)
         }
 
         adapter.setImg = { location: FirebaseViewableObject, img: ImageView ->
-
             mainViewModel.setImgFromPath(location, img, ImageCropOption.SQUARE)
-            Log.d("setImg", "success")
         }
 
         val locationsRecyclerView = binding.recyclerViewMyLocations
@@ -79,12 +75,9 @@ class MyLocationsFragment : Fragment() {
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
 
         val locationObserver = Observer<List<Location>> { locations ->
-            Log.d("eilon-loc", "observer: $locations")
             setUpLocationAdapter(locations)
         }
         mainViewModel.locationsList.observe(viewLifecycleOwner, locationObserver)
-        Log.d("eilon-loc", "observer created")
-
         setUpLocationAdapter(getListOfLocations())
 
         val addButton: Button = view.findViewById(R.id.add_button)
