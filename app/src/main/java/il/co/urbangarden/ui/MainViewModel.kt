@@ -1,12 +1,18 @@
 package il.co.urbangarden.ui
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Bitmap.CompressFormat
+import android.net.Uri
 import android.util.Log
 import android.widget.ImageView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import il.co.urbangarden.GlideApp
@@ -16,40 +22,19 @@ import il.co.urbangarden.data.location.Location
 import il.co.urbangarden.data.plant.PlantInstance
 import il.co.urbangarden.data.user.User
 import il.co.urbangarden.utils.ImageCropOption
-import com.google.firebase.storage.UploadTask
-
-import android.widget.Toast
-
-import il.co.urbangarden.MainActivity
-
-import com.google.android.gms.tasks.OnFailureListener
-
-import com.google.android.gms.tasks.OnSuccessListener
-
-import android.app.ProgressDialog
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Bitmap.CompressFormat
-import android.net.Uri
-import java.util.*
-import android.provider.MediaStore
 import java.io.ByteArrayOutputStream
-import android.os.Environment
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import java.io.File
-import java.io.FileOutputStream
 
 
 class MainViewModel : ViewModel() {
-    private var userUid : String? = Firebase.auth.currentUser?.uid
+    private var userUid: String? = Firebase.auth.currentUser?.uid
     private val storage = FirebaseStorage.getInstance()
     private val db = FirebaseFirestore.getInstance()
     private val _user = MutableLiveData<User>()
     val user: LiveData<User> = _user
     private val _plantsList = MutableLiveData<List<PlantInstance>>()
     val plantsList: LiveData<List<PlantInstance>> = _plantsList
-    val _locationsList = MutableLiveData<List<Location>>()
+    private val _locationsList = MutableLiveData<List<Location>>()
     val locationsList: LiveData<List<Location>> = _locationsList
 
     companion object {
@@ -105,7 +90,7 @@ class MainViewModel : ViewModel() {
                 _plantsList.value = res
             }
             .addOnFailureListener {
-                    Log.d("failed", "fail")
+                Log.d("failed", "fail")
             }
     }
 
@@ -213,15 +198,18 @@ class MainViewModel : ViewModel() {
     }
 
     private fun getImageUri(inContext: Context, inImage: Bitmap): Uri? {
+        val file = File(inContext.cacheDir, "lcl_urban_garden") // Get Access to a local file.
+        file.delete() // Delete the File, just in Case, that there was still another File
+        file.createNewFile()
+        val fileOutputStream = file.outputStream()
         val bytes = ByteArrayOutputStream()
         inImage.compress(CompressFormat.JPEG, 100, bytes)
-        val path = MediaStore.Images.Media.insertImage(
-            inContext.contentResolver,
-            inImage,
-            "Title",
-            null
-        )
-        return Uri.parse(path)
+        val bytearray = bytes.toByteArray()
+        fileOutputStream.write(bytearray)
+        fileOutputStream.flush()
+        fileOutputStream.close()
+        bytes.close()
+        return Uri.fromFile(file)
     }
 
     fun uploadImage(imgBitmap: Bitmap?, inContext: Context?, filename: String) {
