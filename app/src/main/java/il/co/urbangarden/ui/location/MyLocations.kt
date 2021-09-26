@@ -8,17 +8,17 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import il.co.urbangarden.R
 import il.co.urbangarden.data.FirebaseViewableObject
 import il.co.urbangarden.data.location.Location
 import il.co.urbangarden.databinding.MyLocationsFragmentBinding
 import il.co.urbangarden.ui.MainViewModel
-import androidx.recyclerview.widget.ItemTouchHelper
-
 import il.co.urbangarden.ui.dragAndDrop.SimpleItemTouchHelperCallback
 import il.co.urbangarden.utils.ImageCropOption
 
@@ -26,7 +26,7 @@ import il.co.urbangarden.utils.ImageCropOption
 class MyLocations : Fragment() {
 
     private lateinit var locationsViewModel: MyLocationsViewModel
-    private lateinit var mainViewModel : MainViewModel
+    private lateinit var mainViewModel: MainViewModel
     private var _binding: MyLocationsFragmentBinding? = null
 
     private val binding get() = _binding!!
@@ -38,21 +38,10 @@ class MyLocations : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-
-        locationsViewModel = ViewModelProvider(requireActivity()).get(MyLocationsViewModel::class.java)
-        mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+    ): View {
 
         _binding = MyLocationsFragmentBinding.inflate(inflater, container, false)
         val root: View = _binding!!.root
-
-        val locationObserver = Observer<List<Location>> { locations ->
-            setUpLocationAdapter(locations)
-
-        }
-
-        mainViewModel.locationsList.observe(viewLifecycleOwner, locationObserver)
-
         return root
     }
 
@@ -60,7 +49,7 @@ class MyLocations : Fragment() {
         return mainViewModel.locationsList.value
     }
 
-    private fun setUpLocationAdapter(locations: List<Location>?){
+    private fun setUpLocationAdapter(locations: List<Location>?) {
         val context = requireContext()
         val adapter = LocationAdapter()
         Log.d("setup", "locationAdapter")
@@ -90,22 +79,25 @@ class MyLocations : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        locationsViewModel = ViewModelProvider(requireActivity()).get(MyLocationsViewModel::class.java)
+
+        locationsViewModel =
+            ViewModelProvider(requireActivity()).get(MyLocationsViewModel::class.java)
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+
+        val locationObserver = Observer<List<Location>> { locations ->
+            Log.d("eilon-loc", "observer: $locations")
+            setUpLocationAdapter(locations)
+        }
+        mainViewModel.locationsList.observe(viewLifecycleOwner, locationObserver)
+        Log.d("eilon-loc", "observer created")
 
         setUpLocationAdapter(getListOfLocations())
 
-        val locationObserver = Observer<List<Location>> { locations ->
-            setUpLocationAdapter(locations)
-
-        }
-        mainViewModel.locationsList.observe(viewLifecycleOwner, locationObserver)
-
-        var addButton: Button = view.findViewById(R.id.add_button)
+        val addButton: Button = view.findViewById(R.id.add_button)
 
         addButton.setOnClickListener {
             setUpLocationAdapter(mainViewModel.locationsList.value)
-            var newLocation = Location()
+            val newLocation = Location()
             locationsViewModel.location = newLocation
             view.findNavController().navigate(R.id.action_navigation_home_to_locationInfo)
         }

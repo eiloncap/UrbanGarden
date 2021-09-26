@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -17,6 +18,7 @@ import il.co.urbangarden.ui.MainViewModel
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import il.co.urbangarden.data.location.Location
 import il.co.urbangarden.data.plant.PlantInstance
 import il.co.urbangarden.databinding.MyPlantsFragmentBinding
 
@@ -27,7 +29,7 @@ import il.co.urbangarden.utils.ImageCropOption
 class MyPlants : Fragment() {
 
     private lateinit var plantsViewModel: MyPlantsViewModel
-    private lateinit var mainViewModel : MainViewModel
+    private lateinit var mainViewModel: MainViewModel
     private var _binding: MyPlantsFragmentBinding? = null
 
     private val binding get() = _binding!!
@@ -39,19 +41,10 @@ class MyPlants : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-
-        plantsViewModel = ViewModelProvider(requireActivity()).get(MyPlantsViewModel::class.java)
-        mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+    ): View {
 
         _binding = MyPlantsFragmentBinding.inflate(inflater, container, false)
         val root: View = _binding!!.root
-
-        val plantsObserver = Observer<List<PlantInstance>> { plants ->
-            setUpPlantsAdapter(plants)
-
-        }
-        mainViewModel.plantsList.observe(viewLifecycleOwner, plantsObserver)
 
         return root
     }
@@ -101,10 +94,10 @@ class MyPlants : Fragment() {
         }
         mainViewModel.plantsList.observe(viewLifecycleOwner, plantsObserver)
 
-        var addButton: Button = view.findViewById(R.id.add_button)
+        val addButton: Button = view.findViewById(R.id.add_button)
 
         addButton.setOnClickListener {
-            var newPlant = PlantInstance()
+            val newPlant = PlantInstance()
             plantsViewModel.plant = newPlant
             view.findNavController().navigate(R.id.action_navigation_home_to_plantInfo)
         }

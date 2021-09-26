@@ -23,6 +23,7 @@ class LocationAdapter : RecyclerView.Adapter<LocationHolder>(), ItemTouchHelperA
 
     @SuppressLint("NotifyDataSetChanged")
     fun setLocationList(dataList: List<Location>?) {
+        Log.d("eilon-loc", "adapter: $dataList")
         if (dataList != null) {
             this.locationList = dataList
             notifyDataSetChanged()
