@@ -1,7 +1,5 @@
 package il.co.urbangarden.ui.location
 
-import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import il.co.urbangarden.data.location.Location

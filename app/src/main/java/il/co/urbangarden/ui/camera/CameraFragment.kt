@@ -81,7 +81,7 @@ class CameraFragment : Fragment() {
                 mainViewModel.uploadImage(
                     result.data?.extras?.get("data") as Bitmap,
                     activity?.baseContext,
-                    fileName
+                    fileName //todo put uid
                 )
 
 //                val imageBitmap = result.data?.extras?.get("data") as Bitmap

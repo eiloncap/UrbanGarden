@@ -10,11 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import il.co.urbangarden.R
 import il.co.urbangarden.data.FirebaseViewableObject
 import il.co.urbangarden.data.plant.PlantInstance
-import il.co.urbangarden.ui.dragAndDrop.ItemTouchHelperAdapter
 import java.util.*
 import kotlin.collections.ArrayList
 
-class PlantAdapter : RecyclerView.Adapter<PlantHolder>(), ItemTouchHelperAdapter {
+class PlantInstanceAdapter : RecyclerView.Adapter<PlantInstanceHolder>() {
 
 
     private var plantsList: List<PlantInstance> = ArrayList()
@@ -34,11 +33,11 @@ class PlantAdapter : RecyclerView.Adapter<PlantHolder>(), ItemTouchHelperAdapter
 
 
     // Usually involves inflating a layout from XML and returning the holder
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlantHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlantInstanceHolder {
 
         // Inflate the custom layout
         var view = LayoutInflater.from(parent.context).inflate(R.layout.one_plant, parent, false)
-        var holder = PlantHolder(view)
+        var holder = PlantInstanceHolder(view)
 
         holder.view.setOnClickListener{
             val callback = onItemClick ?: return@setOnClickListener
@@ -49,40 +48,20 @@ class PlantAdapter : RecyclerView.Adapter<PlantHolder>(), ItemTouchHelperAdapter
     }
 
     // Involves populating data into the item through holder
-    override fun onBindViewHolder(holder: PlantHolder, position: Int) {
+    override fun onBindViewHolder(instanceHolder: PlantInstanceHolder, position: Int) {
 
         // Get the data model based on position
         val item = plantsList[position]
         // Set item views based on your views and data model
         if (item != null) {
-            holder.name.text = item.name
+            instanceHolder.name.text = item.name
             Log.d("setImgIsNull", setImg.toString())
-            setImg?.let { it(item , holder.image) }
+            setImg?.let { it(item , instanceHolder.image) }
         }
     }
 
     //  total count of items in the list
     override fun getItemCount() = plantsList.size
 
-    override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
-        if (fromPosition < toPosition) {
-            for (i in fromPosition until toPosition) {
-                Collections.swap(plantsList, i, i + 1)
-            }
-        } else {
-            for (i in fromPosition downTo toPosition + 1) {
-                Collections.swap(plantsList, i, i - 1)
-            }
-        }
-        notifyItemMoved(fromPosition, toPosition)
-        return true
-    }
-
-    override fun onItemDismiss(position: Int): Boolean {
-        val newList = plantsList.drop(position)
-        plantsList = newList
-        notifyItemRemoved(position);
-        return true
-    }
 }
 
