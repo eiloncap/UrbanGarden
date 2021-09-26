@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
@@ -43,8 +44,6 @@ class ForumNewQuestionFragment : Fragment() {
         val question: EditText = binding.newQuestion
 
         submitButton.setOnClickListener {
-            //todo check not empty
-
             //todo add new question to firebase
             val newQuestion = Question(
                 email = "user",
@@ -52,6 +51,13 @@ class ForumNewQuestionFragment : Fragment() {
                 question = question.text.toString(),
                 date = Date()
             )
+            //todo check not empty
+            if (newQuestion.title == ""){
+                Toast.makeText(requireContext(), "Please enter a title", Toast.LENGTH_SHORT)
+                    .show()
+                return@setOnClickListener
+            }
+
             forumViewModel.addNewQuestion(newQuestion)
             Log.d("TAG_Q new", title.text.toString())
 //            parentFragmentManager.popBackStack()

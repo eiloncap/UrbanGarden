@@ -21,8 +21,7 @@ class ForumViewModel : ViewModel() {
 
     private val firebase: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    val questionsLiveData: MutableLiveData<ArrayList<Question>> =
-        MutableLiveData<ArrayList<Question>>()
+    val questionsLiveData: MutableLiveData<ArrayList<Question>> = MutableLiveData()
 
     var currQuestion: Question? = null
     var answerNum: MutableLiveData<Int> = MutableLiveData()
@@ -42,6 +41,7 @@ class ForumViewModel : ViewModel() {
 
                     answersCollectionRef.get().addOnSuccessListener { ansResult ->
                         newQ.numOfAnswers = ansResult.size()
+                        questionsLiveData.value = arrayList
                     }
 //                    answerNum.observe(
 //                        { num ->  })
