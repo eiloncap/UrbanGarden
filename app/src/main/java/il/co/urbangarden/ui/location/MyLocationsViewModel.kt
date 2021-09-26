@@ -1,5 +1,6 @@
 package il.co.urbangarden.ui.location
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import il.co.urbangarden.data.location.Location
@@ -14,16 +15,7 @@ class MyLocationsViewModel : ViewModel() {
     lateinit var location: Location
 
     //should do observe
-    /**
-     * wantedList = empty
-    if (ViewModel.plantsLiveData.value == null) {
-    ViewModel.getListOfPlants()
-    ViewModel.plantsLiveData.observe(requireActivity(),
-    { listOfPlants -> wantedList = relevantPlants(listOfPlants) })
-    } else {
-    wantedList = relevantPlants(ViewModel.plantsLiveData.value!!)
-    }
-    */
+
     fun relevantPlants(location: Location): List<Plant> {
 //val currySorted = spices.filter { it.contains("curry", true) }.sortedBy { it.length }
         return ArrayList(plantsLiveData.value)
@@ -40,15 +32,11 @@ class MyLocationsViewModel : ViewModel() {
                     val newP = document.toObject(Plant::class.java)
 
                     arrayList.add(newP)
-                    Log.d(
-                        "TAG_Q fetch",
-                        "${document.id} => ${document.data}"
-                    )
+
                 }
                 plantsLiveData.value = arrayList
             }
             .addOnFailureListener { exception ->
-                Log.d("TAG_Q fetch fail", "Error getting documents: ", exception)
             }
 
     }

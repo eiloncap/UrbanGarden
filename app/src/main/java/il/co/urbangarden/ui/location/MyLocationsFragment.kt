@@ -19,7 +19,7 @@ import il.co.urbangarden.data.FirebaseViewableObject
 import il.co.urbangarden.data.location.Location
 import il.co.urbangarden.databinding.MyLocationsFragmentBinding
 import il.co.urbangarden.ui.MainViewModel
-import il.co.urbangarden.ui.dragAndDrop.SimpleItemTouchHelperCallback
+
 import il.co.urbangarden.utils.ImageCropOption
 
 
@@ -71,17 +71,13 @@ class MyLocationsFragment : Fragment() {
         locationsRecyclerView.adapter = adapter
         locationsRecyclerView.layoutManager = GridLayoutManager(context, 2)
 
-        val callback: ItemTouchHelper.Callback = SimpleItemTouchHelperCallback(adapter)
-        val touchHelper = ItemTouchHelper(callback)
-        touchHelper.attachToRecyclerView(locationsRecyclerView)
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        locationsViewModel =
-            ViewModelProvider(requireActivity()).get(MyLocationsViewModel::class.java)
+        locationsViewModel = ViewModelProvider(requireActivity()).get(MyLocationsViewModel::class.java)
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
 
         val locationObserver = Observer<List<Location>> { locations ->

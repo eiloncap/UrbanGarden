@@ -130,7 +130,16 @@ class LocationInfo : Fragment() {
 
             val recyclerView: RecyclerView = view.findViewById(R.id.recycler_dialog)
             val adapter = PlantAdapter()
-            adapter.setPlantList(locationViewModel.getPlantsList(locationViewModel.location))
+
+            var wantedList: List<Plant> = ArrayList()
+            if (locationViewModel.plantsLiveData.value == null) {
+                locationViewModel.getListOfPlants()
+                locationViewModel.plantsLiveData.observe(requireActivity(),
+            { wantedList = locationViewModel.relevantPlants(locationViewModel.location) })
+            } else {
+                wantedList = locationViewModel.relevantPlants(locationViewModel.location)
+            }
+            adapter.setPlantList(wantedList)
 
             adapter.onItemClick = { plant: Plant ->
                 newPlantDialog(plant).show()
