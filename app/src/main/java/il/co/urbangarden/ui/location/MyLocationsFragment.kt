@@ -23,7 +23,7 @@ import il.co.urbangarden.ui.dragAndDrop.SimpleItemTouchHelperCallback
 import il.co.urbangarden.utils.ImageCropOption
 
 
-class MyLocations : Fragment() {
+class MyLocationsFragment : Fragment() {
 
     private lateinit var locationsViewModel: MyLocationsViewModel
     private lateinit var mainViewModel : MainViewModel
@@ -32,7 +32,7 @@ class MyLocations : Fragment() {
     private val binding get() = _binding!!
 
     companion object {
-        fun newInstance() = MyLocations()
+        fun newInstance() = MyLocationsFragment()
     }
 
     override fun onCreateView(

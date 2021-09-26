@@ -25,7 +25,7 @@ class QuestionAdapter : RecyclerView.Adapter<QuestionHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuestionHolder {
         val context = parent.context
         val view = LayoutInflater.from(context)
-            .inflate(R.layout.forum_question_one_line, parent, false)
+            .inflate(R.layout.one_line_forum_question, parent, false)
         val holder = QuestionHolder(view)
 
         holder.view.setOnClickListener {

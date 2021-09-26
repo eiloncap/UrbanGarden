@@ -23,7 +23,7 @@ class AnswersAdapter : RecyclerView.Adapter<AnswerHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnswerHolder {
         val context = parent.context
         val view = LayoutInflater.from(context)
-            .inflate(R.layout.forum_answer_one_line, parent, false)
+            .inflate(R.layout.one_line_forum_answer, parent, false)
 
         return AnswerHolder(view)
     }

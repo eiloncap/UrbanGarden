@@ -1,14 +1,10 @@
 package il.co.urbangarden.ui.home.ui.main
 
-import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import il.co.urbangarden.ui.location.MyLocations
-import il.co.urbangarden.ui.plants.MyPlants
-import il.co.urbangarden.R
-
+import il.co.urbangarden.ui.location.MyLocationsFragment
+import il.co.urbangarden.ui.plants.MyPlantsFragment
 
 
 /**
@@ -22,10 +18,10 @@ class SectionsPagerAdapter(fm: FragmentManager) :
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
         when(position){
-            0-> return MyPlants.newInstance()
-            1-> return MyLocations.newInstance()
+            0-> return MyPlantsFragment.newInstance()
+            1-> return MyLocationsFragment.newInstance()
         }
-        return MyLocations.newInstance()
+        return MyLocationsFragment.newInstance()
     }
 
 
