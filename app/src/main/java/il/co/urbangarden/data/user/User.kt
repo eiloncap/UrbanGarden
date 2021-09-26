@@ -4,6 +4,5 @@ import il.co.urbangarden.data.FirebaseObject
 
 data class User(
     override var uid: String = "",
-    var name: String = "",
-    var email: String = "",
-): FirebaseObject
+    var name: String = ""
+) : FirebaseObject

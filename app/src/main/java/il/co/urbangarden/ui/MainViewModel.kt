@@ -1,12 +1,18 @@
 package il.co.urbangarden.ui
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Bitmap.CompressFormat
+import android.net.Uri
 import android.util.Log
 import android.widget.ImageView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import il.co.urbangarden.GlideApp
@@ -16,33 +22,13 @@ import il.co.urbangarden.data.location.Location
 import il.co.urbangarden.data.plant.PlantInstance
 import il.co.urbangarden.data.user.User
 import il.co.urbangarden.utils.ImageCropOption
-import com.google.firebase.storage.UploadTask
-
-import android.widget.Toast
-
-import il.co.urbangarden.MainActivity
-
-import com.google.android.gms.tasks.OnFailureListener
-
-import com.google.android.gms.tasks.OnSuccessListener
-
-import android.app.ProgressDialog
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Bitmap.CompressFormat
-import android.net.Uri
-import java.util.*
-import android.provider.MediaStore
 import java.io.ByteArrayOutputStream
-import android.os.Environment
 import java.io.File
-import java.io.FileOutputStream
 
 
 class MainViewModel : ViewModel() {
-
-    private val userUid = "12345" // TODO: reach only from user.value.uid
-    val storage = FirebaseStorage.getInstance()
+    private var userUid: String? = Firebase.auth.currentUser?.uid
+    private val storage = FirebaseStorage.getInstance()
     private val db = FirebaseFirestore.getInstance()
     private val _user = MutableLiveData<User>()
     val user: LiveData<User> = _user
@@ -52,6 +38,7 @@ class MainViewModel : ViewModel() {
     val locationsList: LiveData<List<Location>> = _locationsList
 
     companion object {
+        private var timesCreated = 0
         private const val USERS_COLLECTION_TAG = "Users"
         private const val USER_PLANTS_COLLECTION_TAG = "plants"
         private const val USER_LOCATIONS_COLLECTION_TAG = "locations"
@@ -66,33 +53,34 @@ class MainViewModel : ViewModel() {
 //        storage.reference.child("photos_test.jpg").downloadUrl.addOnSuccessListener { it. }
 //        // Get a reference to our chat "room" in the database
 //        val databaseRef = database.getReference("chat")
+        timesCreated++
+        Log.d("eilon-loc", "VM created!! $timesCreated times")
+    }
 
+    fun loadDb() {
+        userUid = Firebase.auth.currentUser?.uid
         loadUser()
         loadPlantsList()
         loadLocationsList()
         listenToChanges()
-        Log.d("locationsList", locationsList.value.toString())
     }
 
     private fun loadUser() {
-        _user.value = User(uid = "12345") // TODO: login
         db.collection(USERS_COLLECTION_TAG)
-            .document(userUid).get()
+            .document(userUid!!).get()
             .addOnSuccessListener { d: DocumentSnapshot ->
                 if (d.exists()) {
                     _user.value = d.toObject(User::class.java)
-                    _user.value = User(uid = "12345")
                 }
             }
             .addOnFailureListener {
 //                    TODO: fail case
-                _user.value = User(uid = "12345")
             }
     }
 
     private fun loadPlantsList() {
         db.collection(USERS_COLLECTION_TAG)
-            .document(userUid)
+            .document(userUid!!)
             .collection(USER_PLANTS_COLLECTION_TAG).get()
             .addOnSuccessListener {
                 val res = mutableListOf<PlantInstance>()
@@ -102,13 +90,13 @@ class MainViewModel : ViewModel() {
                 _plantsList.value = res
             }
             .addOnFailureListener {
-                    Log.d("failer", "fail")
+                Log.d("failed", "fail")
             }
     }
 
     private fun loadLocationsList() {
         db.collection(USERS_COLLECTION_TAG)
-            .document(userUid)
+            .document(userUid!!)
             .collection(USER_LOCATIONS_COLLECTION_TAG).get()
             .addOnSuccessListener {
                 val res = mutableListOf<Location>()
@@ -116,7 +104,8 @@ class MainViewModel : ViewModel() {
                     res.add(loc.toObject(Location::class.java))
                 }
                 _locationsList.value = res
-                Log.d("success", _locationsList.value.toString())
+                Log.d("eilon-loc", "_locationsList loaded with $res")
+
             }
             .addOnFailureListener {
 //                    TODO: fail case
@@ -124,7 +113,7 @@ class MainViewModel : ViewModel() {
     }
 
     private fun listenToChanges() {
-        val userDoc = db.collection(USERS_COLLECTION_TAG).document(userUid)
+        val userDoc = db.collection(USERS_COLLECTION_TAG).document(userUid!!)
 
         userDoc.addSnapshotListener { value, error ->
             if (error == null && value != null && value.exists()) {
@@ -145,6 +134,7 @@ class MainViewModel : ViewModel() {
 
         userDoc.collection(USER_LOCATIONS_COLLECTION_TAG)
             .addSnapshotListener { value, error ->
+                Log.d("eilon-loc", "locations listener activated")
                 if (error == null && value != null) {
                     val res = mutableListOf<Location>()
                     value.forEach { loc ->
@@ -168,7 +158,7 @@ class MainViewModel : ViewModel() {
             }
         }
         db.collection(USERS_COLLECTION_TAG)
-            .document(userUid)
+            .document(userUid!!)
             .collection(collection)
             .document(item.uid).set(item)
     }
@@ -186,7 +176,7 @@ class MainViewModel : ViewModel() {
             }
         }
         db.collection(USERS_COLLECTION_TAG)
-            .document(userUid)
+            .document(userUid!!)
             .collection(collection)
             .document(item.uid).delete()
     }
@@ -196,30 +186,30 @@ class MainViewModel : ViewModel() {
         imageView: ImageView,
         crop: ImageCropOption = ImageCropOption.NONE
     ) {
-        val userId = user.value?.uid
-        if (userId != null) {
-            // Reference to an image file in Firebase Storage
-            val storageReference: StorageReference =
-                storage.reference.child("$userId/${item.imgFileName}")
+        // Reference to an image file in Firebase Storage
+        val storageReference: StorageReference =
+            storage.reference.child("${userUid!!}/${item.imgFileName}")
 
-            // Download directly from StorageReference using Glide
-            GlideApp.with(imageView)
-                .load(storageReference)
-                .apply(crop.getGlideTransform())
-                .into(imageView)
-        }
+        // Download directly from StorageReference using Glide
+        GlideApp.with(imageView)
+            .load(storageReference)
+            .apply(crop.getGlideTransform())
+            .into(imageView)
     }
 
     private fun getImageUri(inContext: Context, inImage: Bitmap): Uri? {
+        val file = File(inContext.cacheDir, "lcl_urban_garden") // Get Access to a local file.
+        file.delete() // Delete the File, just in Case, that there was still another File
+        file.createNewFile()
+        val fileOutputStream = file.outputStream()
         val bytes = ByteArrayOutputStream()
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
-        val path = MediaStore.Images.Media.insertImage(
-            inContext.contentResolver,
-            inImage,
-            "Title",
-            null
-        )
-        return Uri.parse(path)
+        inImage.compress(CompressFormat.JPEG, 100, bytes)
+        val bytearray = bytes.toByteArray()
+        fileOutputStream.write(bytearray)
+        fileOutputStream.flush()
+        fileOutputStream.close()
+        bytes.close()
+        return Uri.fromFile(file)
     }
 
     fun uploadImage(imgBitmap: Bitmap?, inContext: Context?, filename: String) {

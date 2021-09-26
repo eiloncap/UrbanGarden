@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@id/login">
 
     <fragment
         android:id="@+id/navigation_home"
         android:name="il.co.urbangarden.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_navigation_home_to_locationInfo"
             app:destination="@id/locationInfo" />
@@ -78,5 +78,14 @@
         <action
             android:id="@+id/action_cameraFragment_to_locationInfo"
             app:destination="@id/locationInfo" />
+    </fragment>
+    <fragment
+        android:id="@+id/login"
+        android:name="il.co.urbangarden.ui.login.Login"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_login_to_navigation_home"
+            app:destination="@id/navigation_home" />
     </fragment>
 </navigation>
