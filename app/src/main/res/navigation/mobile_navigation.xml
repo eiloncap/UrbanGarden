@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@id/login">
+    app:startDestination="@id/navigation_home">
 
     <fragment
         android:id="@+id/navigation_home"
@@ -78,14 +78,5 @@
         <action
             android:id="@+id/action_cameraFragment_to_locationInfo"
             app:destination="@id/locationInfo" />
-    </fragment>
-    <fragment
-        android:id="@+id/login"
-        android:name="il.co.urbangarden.ui.login.Login"
-        android:label="fragment_login"
-        tools:layout="@layout/fragment_login" >
-        <action
-            android:id="@+id/action_login_to_navigation_home"
-            app:destination="@id/navigation_home" />
     </fragment>
 </navigation>

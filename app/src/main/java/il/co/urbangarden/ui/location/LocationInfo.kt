@@ -39,14 +39,10 @@ class LocationInfo : Fragment() {
     companion object {
         fun newInstance() = LocationInfo()
     }
-
-    private val mainViewModel: MainViewModel by lazy {
-        ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-    }
+    private lateinit var mainViewModel: MainViewModel
     private val locationViewModel: MyLocationsViewModel by lazy {
         ViewModelProvider(requireActivity()).get(MyLocationsViewModel::class.java)
     }
-
     private val homeViewModel: HomeViewModel by lazy {
         ViewModelProvider(requireActivity()).get(HomeViewModel::class.java)
     }
@@ -61,6 +57,8 @@ class LocationInfo : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
 
         //finds views
         val imgView: ImageView = view.findViewById(R.id.location_photo)
@@ -94,7 +92,6 @@ class LocationInfo : Fragment() {
                 imgView.setImageBitmap(imageBitmap)
             }
         }
-
 
         saveButton.setOnClickListener {
             val imgFileName: String = locationViewModel.location.uid + ".jpeg"

@@ -8,18 +8,15 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.ItemTouchHelper
 import il.co.urbangarden.R
 import il.co.urbangarden.data.FirebaseViewableObject
 import il.co.urbangarden.data.location.Location
 import il.co.urbangarden.databinding.MyLocationsFragmentBinding
 import il.co.urbangarden.ui.MainViewModel
-
 import il.co.urbangarden.utils.ImageCropOption
 
 
@@ -77,7 +74,8 @@ class MyLocationsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        locationsViewModel = ViewModelProvider(requireActivity()).get(MyLocationsViewModel::class.java)
+        locationsViewModel =
+            ViewModelProvider(requireActivity()).get(MyLocationsViewModel::class.java)
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
 
         val locationObserver = Observer<List<Location>> { locations ->

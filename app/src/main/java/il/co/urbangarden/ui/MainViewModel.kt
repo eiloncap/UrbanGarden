@@ -9,6 +9,7 @@ import android.widget.ImageView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -186,6 +187,8 @@ class MainViewModel : ViewModel() {
         imageView: ImageView,
         crop: ImageCropOption = ImageCropOption.NONE
     ) {
+
+        Log.d("eilon", "setImgFromPath was called")
         // Reference to an image file in Firebase Storage
         val storageReference: StorageReference =
             storage.reference.child("${userUid!!}/${item.imgFileName}")
@@ -193,6 +196,8 @@ class MainViewModel : ViewModel() {
         // Download directly from StorageReference using Glide
         GlideApp.with(imageView)
             .load(storageReference)
+            .skipMemoryCache(true)
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
             .apply(crop.getGlideTransform())
             .into(imageView)
     }
@@ -224,8 +229,8 @@ class MainViewModel : ViewModel() {
             ref.putFile(img)
                 .addOnSuccessListener { // Image uploaded successfully
                     // TODO: implement
-
                     Log.d("eilon", "succeed uploading")
+                    _locationsList.value = _locationsList.value
                 }
                 .addOnFailureListener { e -> // Error, Image not uploaded
                     // TODO: implement
