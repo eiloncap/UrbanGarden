@@ -37,6 +37,7 @@ class CameraFragment : Fragment() {
 
     private lateinit var cameraViewModel: CameraViewModel
     private lateinit var mainViewModel: MainViewModel
+
     private var _binding: FragmentCamera2Binding? = null
 
     private val binding get() = _binding!!
