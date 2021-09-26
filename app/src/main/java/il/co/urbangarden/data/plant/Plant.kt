@@ -9,4 +9,6 @@ data class Plant(
     override val imgFileName: String,
     val name: String = "",
     val care: String = "",
-): FirebaseViewableObject
+    val sun: Int = 5
+
+) : FirebaseViewableObject
