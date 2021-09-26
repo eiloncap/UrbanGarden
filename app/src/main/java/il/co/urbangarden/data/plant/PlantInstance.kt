@@ -7,7 +7,7 @@ import java.util.*
 
 data class PlantInstance(
     override val uid: String = UUID.randomUUID().toString(),
-    override var imgFileName: String = "NoImageAvailable.jpg",
+    override var imgFileName: String = "",
     var lastWatered: Timestamp = Timestamp(0, 0),
     var name: String = "",
     var notes: String = "",

@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -40,12 +41,9 @@ class LocationInfo : Fragment() {
         fun newInstance() = LocationInfo()
     }
     private lateinit var mainViewModel: MainViewModel
-    private val locationViewModel: MyLocationsViewModel by lazy {
-        ViewModelProvider(requireActivity()).get(MyLocationsViewModel::class.java)
-    }
-    private val homeViewModel: HomeViewModel by lazy {
-        ViewModelProvider(requireActivity()).get(HomeViewModel::class.java)
-    }
+    private lateinit var locationViewModel: MyLocationsViewModel
+    private lateinit var homeViewModel: HomeViewModel
+
 
 
     override fun onCreateView(
@@ -57,9 +55,11 @@ class LocationInfo : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
 
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+        locationViewModel = ViewModelProvider(requireActivity()).get(MyLocationsViewModel::class.java)
+        homeViewModel = ViewModelProvider(requireActivity()).get(HomeViewModel::class.java)
+
 
         //finds views
         val imgView: ImageView = view.findViewById(R.id.location_photo)
@@ -111,7 +111,6 @@ class LocationInfo : Fragment() {
                 val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                 resultLauncher.launch(takePictureIntent)
             }
-
         }
 
         getPlantsButton.setOnClickListener {
@@ -130,7 +129,6 @@ class LocationInfo : Fragment() {
             val recyclerView: RecyclerView = view.findViewById(R.id.recycler_dialog)
             val adapter = PlantAdapter()
 
-//            var wantedList: List<Plant> = listOf(Plant())
             var wantedList: List<Plant> = ArrayList()
             if (locationViewModel.plantsLiveData.value == null) {
                 locationViewModel.getListOfPlants()
@@ -143,7 +141,7 @@ class LocationInfo : Fragment() {
                 wantedList = locationViewModel.relevantPlants(locationViewModel.location)
                 adapter.setPlantList(wantedList)
             }
-//            adapter.setPlantList(wantedList)
+
 
             adapter.onItemClick = { plant: Plant ->
                 newPlantDialog(plant).show()
@@ -152,6 +150,7 @@ class LocationInfo : Fragment() {
             adapter.setImg = { plant: FirebaseViewableObject, img: ImageView ->
                 mainViewModel.setImgFromPath(plant, img, ImageCropOption.SQUARE)
             }
+
             recyclerView.adapter = adapter
             recyclerView.layoutManager = LinearLayoutManager(
                 requireContext(),
@@ -176,7 +175,13 @@ class LocationInfo : Fragment() {
             val view = LayoutInflater.from(requireContext())
                 .inflate(R.layout.dialog_plant, null)
 
-            //todo sets view
+            val imgView: ImageView = view.findViewById(R.id.plant_photo)
+            val name: TextView = view.findViewById(R.id.name)
+            val care: TextView = view.findViewById(R.id.care)
+
+            mainViewModel.setImgFromPath(plant, imgView)
+            name.text = plant.name
+            care.text = plant.care
 
             // Inflate and set the layout for the dialog
             // Pass null as the parent view because its going in the dialog layout

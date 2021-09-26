@@ -34,6 +34,7 @@ class CameraNavigationFragment : Fragment() {
     private lateinit var plantsViewModel: MyPlantsViewModel
     private lateinit var cameraViewModel: CameraViewModel
     private lateinit var mainViewModel: MainViewModel
+
     private var _binding: FragmentCameraBinding? = null
 
     // This property is only valid between onCreateView and
