@@ -1,13 +1,20 @@
 package il.co.urbangarden.ui.forum
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import il.co.urbangarden.R
+import il.co.urbangarden.data.forum.Answer
+import il.co.urbangarden.data.forum.Question
 import il.co.urbangarden.databinding.FragmentForumBinding
 
 class ForumFragment : Fragment() {
@@ -25,15 +32,29 @@ class ForumFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         forumViewModel =
-            ViewModelProvider(this).get(ForumViewModel::class.java)
+            ViewModelProvider(requireActivity()).get(ForumViewModel::class.java)
 
         _binding = FragmentForumBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textNotifications
-        forumViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
+        val addQuestionButton: FloatingActionButton = binding.floatingActionButton
+        addQuestionButton.setOnClickListener {
+            view?.findNavController()
+                ?.navigate(R.id.action_navigation_forum_to_forumNewQuestionFragment)
+        }
+
+        Log.d("TAG_Q ans", "yoyo")
+//        forumViewModel.currAnswers.value = null
+
+        if (forumViewModel.questionsLiveData.value == null) {
+//            forumViewModel.getListOfQuestions()
+            forumViewModel.questionsLiveData.observe(requireActivity(),
+                { listOfQuestion -> setupQuestionListAdapter(listOfQuestion) })
+            forumViewModel.addQuestionSnapShot()
+        } else {
+            setupQuestionListAdapter(forumViewModel.questionsLiveData.value!!)
+        }
+
         return root
     }
 
@@ -41,4 +62,29 @@ class ForumFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    private fun setupQuestionListAdapter(questions: List<Question>) {
+        val context = requireContext()
+        val adapter = QuestionAdapter()
+
+        adapter.setQuestions(questions)
+        Log.d("TAG_Q", questions.size.toString())
+//
+        adapter.onItemClick = { question: Question ->
+            Log.d("TAG_Q", "clicked")
+//            forumViewModel.currAnswers.value = null
+            forumViewModel.currQuestion = question
+//            forumViewModel.getListOfAnswers()
+            forumViewModel.currAnswers = MutableLiveData()
+
+            // navigate to forum item
+            view?.findNavController()?.navigate(R.id.action_navigation_forum_to_forumItemFragment2)
+        }
+
+        val questionRecycler = binding.recycleView
+        questionRecycler.adapter = adapter
+        questionRecycler.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+
+    }
+
 }
