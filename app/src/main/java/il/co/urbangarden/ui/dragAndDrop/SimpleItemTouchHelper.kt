@@ -1,10 +1,9 @@
-package il.co.urbangarden.ui.helper
+package il.co.urbangarden.ui.dragAndDrop
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.*
 
 import androidx.recyclerview.widget.RecyclerView
-import il.co.urbangarden.ui.location.LocationAdapter
 
 
 class SimpleItemTouchHelperCallback(adapter: ItemTouchHelperAdapter) : ItemTouchHelper.Callback() {

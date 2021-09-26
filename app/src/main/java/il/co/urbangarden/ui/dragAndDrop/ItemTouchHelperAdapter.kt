@@ -1,4 +1,4 @@
-package il.co.urbangarden.ui.helper
+package il.co.urbangarden.ui.dragAndDrop
 
 interface ItemTouchHelperAdapter {
 

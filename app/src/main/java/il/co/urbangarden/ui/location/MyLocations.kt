@@ -19,10 +19,8 @@ import il.co.urbangarden.databinding.MyLocationsFragmentBinding
 import il.co.urbangarden.ui.MainViewModel
 import androidx.recyclerview.widget.ItemTouchHelper
 
-import il.co.urbangarden.ui.helper.SimpleItemTouchHelperCallback
-
-
-
+import il.co.urbangarden.ui.dragAndDrop.SimpleItemTouchHelperCallback
+import il.co.urbangarden.utils.ImageCropOption
 
 
 class MyLocations : Fragment() {
@@ -52,6 +50,7 @@ class MyLocations : Fragment() {
             setUpLocationAdapter(locations)
 
         }
+
         mainViewModel.locationsList.observe(viewLifecycleOwner, locationObserver)
 
         return root
@@ -75,7 +74,7 @@ class MyLocations : Fragment() {
 
         adapter.setImg = { location: FirebaseViewableObject, img: ImageView ->
 
-            mainViewModel.setImgFromPath(location, img)
+            mainViewModel.setImgFromPath(location, img, ImageCropOption.SQUARE)
             Log.d("setImg", "success")
         }
 
@@ -105,6 +104,7 @@ class MyLocations : Fragment() {
         var addButton: Button = view.findViewById(R.id.add_button)
 
         addButton.setOnClickListener {
+            setUpLocationAdapter(mainViewModel.locationsList.value)
             var newLocation = Location()
             locationsViewModel.location = newLocation
             view.findNavController().navigate(R.id.action_navigation_home_to_locationInfo)

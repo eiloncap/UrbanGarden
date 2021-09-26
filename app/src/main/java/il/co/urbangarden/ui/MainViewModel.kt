@@ -234,6 +234,7 @@ class MainViewModel : ViewModel() {
             ref.putFile(img)
                 .addOnSuccessListener { // Image uploaded successfully
                     // TODO: implement
+
                     Log.d("eilon", "succeed uploading")
                 }
                 .addOnFailureListener { e -> // Error, Image not uploaded

@@ -21,6 +21,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import il.co.urbangarden.R
 import il.co.urbangarden.data.location.Location
 import il.co.urbangarden.ui.MainViewModel
+import kotlinx.android.synthetic.main.location_info_fragment.*
 import org.w3c.dom.Text
 
 class LocationInfo : Fragment() {
@@ -84,9 +85,10 @@ class LocationInfo : Fragment() {
 
         saveButton.setOnClickListener {
             val imgFileName: String = locationViewModel.location.uid + ".jpeg"
-            val newLocation = Location(locationViewModel.location.uid, imgFileName,
-                name.editableText.toString(), sunHours.editableText.toString())
-            mainViewModel.uploadObject(newLocation)
+            locationViewModel.location.name = edit_name.text.toString()
+            locationViewModel.location.imgFileName = imgFileName
+            locationViewModel.location.sunHours = sunHours.text.toString()
+            mainViewModel.uploadObject(locationViewModel.location)
             view.findNavController().navigate(R.id.action_locationInfo_to_navigation_home)
         }
         //todo share button on click and camera on click

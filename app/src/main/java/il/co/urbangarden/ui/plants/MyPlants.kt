@@ -11,23 +11,17 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import il.co.urbangarden.R
 import il.co.urbangarden.data.FirebaseViewableObject
-import il.co.urbangarden.data.location.Location
-import il.co.urbangarden.databinding.MyLocationsFragmentBinding
 import il.co.urbangarden.ui.MainViewModel
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import il.co.urbangarden.data.plant.Plant
 import il.co.urbangarden.data.plant.PlantInstance
 import il.co.urbangarden.databinding.MyPlantsFragmentBinding
 
-import il.co.urbangarden.ui.helper.SimpleItemTouchHelperCallback
-
-
-
+import il.co.urbangarden.ui.dragAndDrop.SimpleItemTouchHelperCallback
+import il.co.urbangarden.utils.ImageCropOption
 
 
 class MyPlants : Fragment() {
@@ -80,7 +74,7 @@ class MyPlants : Fragment() {
 
         adapter.setImg = { plant: FirebaseViewableObject, img: ImageView ->
 
-            mainViewModel.setImgFromPath(plant, img)
+            mainViewModel.setImgFromPath(plant, img, ImageCropOption.CIRCLE)
             Log.d("setImg", "success")
         }
 

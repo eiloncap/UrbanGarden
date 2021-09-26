@@ -20,9 +20,13 @@
 
     <fragment
         android:id="@+id/navigation_camera"
-        android:name="il.co.urbangarden.ui.camera.CameraFragment"
+        android:name="il.co.urbangarden.ui.camera.CameraNavigationFragment"
         android:label="@string/title_camera"
-        tools:layout="@layout/fragment_camera" />
+        tools:layout="@layout/fragment_camera" >
+        <action
+            android:id="@+id/action_navigation_camera_to_cameraFragment"
+            app:destination="@id/cameraFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_forum"
@@ -45,5 +49,16 @@
         <action
             android:id="@+id/action_plantInfo_to_navigation_home"
             app:destination="@id/navigation_home" />
+    </fragment>
+    <fragment
+        android:id="@+id/cameraFragment"
+        android:name="il.co.urbangarden.ui.camera.CameraFragment"
+        android:label="CameraFragment" >
+        <action
+            android:id="@+id/action_cameraFragment_to_plantInfo"
+            app:destination="@id/plantInfo" />
+        <action
+            android:id="@+id/action_cameraFragment_to_locationInfo"
+            app:destination="@id/locationInfo" />
     </fragment>
 </navigation>

@@ -1,39 +1,54 @@
 package il.co.urbangarden.ui.camera
 
-import android.app.Activity.RESULT_OK
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import il.co.urbangarden.R
+import il.co.urbangarden.data.location.Location
+import il.co.urbangarden.data.plant.PlantInstance
+import il.co.urbangarden.databinding.FragmentCamera2Binding
 import il.co.urbangarden.databinding.FragmentCameraBinding
 import il.co.urbangarden.ui.MainViewModel
+import il.co.urbangarden.ui.location.MyLocationsViewModel
+import il.co.urbangarden.ui.plants.MyPlantsViewModel
 
+// TODO: Rename parameter arguments, choose names that match
+// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+private const val ARG_PARAM1 = "param1"
+private const val ARG_PARAM2 = "param2"
 
+/**
+ * A simple [Fragment] subclass.
+ * Use the [CameraFragment.newInstance] factory method to
+ * create an instance of this fragment.
+ */
 class CameraFragment : Fragment() {
-    companion object {
-        private const val REQUEST_IMAGE_CAPTURE = 1
-    }
 
     private lateinit var cameraViewModel: CameraViewModel
-    private var _binding: FragmentCameraBinding? = null
-    private lateinit var viewModel: MainViewModel
+    private lateinit var mainViewModel: MainViewModel
+    private var _binding: FragmentCamera2Binding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        cameraViewModel = ViewModelProvider(this).get(CameraViewModel::class.java)
+
+        openCameraTakePictureAndUploadToDb(cameraViewModel.fileName)
+
+        navigateFragmentByState(view)
     }
 
     override fun onCreateView(
@@ -41,38 +56,32 @@ class CameraFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        cameraViewModel =
-            ViewModelProvider(this).get(CameraViewModel::class.java)
-
-        _binding = FragmentCameraBinding.inflate(inflater, container, false)
+        _binding = FragmentCamera2Binding.inflate(inflater, container, false)
         val root: View = binding.root
-
-        val textView: TextView = binding.textDashboard
-        cameraViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
 
         return root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun navigateFragmentByState(view: View){
+        when(cameraViewModel.state){
+            2-> view.findNavController().navigate(R.id.action_cameraFragment_to_plantInfo)
+            3-> view.findNavController().navigate(R.id.action_cameraFragment_to_locationInfo)
+        }
     }
 
-    private fun openCameraTakePictureAndUploadToDb() {
+    private fun openCameraTakePictureAndUploadToDb(fileName: String) {
         // TODO: init the following launcher at the creation of the fragment
         val resultLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
-            if (result.resultCode == RESULT_OK
+            if (result.resultCode == Activity.RESULT_OK
                 && result.data != null
                 && result?.data?.extras != null
             ) {
-                viewModel.uploadImage(
+                mainViewModel.uploadImage(
                     result.data?.extras?.get("data") as Bitmap,
                     activity?.baseContext,
-                    "test" // TODO: set filename to be documents uid
+                    fileName
                 )
 
 //                val imageBitmap = result.data?.extras?.get("data") as Bitmap
@@ -86,4 +95,5 @@ class CameraFragment : Fragment() {
             resultLauncher.launch(takePictureIntent)
         }
     }
+
 }

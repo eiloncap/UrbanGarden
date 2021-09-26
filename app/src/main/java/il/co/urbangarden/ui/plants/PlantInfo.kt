@@ -22,6 +22,7 @@ import il.co.urbangarden.R
 import il.co.urbangarden.data.plant.Plant
 import il.co.urbangarden.ui.MainViewModel
 import il.co.urbangarden.ui.location.LocationInfo
+import kotlinx.android.synthetic.main.plant_info_fragment.*
 
 class PlantInfo : Fragment() {
 
@@ -51,6 +52,7 @@ class PlantInfo : Fragment() {
         val imgView : ImageView = view.findViewById(R.id.plant_photo)
         val care: TextView = view.findViewById(R.id.notes)
         val name: EditText = view.findViewById(R.id.edit_name)
+        val lastStamp: TextView = view.findViewById(R.id.watering_text)
         val saveButton: Button = view.findViewById(R.id.save_button)
         val shareButton: FloatingActionButton = view.findViewById(R.id.share_button)
         val cameraButton: FloatingActionButton = view.findViewById(R.id.camera_button)
@@ -82,9 +84,10 @@ class PlantInfo : Fragment() {
 
         saveButton.setOnClickListener {
             val imgFileName: String = plantsViewModel.plant.uid + ".jpeg"
-            val newPlant = Plant(plantsViewModel.plant.uid, imgFileName,
-                name.editableText.toString(), care.editableText.toString())
-            mainViewModel.uploadObject(newPlant)
+            plantsViewModel.plant.imgFileName = imgFileName
+            plantsViewModel.plant.notes = notes.text.toString()
+            plantsViewModel.plant.name = name.text.toString()
+            mainViewModel.uploadObject(plantsViewModel.plant)
             view.findNavController().navigate(R.id.action_plantInfo_to_navigation_home)
         }
         //todo share button on click and camera on click

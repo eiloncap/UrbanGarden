@@ -4,18 +4,13 @@ package il.co.urbangarden.ui.plants
 import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import il.co.urbangarden.R
 import il.co.urbangarden.data.FirebaseViewableObject
-import il.co.urbangarden.data.location.Location
 import il.co.urbangarden.data.plant.PlantInstance
-import il.co.urbangarden.ui.MainViewModel
-import il.co.urbangarden.ui.helper.ItemTouchHelperAdapter
+import il.co.urbangarden.ui.dragAndDrop.ItemTouchHelperAdapter
 import java.util.*
 import kotlin.collections.ArrayList
 
