@@ -37,6 +37,7 @@ class CameraFragment : Fragment() {
 
     private lateinit var cameraViewModel: CameraViewModel
     private lateinit var mainViewModel: MainViewModel
+
     private var _binding: FragmentCamera2Binding? = null
 
     private val binding get() = _binding!!
@@ -81,7 +82,7 @@ class CameraFragment : Fragment() {
                 mainViewModel.uploadImage(
                     result.data?.extras?.get("data") as Bitmap,
                     activity?.baseContext,
-                    fileName
+                    fileName //todo put uid
                 )
 
 //                val imageBitmap = result.data?.extras?.get("data") as Bitmap

@@ -17,9 +17,9 @@ import il.co.urbangarden.ui.home.ui.main.SectionsPagerAdapter
 
 class HomeFragment : Fragment() {
 
-    private val homeViewModel: HomeViewModel by lazy {
-        ViewModelProvider(requireActivity()).get(HomeViewModel::class.java)
-    }
+    private lateinit var homeViewModel: HomeViewModel
+
+
     private var _binding: FragmentHomeBinding? = null
 
     // This property is only valid between onCreateView and
@@ -38,6 +38,8 @@ class HomeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        homeViewModel = ViewModelProvider(requireActivity()).get(HomeViewModel::class.java)
+
         sectionsPagerAdapter = SectionsPagerAdapter(childFragmentManager)
         viewPager = view.findViewById(R.id.view_pager)
         viewPager.adapter = sectionsPagerAdapter

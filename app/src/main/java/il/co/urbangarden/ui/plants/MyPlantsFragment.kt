@@ -21,8 +21,8 @@ import androidx.recyclerview.widget.RecyclerView
 import il.co.urbangarden.data.location.Location
 import il.co.urbangarden.data.plant.PlantInstance
 import il.co.urbangarden.databinding.MyPlantsFragmentBinding
+import il.co.urbangarden.ui.location.suggestPlants.PlantAdapter
 
-import il.co.urbangarden.ui.dragAndDrop.SimpleItemTouchHelperCallback
 import il.co.urbangarden.utils.ImageCropOption
 
 
@@ -55,7 +55,7 @@ class MyPlantsFragment : Fragment() {
 
     private fun setUpPlantsAdapter(plants: List<PlantInstance>?){
         val context = requireContext()
-        val adapter = PlantAdapter()
+        val adapter = PlantInstanceAdapter()
         Log.d("setup", "locationAdapter")
 
         adapter.setPlantList(plants)
@@ -75,9 +75,6 @@ class MyPlantsFragment : Fragment() {
         plantsRecyclerView.adapter = adapter
         plantsRecyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
-        val callback: ItemTouchHelper.Callback = SimpleItemTouchHelperCallback(adapter)
-        val touchHelper = ItemTouchHelper(callback)
-        touchHelper.attachToRecyclerView(plantsRecyclerView)
     }
 
 

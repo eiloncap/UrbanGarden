@@ -9,11 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import il.co.urbangarden.R
 import il.co.urbangarden.data.FirebaseViewableObject
 import il.co.urbangarden.data.location.Location
-import il.co.urbangarden.ui.dragAndDrop.ItemTouchHelperAdapter
 import java.util.*
 import kotlin.collections.ArrayList
 
-class LocationAdapter : RecyclerView.Adapter<LocationHolder>(), ItemTouchHelperAdapter {
+class LocationAdapter : RecyclerView.Adapter<LocationHolder>() {
 
 
     private var locationList: List<Location> = ArrayList()
@@ -23,7 +22,6 @@ class LocationAdapter : RecyclerView.Adapter<LocationHolder>(), ItemTouchHelperA
 
     @SuppressLint("NotifyDataSetChanged")
     fun setLocationList(dataList: List<Location>?) {
-        Log.d("eilon-loc", "adapter: $dataList")
         if (dataList != null) {
             this.locationList = dataList
             notifyDataSetChanged()
@@ -56,7 +54,6 @@ class LocationAdapter : RecyclerView.Adapter<LocationHolder>(), ItemTouchHelperA
         // Set item views based on your views and data model
         if (item != null) {
             holder.name.text = item.name
-            Log.d("setImgIsNull", setImg.toString())
             setImg?.let { it(item , holder.image) }
         }
     }
@@ -64,25 +61,5 @@ class LocationAdapter : RecyclerView.Adapter<LocationHolder>(), ItemTouchHelperA
     //  total count of items in the list
     override fun getItemCount() = locationList.size
 
-    override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
-        if (fromPosition < toPosition) {
-            for (i in fromPosition until toPosition) {
-                Collections.swap(locationList, i, i + 1)
-            }
-        } else {
-            for (i in fromPosition downTo toPosition + 1) {
-                Collections.swap(locationList, i, i - 1)
-            }
-        }
-        notifyItemMoved(fromPosition, toPosition)
-        return true
-    }
-
-    override fun onItemDismiss(position: Int): Boolean {
-        val newList = locationList.drop(position)
-        locationList = newList
-        notifyItemRemoved(position);
-        return true
-    }
 }
 

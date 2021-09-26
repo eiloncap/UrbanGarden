@@ -14,4 +14,5 @@
     <string name="recognize_plant">Recognize a plant</string>
     <string name="new_plant_button">add to my plants</string>
     <string name="new_location_button">add to my locations</string>
+    <string name="title">Title</string>
 </resources>
