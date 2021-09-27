@@ -151,6 +151,7 @@ class MainViewModel : ViewModel() {
         imageView: ImageView,
         crop: ImageCropOption = ImageCropOption.NONE
     ) {
+
         val dir: String = when (item) {
             is Plant -> {
                 "Plants"
@@ -170,7 +171,7 @@ class MainViewModel : ViewModel() {
         // Download directly from StorageReference using Glide
         var load = GlideApp.with(imageView)
             .load(storageReference)
-        if (item !is Plant) {
+        if (item !is Plant && item !is Question) {
             load = load.skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
         }
