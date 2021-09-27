@@ -66,6 +66,7 @@ class ForumNewQuestionFragment : Fragment() {
                 uid = id.toString(),
                 imgFileName = "$id.jpeg",
                 email = mainViewModel.user?.email.toString(),
+                uri = mainViewModel.user?.photoUrl.toString(),
                 title = title.text.toString(),
                 question = question.text.toString(),
             )

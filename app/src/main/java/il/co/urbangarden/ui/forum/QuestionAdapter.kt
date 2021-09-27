@@ -1,5 +1,6 @@
 package il.co.urbangarden.ui.forum
 
+import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -18,6 +19,7 @@ class QuestionAdapter : RecyclerView.Adapter<QuestionHolder>() {
     private val _questions: MutableList<Question> = ArrayList()
     var onItemClick: ((Question) -> Unit)? = null
     var setImg: ((FirebaseViewableObject, ImageView) -> Unit)? = null
+    var setAvatar: ((ImageView, String) -> Unit)? = null
 
     fun setQuestions(questions: List<Question>) {
         _questions.clear()
@@ -46,7 +48,7 @@ class QuestionAdapter : RecyclerView.Adapter<QuestionHolder>() {
         if (question.imgFileName != "" && holder.image.alpha == 0.5F) {
             holder.image.alpha = 1F
             Log.d("Tag_q adapter img debug", question.imgFileName)
-            setImg?.let { it(question , holder.image) }
+            setImg?.let { it(question, holder.image) }
         }
         holder.title.text = question.title
 
@@ -55,6 +57,7 @@ class QuestionAdapter : RecyclerView.Adapter<QuestionHolder>() {
         val dateFormat: DateFormat = SimpleDateFormat("dd-MM-yy")
         holder.date.text = dateFormat.format(question.date).toString()
 
+        setAvatar?.let { it(holder.avatar, question.uri) }
     }
 
     override fun getItemCount(): Int {

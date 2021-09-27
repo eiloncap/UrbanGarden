@@ -1,7 +1,6 @@
 package il.co.urbangarden.ui.forum
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,11 +11,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import il.co.urbangarden.R
 import il.co.urbangarden.data.FirebaseViewableObject
-import il.co.urbangarden.data.forum.Answer
 import il.co.urbangarden.data.forum.Question
 import il.co.urbangarden.databinding.FragmentForumBinding
 import il.co.urbangarden.ui.MainViewModel
@@ -41,9 +39,9 @@ class ForumFragment : Fragment() {
             ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         forumViewModel =
             ViewModelProvider(requireActivity()).get(ForumViewModel::class.java)
-
         _binding = FragmentForumBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
 
         val addQuestionButton: ExtendedFloatingActionButton = binding.addNewQuestion
         addQuestionButton.setOnClickListener {
@@ -51,11 +49,7 @@ class ForumFragment : Fragment() {
                 ?.navigate(R.id.action_navigation_forum_to_forumNewQuestionFragment)
         }
 
-        Log.d("TAG_Q ans", "yoyo")
-//        forumViewModel.currAnswers.value = null
-
         if (forumViewModel.questionsLiveData.value == null) {
-//            forumViewModel.getListOfQuestions()
             forumViewModel.questionsLiveData.observe(requireActivity(),
                 { listOfQuestion -> setupQuestionListAdapter(listOfQuestion) })
             forumViewModel.addQuestionSnapShot()
@@ -76,13 +70,9 @@ class ForumFragment : Fragment() {
         val adapter = QuestionAdapter()
 
         adapter.setQuestions(questions)
-        Log.d("TAG_Q", questions.size.toString())
-//
+
         adapter.onItemClick = { question: Question ->
-            Log.d("TAG_Q", "clicked")
-//            forumViewModel.currAnswers.value = null
             forumViewModel.currQuestion = question
-//            forumViewModel.getListOfAnswers()
             forumViewModel.currAnswers = MutableLiveData()
 
             // navigate to forum item
@@ -91,6 +81,13 @@ class ForumFragment : Fragment() {
 
         adapter.setImg = { question: FirebaseViewableObject, img: ImageView ->
             mainViewModel.setImgFromPath(question, img, ImageCropOption.SQUARE)
+        }
+
+        adapter.setAvatar = { imageView, uri ->
+            Glide.with(context)
+                .load(uri)
+                .circleCrop()
+                .into(imageView)
         }
 
         val questionRecycler = binding.recycleView

@@ -55,6 +55,7 @@ class ForumItemFragment : Fragment() {
 
         val questionTitle: TextView = binding.questionViewTitle
         val question: TextView = binding.questionView
+        val card = binding.card
         val img: ImageView = binding.viewImage
         if (forumViewModel.currQuestion?.imgFileName ?: "" != "") {
             forumViewModel.currQuestion?.let {
@@ -64,7 +65,9 @@ class ForumItemFragment : Fragment() {
                     ImageCropOption.SQUARE
                 )
             }
-            img.visibility = View.VISIBLE
+            card.visibility = View.VISIBLE
+        } else {
+            card.visibility = View.GONE
         }
 
         questionTitle.text = forumViewModel.currQuestion?.title ?: ""

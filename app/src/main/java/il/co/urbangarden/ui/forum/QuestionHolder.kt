@@ -12,4 +12,5 @@ class QuestionHolder(view: View) : RecyclerView.ViewHolder(view) {
     val title: TextView = view.findViewById(R.id.question_title)
     val answersNum: TextView = view.findViewById(R.id.answers)
     val date: TextView = view.findViewById(R.id.date)
+    val avatar: ImageView = view.findViewById(R.id.avatarIcon)
 }
