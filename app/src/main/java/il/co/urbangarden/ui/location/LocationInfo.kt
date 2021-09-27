@@ -1,14 +1,12 @@
 package il.co.urbangarden.ui.location
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,13 +23,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import il.co.urbangarden.R
 import il.co.urbangarden.data.FirebaseViewableObject
-import il.co.urbangarden.data.forum.Answer
 import il.co.urbangarden.data.plant.Plant
 import il.co.urbangarden.ui.MainViewModel
 import il.co.urbangarden.ui.home.HomeViewModel
 import il.co.urbangarden.ui.location.suggestPlants.PlantAdapter
 import il.co.urbangarden.utils.ImageCropOption
-import kotlinx.android.synthetic.main.dialog_recycler.*
 import kotlinx.android.synthetic.main.location_info_fragment.*
 
 
@@ -50,7 +46,7 @@ class LocationInfo : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(il.co.urbangarden.R.layout.location_info_fragment, container, false)
+        return inflater.inflate(R.layout.location_info_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

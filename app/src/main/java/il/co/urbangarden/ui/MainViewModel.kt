@@ -39,14 +39,12 @@ class MainViewModel : ViewModel() {
     val locationsList: LiveData<List<Location>> = _locationsList
 
     companion object {
-        private var timesCreated = 0
         private const val USERS_COLLECTION_TAG = "Users"
         private const val USER_PLANTS_COLLECTION_TAG = "plants"
         private const val USER_LOCATIONS_COLLECTION_TAG = "locations"
     }
 
     fun loadDb() {
-//        userUid = Firebase.auth.currentUser?.uid
         loadPlantsList()
         loadLocationsList()
         listenToChanges()
@@ -157,7 +155,7 @@ class MainViewModel : ViewModel() {
             is Plant -> {
                 "Plants"
             }
-            is Question ->{
+            is Question -> {
                 "Forum"
             }
             else -> {
@@ -170,11 +168,13 @@ class MainViewModel : ViewModel() {
             storage.reference.child("$dir/${item.imgFileName}")
 
         // Download directly from StorageReference using Glide
-        GlideApp.with(imageView)
+        var load = GlideApp.with(imageView)
             .load(storageReference)
-            .skipMemoryCache(true)
-            .diskCacheStrategy(DiskCacheStrategy.NONE)
-            .apply(crop.getGlideTransform())
+        if (item !is Plant) {
+            load = load.skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+        }
+        load.apply(crop.getGlideTransform())
             .into(imageView)
     }
 
@@ -193,12 +193,17 @@ class MainViewModel : ViewModel() {
         return Uri.fromFile(file)
     }
 
-    fun uploadImage(imgBitmap: Bitmap?, inContext: Context?, filename: String, dir:String=userUid.toString()) {
+    fun uploadImage(
+        imgBitmap: Bitmap?,
+        inContext: Context?,
+        filename: String,
+        dir: String = userUid.toString()
+    ) {
         if (imgBitmap != null && inContext != null) {
             val img = getImageUri(inContext, imgBitmap) ?: return // TODO: deal better
             // Defining the child of storageReference
             val ref: StorageReference = storage.reference
-                .child("$dir/$filename.jpeg") // TODO: set in users directory with UID
+                .child("$dir/$filename.jpeg")
 
             // adding listeners on upload
             // or failure of image
@@ -212,29 +217,15 @@ class MainViewModel : ViewModel() {
                     // TODO: implement
                     Log.d("eilon", "failure uploading: $e")
                 }
-//                .addOnProgressListener(
-//                    // TODO: implement
-//                    object : OnProgressListener<UploadTask.TaskSnapshot?>() {
-//                        // Progress Listener for loading
-//                        // percentage on the dialog box
-//                        fun onProgress(
-//                            taskSnapshot: UploadTask.TaskSnapshot
-//                        ) {
-//                            val progress = ((100.0
-//                                    * taskSnapshot.bytesTransferred
-//                                    / taskSnapshot.totalByteCount))
-//                            progressDialog.setMessage(
-//                                ("Uploaded "
-//                                        + progress.toInt() + "%")
-//                            )
-//                        }
-//                    })
-
         }
     }
 
+    fun getPlantByLabel(label: String): Plant? {
+        Log.d("eilon-re", "label=$label -- list=${plantsLiveData.value}")
+        return plantsLiveData.value?.firstOrNull { it.name == label }
+    }
 
-    fun getListOfPlants() {
+    private fun getListOfPlants() {
         val arrayList = ArrayList<Plant>()
         val plantsCollectionRef = db.collection("Plants")
         plantsCollectionRef.get()
@@ -243,6 +234,8 @@ class MainViewModel : ViewModel() {
                     val newP = document.toObject(Plant::class.java)
                     arrayList.add(newP)
                 }
+
+                Log.d("eilon-re", "loaded $arrayList")
                 plantsLiveData.value = arrayList
             }
             .addOnFailureListener { exception ->
