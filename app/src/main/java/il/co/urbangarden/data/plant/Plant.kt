@@ -7,7 +7,7 @@ import java.util.*
 
 data class Plant(
     override val uid: String = UUID.randomUUID().toString(),
-    override val imgFileName: String = "",
+    override val imgFileName: String = "$uid.jpeg",
     val name: String = "",
     val care: String = "",
     val sun: Int = 5

@@ -226,6 +226,22 @@ class MainViewModel : ViewModel() {
         return plantsLiveData.value?.firstOrNull { it.name == label }
     }
 
+    fun getPlantsSpecies(plant: PlantInstance): Plant? {
+        return plantsLiveData.value?.firstOrNull { it.uid == plant.speciesUid }
+    }
+
+    fun getPlantInstanceByUid(uid: String): PlantInstance? {
+        return _plantsList.value?.firstOrNull { it.uid == uid }
+    }
+
+    fun getPlantsByLocation(loc: Location): ArrayList<PlantInstance> {
+        val res = ArrayList<PlantInstance>()
+        loc.plants.forEach { uid ->
+            getPlantInstanceByUid(uid)?.let { plant -> res.add(plant) }
+        }
+        return res
+    }
+
     private fun getListOfPlants() {
         val arrayList = ArrayList<Plant>()
         val plantsCollectionRef = db.collection("Plants")
