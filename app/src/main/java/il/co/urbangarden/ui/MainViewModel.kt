@@ -32,6 +32,7 @@ class MainViewModel : ViewModel() {
     private val userUid: String? = user?.uid
     private val storage = FirebaseStorage.getInstance()
     private val db = FirebaseFirestore.getInstance()
+    val plantsLiveData: MutableLiveData<ArrayList<Plant>> = MutableLiveData()
     private val _plantsList = MutableLiveData<List<PlantInstance>>()
     val plantsList: LiveData<List<PlantInstance>> = _plantsList
     private val _locationsList = MutableLiveData<List<Location>>()
@@ -49,6 +50,7 @@ class MainViewModel : ViewModel() {
         loadPlantsList()
         loadLocationsList()
         listenToChanges()
+        getListOfPlants()
     }
 
     private fun loadPlantsList() {
@@ -229,6 +231,23 @@ class MainViewModel : ViewModel() {
 //                    })
 
         }
+    }
+
+
+    fun getListOfPlants() {
+        val arrayList = ArrayList<Plant>()
+        val plantsCollectionRef = db.collection("Plants")
+        plantsCollectionRef.get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    val newP = document.toObject(Plant::class.java)
+                    arrayList.add(newP)
+                }
+                plantsLiveData.value = arrayList
+            }
+            .addOnFailureListener { exception ->
+            }
+
     }
 
 }

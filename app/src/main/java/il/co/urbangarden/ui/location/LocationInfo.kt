@@ -40,10 +40,10 @@ class LocationInfo : Fragment() {
     companion object {
         fun newInstance() = LocationInfo()
     }
+
     private lateinit var mainViewModel: MainViewModel
     private lateinit var locationViewModel: MyLocationsViewModel
     private lateinit var homeViewModel: HomeViewModel
-
 
 
     override fun onCreateView(
@@ -57,7 +57,8 @@ class LocationInfo : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-        locationViewModel = ViewModelProvider(requireActivity()).get(MyLocationsViewModel::class.java)
+        locationViewModel =
+            ViewModelProvider(requireActivity()).get(MyLocationsViewModel::class.java)
         homeViewModel = ViewModelProvider(requireActivity()).get(HomeViewModel::class.java)
 
 
@@ -130,15 +131,20 @@ class LocationInfo : Fragment() {
             val adapter = PlantAdapter()
 
             var wantedList: List<Plant> = ArrayList()
-            if (locationViewModel.plantsLiveData.value == null) {
-                locationViewModel.getListOfPlants()
-                locationViewModel.plantsLiveData.observe(requireActivity(),
+            if (mainViewModel.plantsLiveData.value == null) {
+                mainViewModel.plantsLiveData.observe(requireActivity(),
                     {
-                        wantedList = locationViewModel.relevantPlants(locationViewModel.location)
+                        wantedList = locationViewModel.relevantPlants(
+                            locationViewModel.location,
+                            mainViewModel.plantsLiveData.value
+                        )
                         adapter.setPlantList(wantedList)
                     })
             } else {
-                wantedList = locationViewModel.relevantPlants(locationViewModel.location)
+                wantedList = locationViewModel.relevantPlants(
+                    locationViewModel.location,
+                    mainViewModel.plantsLiveData.value
+                )
                 adapter.setPlantList(wantedList)
             }
 
