@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -17,12 +18,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import il.co.urbangarden.R
+import il.co.urbangarden.data.FirebaseViewableObject
 import il.co.urbangarden.data.forum.Answer
 import il.co.urbangarden.databinding.FragmentForumItemBinding
+import il.co.urbangarden.ui.MainViewModel
+import il.co.urbangarden.utils.ImageCropOption
 import java.util.*
 
 class ForumItemFragment : Fragment() {
 
+    private lateinit var mainViewModel: MainViewModel
     private lateinit var forumViewModel: ForumViewModel
     private var _binding: FragmentForumItemBinding? = null
 
@@ -35,6 +40,8 @@ class ForumItemFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        mainViewModel =
+            ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         forumViewModel =
             ViewModelProvider(requireActivity()).get(ForumViewModel::class.java)
 
@@ -48,6 +55,17 @@ class ForumItemFragment : Fragment() {
 
         val questionTitle: TextView = binding.questionViewTitle
         val question: TextView = binding.questionView
+        val img: ImageView = binding.viewImage
+        if (forumViewModel.currQuestion?.imgFileName ?: "" != "") {
+            forumViewModel.currQuestion?.let {
+                mainViewModel.setImgFromPath(
+                    it,
+                    img,
+                    ImageCropOption.SQUARE
+                )
+            }
+            img.visibility = View.VISIBLE
+        }
 
         questionTitle.text = forumViewModel.currQuestion?.title ?: ""
         question.text = forumViewModel.currQuestion?.question ?: ""
@@ -60,15 +78,7 @@ class ForumItemFragment : Fragment() {
         } else {
             setupAnswerListAdapter(forumViewModel.currAnswers.value!!)
         }
-//        setupAnswerListAdapter(forumViewModel.currAnswers.value!!)
 
-
-//        setupAnswerListAdapter(forumViewModel.currAnswers!!.value)
-//        setupAnswerListAdapter(
-//            listOf(
-//                Answer(), Answer()
-//            )
-//        )
 
         return root
     }
@@ -110,7 +120,11 @@ class ForumItemFragment : Fragment() {
                             Answer(email = "", answer = answer.text.toString())
                         )
                     } else {
-                        Toast.makeText(requireContext(), "Please type something", Toast.LENGTH_SHORT)
+                        Toast.makeText(
+                            requireContext(),
+                            "Please type something",
+                            Toast.LENGTH_SHORT
+                        )
                             .show()
                     }
                 }

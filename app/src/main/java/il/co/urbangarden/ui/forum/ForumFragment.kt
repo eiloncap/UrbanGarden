@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
@@ -14,12 +15,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import il.co.urbangarden.R
+import il.co.urbangarden.data.FirebaseViewableObject
 import il.co.urbangarden.data.forum.Answer
 import il.co.urbangarden.data.forum.Question
 import il.co.urbangarden.databinding.FragmentForumBinding
+import il.co.urbangarden.ui.MainViewModel
+import il.co.urbangarden.utils.ImageCropOption
 
 class ForumFragment : Fragment() {
 
+    private lateinit var mainViewModel: MainViewModel
     private lateinit var forumViewModel: ForumViewModel
     private var _binding: FragmentForumBinding? = null
 
@@ -32,6 +37,8 @@ class ForumFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        mainViewModel =
+            ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         forumViewModel =
             ViewModelProvider(requireActivity()).get(ForumViewModel::class.java)
 
@@ -80,6 +87,10 @@ class ForumFragment : Fragment() {
 
             // navigate to forum item
             view?.findNavController()?.navigate(R.id.action_navigation_forum_to_forumItemFragment2)
+        }
+
+        adapter.setImg = { question: FirebaseViewableObject, img: ImageView ->
+            mainViewModel.setImgFromPath(question, img, ImageCropOption.SQUARE)
         }
 
         val questionRecycler = binding.recycleView

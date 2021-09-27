@@ -24,6 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import il.co.urbangarden.data.forum.Question
 import il.co.urbangarden.databinding.FragmentForumNewQuestionBinding
 import il.co.urbangarden.ui.MainViewModel
+import kotlinx.android.synthetic.main.one_plant.*
 import java.util.*
 
 class ForumNewQuestionFragment : Fragment() {
@@ -45,6 +46,7 @@ class ForumNewQuestionFragment : Fragment() {
             ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         forumViewModel =
             ViewModelProvider(requireActivity()).get(ForumViewModel::class.java)
+
         _binding = FragmentForumNewQuestionBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
@@ -54,14 +56,23 @@ class ForumNewQuestionFragment : Fragment() {
         val question: EditText = binding.newQuestion
         val imgView: ImageView = binding.imageView
 
+//        var imgPath: String = ""
+
+        val id = UUID.randomUUID()
+
         submitButton.setOnClickListener {
-            //todo add new question to firebase
+            //add new question to firebase
             val newQuestion = Question(
-                email = "user",
+                uid = id.toString(),
+                imgFileName = "$id.jpeg",
+                email = mainViewModel.user?.email.toString(),
                 title = title.text.toString(),
                 question = question.text.toString(),
-                date = Date()
             )
+
+            Log.d( "Tag_q_user","user: ${mainViewModel.user?.displayName}\n" +
+                    "photo: ${mainViewModel.user?.photoUrl}")
+
             //todo check not empty
             if (newQuestion.title == "") {
                 Toast.makeText(requireContext(), "Please enter a title", Toast.LENGTH_SHORT)
@@ -69,7 +80,7 @@ class ForumNewQuestionFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            forumViewModel.addNewQuestion(newQuestion)
+            forumViewModel.addNewQuestion(newQuestion, id)
             Log.d("TAG_Q new", title.text.toString())
 //            parentFragmentManager.popBackStack()
 //            parentFragmentManager.popBackStackImmediate()
@@ -79,30 +90,32 @@ class ForumNewQuestionFragment : Fragment() {
         }
 
         //init the camera launcher
-//        val resultLauncher = registerForActivityResult(
-//            ActivityResultContracts.StartActivityForResult()
-//        ) { result ->
-//            if (result.resultCode == Activity.RESULT_OK
-//                && result.data != null
-//                && result?.data?.extras != null
-//            ) {
-//                mainViewModel.uploadImage(
-//                    result.data?.extras?.get("data") as Bitmap,
-//                    activity?.baseContext,
-//                    locationViewModel.location.uid
-//                )
-//
-//                val imageBitmap = result.data?.extras?.get("data") as Bitmap
-//                imgView.setImageBitmap(imageBitmap)
-//            }
-//        }
+        val resultLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK
+                && result.data != null
+                && result?.data?.extras != null
+            ) {
+                mainViewModel.uploadImage(
+                    result.data?.extras?.get("data") as Bitmap,
+                    activity?.baseContext,
+                    dir = "Forum",
+                    filename = id.toString()
+                )
 
-//        addImage.setOnClickListener {
-//            if (activity?.packageManager?.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY) == true) {
-//                val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-//                resultLauncher.launch(takePictureIntent)
-//            }
-//        }
+                val imageBitmap = result.data?.extras?.get("data") as Bitmap
+                imgView.setImageBitmap(imageBitmap)
+//                imgPath = "Forum/$id"
+            }
+        }
+
+        addImage.setOnClickListener {
+            if (activity?.packageManager?.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY) == true) {
+                val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                resultLauncher.launch(takePictureIntent)
+            }
+        }
 
         return root
     }

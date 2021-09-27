@@ -1,19 +1,12 @@
 package il.co.urbangarden.ui.forum
 
-import android.app.Application
-import android.app.Dialog
 import android.util.Log
-import android.view.LayoutInflater
-import android.widget.EditText
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import il.co.urbangarden.data.forum.Answer
 import il.co.urbangarden.data.forum.Question
-import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -122,14 +115,14 @@ class ForumViewModel : ViewModel() {
         }
     }
 
-    fun addNewQuestion(question: Question) {
-        val id = UUID.randomUUID().toString()
+    fun addNewQuestion(question: Question, id :UUID) {
+        val idStr = id.toString()
 //        orderLiveData.value = order
-        Log.d("TAG_Q new id", id)
+        Log.d("TAG_Q new id", idStr)
 //        val add = firebase.collection("Forum").add(question)
-        val add = firebase.collection("Forum").document(id).set(question)
+        val add = firebase.collection("Forum").document(idStr).set(question)
         add.addOnSuccessListener {
-            Log.d("TAG_Q SUCS", id)
+            Log.d("TAG_Q SUCS", idStr)
         }
     }
 

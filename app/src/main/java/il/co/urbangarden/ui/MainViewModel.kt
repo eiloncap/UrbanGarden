@@ -18,6 +18,7 @@ import com.google.firebase.storage.StorageReference
 import il.co.urbangarden.GlideApp
 import il.co.urbangarden.data.FirebaseObject
 import il.co.urbangarden.data.FirebaseViewableObject
+import il.co.urbangarden.data.forum.Question
 import il.co.urbangarden.data.location.Location
 import il.co.urbangarden.data.plant.Plant
 import il.co.urbangarden.data.plant.PlantInstance
@@ -153,6 +154,9 @@ class MainViewModel : ViewModel() {
         val dir: String = when (item) {
             is Plant -> {
                 "Plants"
+            }
+            is Question ->{
+                "Forum"
             }
             else -> {
                 userUid!!.toString()

@@ -1,9 +1,12 @@
 package il.co.urbangarden.ui.forum
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import il.co.urbangarden.R
+import il.co.urbangarden.data.FirebaseViewableObject
 import il.co.urbangarden.data.forum.Question
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -14,6 +17,7 @@ class QuestionAdapter : RecyclerView.Adapter<QuestionHolder>() {
 
     private val _questions: MutableList<Question> = ArrayList()
     var onItemClick: ((Question) -> Unit)? = null
+    var setImg: ((FirebaseViewableObject, ImageView) -> Unit)? = null
 
     fun setQuestions(questions: List<Question>) {
         _questions.clear()
@@ -39,8 +43,10 @@ class QuestionAdapter : RecyclerView.Adapter<QuestionHolder>() {
 
     override fun onBindViewHolder(holder: QuestionHolder, position: Int) {
         val question = _questions[position]
-        if (question.image != "") {
-//            TODO set image
+        if (question.imgFileName != "" && holder.image.alpha == 0.5F) {
+            holder.image.alpha = 1F
+            Log.d("Tag_q adapter img debug", question.imgFileName)
+            setImg?.let { it(question , holder.image) }
         }
         holder.title.text = question.title
 
