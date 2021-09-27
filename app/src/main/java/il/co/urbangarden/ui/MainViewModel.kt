@@ -221,23 +221,26 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun getPlantByLabel(label: String): Plant? {
-        Log.d("eilon-re", "label=$label -- list=${plantsLiveData.value}")
+    fun getPlant(label: String): Plant? {
         return plantsLiveData.value?.firstOrNull { it.name == label }
     }
 
-    fun getPlantsSpecies(plant: PlantInstance): Plant? {
+    fun getPlant(plant: PlantInstance): Plant? {
         return plantsLiveData.value?.firstOrNull { it.uid == plant.speciesUid }
     }
 
-    fun getPlantInstanceByUid(uid: String): PlantInstance? {
+    fun getPlantInstance(uid: String): PlantInstance? {
         return _plantsList.value?.firstOrNull { it.uid == uid }
+    }
+
+    fun getLocation(uid: String): Location? {
+        return _locationsList.value?.firstOrNull { it.uid == uid }
     }
 
     fun getPlantsByLocation(loc: Location): ArrayList<PlantInstance> {
         val res = ArrayList<PlantInstance>()
         loc.plants.forEach { uid ->
-            getPlantInstanceByUid(uid)?.let { plant -> res.add(plant) }
+            getPlantInstance(uid)?.let { plant -> res.add(plant) }
         }
         return res
     }
