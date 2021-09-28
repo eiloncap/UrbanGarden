@@ -69,7 +69,7 @@ class LocationInfo : Fragment() {
 
         //sets views
         mainViewModel.setImgFromPath(locationViewModel.location, imgView)
-        sunHours.setText(locationViewModel.location.sunHours)
+        sunHours.setText(locationViewModel.location.sunny.toString())
         name.setText(locationViewModel.location.name)
 
         //init the camera launcher
@@ -95,7 +95,7 @@ class LocationInfo : Fragment() {
             val imgFileName: String = locationViewModel.location.uid + ".jpeg"
             locationViewModel.location.name = edit_name.text.toString()
             locationViewModel.location.imgFileName = imgFileName
-            locationViewModel.location.sunHours = sunHours.text.toString()
+            locationViewModel.location.sunny = sunHours.text.toString().toInt()
             mainViewModel.uploadObject(locationViewModel.location)
             homeViewModel.tab = 1
             view.findNavController()
@@ -190,6 +190,7 @@ class LocationInfo : Fragment() {
             builder.setView(view)
                 .setNegativeButton("Cancel") { dialog, id ->
                 }
+
             builder.setCancelable(false);
             builder.create()
         }

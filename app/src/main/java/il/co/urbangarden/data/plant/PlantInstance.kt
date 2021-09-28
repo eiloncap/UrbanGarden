@@ -7,9 +7,10 @@ import java.util.*
 
 data class PlantInstance(
     override val uid: String = UUID.randomUUID().toString(),
-    override var imgFileName: String = "",
+    override var imgFileName: String = "$uid.jpeg",
     var lastWatered: Timestamp = Timestamp(0, 0),
     var name: String = "",
     var notes: String = "",
-    val species: DocumentReference? = null
+    var locationUid: String? = null,
+    val speciesUid: String? = null
 ) : FirebaseViewableObject
