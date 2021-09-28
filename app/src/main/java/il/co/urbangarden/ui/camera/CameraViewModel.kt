@@ -6,6 +6,6 @@ import androidx.lifecycle.ViewModel
 
 class CameraViewModel : ViewModel() {
 
-    var fileName: String = ""
-    var state: Int = 0
+    lateinit var fileName: String
+    lateinit var state: String
 }

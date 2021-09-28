@@ -69,7 +69,7 @@ class CameraNavigationFragment : Fragment() {
             plantsViewModel.plant = newPlant
             val imgFileName = newPlant.uid
             cameraViewModel.fileName = imgFileName
-            cameraViewModel.state = 2
+            cameraViewModel.state = "plant"
             view.findNavController().navigate(R.id.action_navigation_camera_to_cameraFragment)
         }
 
@@ -78,7 +78,7 @@ class CameraNavigationFragment : Fragment() {
             locationViewModel.location = newLocation
             val imgFileName = newLocation.uid
             cameraViewModel.fileName = imgFileName
-            cameraViewModel.state = 3
+            cameraViewModel.state = "location"
             view.findNavController().navigate(R.id.action_navigation_camera_to_cameraFragment)
         }
 

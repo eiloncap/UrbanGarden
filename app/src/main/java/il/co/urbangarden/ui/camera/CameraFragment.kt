@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -34,11 +35,19 @@ class CameraFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        Log.d("amit", "what")
+
         mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        Log.d("amit", "the")
         cameraViewModel = ViewModelProvider(this).get(CameraViewModel::class.java)
+        Log.d("amit", "fuck")
 
-        openCameraTakePictureAndUploadToDb(cameraViewModel.fileName)
+        Log.d("amit1", cameraViewModel.fileName)
 
+//        openCameraTakePictureAndUploadToDb(cameraViewModel.fileName)
+
+        Log.d("amit", cameraViewModel.state)
         navigateFragmentByState(view)
     }
 
@@ -55,8 +64,8 @@ class CameraFragment : Fragment() {
 
     private fun navigateFragmentByState(view: View){
         when(cameraViewModel.state){
-            2-> view.findNavController().navigate(R.id.action_cameraFragment_to_plantInfo)
-            3-> view.findNavController().navigate(R.id.action_cameraFragment_to_locationInfo)
+            "plant" -> view.findNavController().navigate(R.id.action_cameraFragment_to_plantInfo)
+            "location" -> view.findNavController().navigate(R.id.action_cameraFragment_to_locationInfo)
         }
     }
 
