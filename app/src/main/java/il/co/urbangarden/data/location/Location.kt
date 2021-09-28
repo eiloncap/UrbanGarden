@@ -9,6 +9,6 @@ data class Location(
     var name: String = "",
     var sunHours: String = "",
     var sunny: Int = 1, // should be 1-10. only plants that are below (or the exact) number can be here
-    var plants: Array<String> = arrayOf()
+    var plants: List<String> = emptyList()
 
 ) : FirebaseViewableObject
