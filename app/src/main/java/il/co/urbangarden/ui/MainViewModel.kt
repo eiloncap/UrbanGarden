@@ -110,6 +110,7 @@ class MainViewModel : ViewModel() {
             }
     }
 
+
     fun uploadObject(item: FirebaseObject) {
         val collection: String = when (item) {
             is PlantInstance -> {
@@ -158,6 +159,9 @@ class MainViewModel : ViewModel() {
             }
             is Question -> {
                 "Forum"
+            }
+            is Location ->{
+                "Location"
             }
             else -> {
                 userUid!!.toString()

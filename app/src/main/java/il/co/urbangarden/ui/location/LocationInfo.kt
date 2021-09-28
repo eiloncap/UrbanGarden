@@ -53,8 +53,7 @@ class LocationInfo : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-        locationViewModel =
-            ViewModelProvider(requireActivity()).get(MyLocationsViewModel::class.java)
+        locationViewModel = ViewModelProvider(requireActivity()).get(MyLocationsViewModel::class.java)
         homeViewModel = ViewModelProvider(requireActivity()).get(HomeViewModel::class.java)
 
 
@@ -64,8 +63,7 @@ class LocationInfo : Fragment() {
         val name: EditText = view.findViewById(R.id.edit_name)
         val saveButton: Button = view.findViewById(R.id.save_button)
         val shareButton: FloatingActionButton = view.findViewById(R.id.share_button)
-        val cameraButton: FloatingActionButton = view.findViewById(R.id.camera_button)
-        val getPlantsButton: Button = view.findViewById(R.id.get_plants)
+        val getPlantsButton: FloatingActionButton = view.findViewById(R.id.get_plant_button)
 
         //sets views
         mainViewModel.setImgFromPath(locationViewModel.location, imgView)
