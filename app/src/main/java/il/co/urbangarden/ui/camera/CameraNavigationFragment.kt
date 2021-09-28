@@ -160,7 +160,7 @@ class CameraNavigationFragment : Fragment() {
             // Inflate and set the layout for the dialog
             // Pass null as the parent view because its going in the dialog layout
             builder.setView(view)
-                .setPositiveButton("Add as plant") { dialog, id ->
+                .setPositiveButton("More Info") { dialog, id ->
                 }
                 .setNegativeButton("Ok") { dialog, id ->
                 }
