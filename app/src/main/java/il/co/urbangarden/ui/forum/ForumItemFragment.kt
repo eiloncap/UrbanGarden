@@ -13,17 +13,18 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import il.co.urbangarden.R
-import il.co.urbangarden.data.FirebaseViewableObject
 import il.co.urbangarden.data.forum.Answer
 import il.co.urbangarden.databinding.FragmentForumItemBinding
 import il.co.urbangarden.ui.MainViewModel
 import il.co.urbangarden.utils.ImageCropOption
-import java.util.*
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 
 class ForumItemFragment : Fragment() {
 
@@ -53,12 +54,20 @@ class ForumItemFragment : Fragment() {
             newAnswerDialog().show()
         }
 
+        val currQuestion = forumViewModel.currQuestion
+
+        val userName = binding.userName
+        val avatarIcon = binding.avatarIcon2
+        binding.answers2.text = currQuestion?.numOfAnswers.toString()
+        val dateFormat: DateFormat = SimpleDateFormat("dd-MM-yy  hh:mm")
+        binding.date2.text = dateFormat.format(currQuestion?.date).toString()
+
         val questionTitle: TextView = binding.questionViewTitle
         val question: TextView = binding.questionView
         val card = binding.card
         val img: ImageView = binding.viewImage
-        if (forumViewModel.currQuestion?.imgFileName ?: "" != "") {
-            forumViewModel.currQuestion?.let {
+        if (currQuestion?.imgFileName ?: "" != "") {
+            currQuestion?.let {
                 mainViewModel.setImgFromPath(
                     it,
                     img,
@@ -70,8 +79,38 @@ class ForumItemFragment : Fragment() {
             card.visibility = View.GONE
         }
 
-        questionTitle.text = forumViewModel.currQuestion?.title ?: ""
-        question.text = forumViewModel.currQuestion?.question ?: ""
+        questionTitle.text = currQuestion?.title ?: ""
+        if (currQuestion?.question == "") {
+            question.visibility = View.GONE
+        } else {
+            if (currQuestion != null) {
+                question.text = currQuestion.question
+            }
+        }
+        userName.text = currQuestion?.userName ?: ""
+        Glide.with(requireContext())
+            .load(currQuestion?.uri)
+            .circleCrop()
+            .into(avatarIcon)
+
+        val deleteButton = binding.delete
+        if (currQuestion!!.email != mainViewModel.user!!.email) {
+            deleteButton.visibility = View.GONE
+        } else {
+            deleteButton.setOnClickListener {
+                Log.d("Tag_q delete", "deleted")
+                val builder = AlertDialog.Builder(requireContext())
+                builder.setTitle("Are you sure you want to delete the question?")
+                    .setPositiveButton("Delete") { dialog, id ->
+                        //delete from firebase
+                        mainViewModel.db.collection("Forum").document(currQuestion.uid).delete()
+                        val navController = Navigation.findNavController(requireView())
+                        navController.navigateUp()
+                    }
+                    .setNegativeButton("Cancel") { dialog, id ->
+                    }.show()
+            }
+        }
 
         if (forumViewModel.currAnswers.value == null) {
 //            forumViewModel.getListOfAnswers()
@@ -98,10 +137,22 @@ class ForumItemFragment : Fragment() {
         adapter.setAnswers(answers)
         Log.d("TAG_Q ans", answers.size.toString())
 
+        adapter.setAvatar = { imageView, uri ->
+            Glide.with(context)
+                .load(uri)
+                .circleCrop()
+                .into(imageView)
+        }
+
         val answersRecycler = binding.answerViewRecyclerView
         answersRecycler.adapter = adapter
-        answersRecycler.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-
+        val manager = object : LinearLayoutManager(context, RecyclerView.VERTICAL, false) {
+            override fun canScrollVertically(): Boolean {
+                return false
+            }
+        }
+//        answersRecycler.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        answersRecycler.layoutManager = manager
     }
 
     private fun newAnswerDialog(): Dialog {
@@ -117,10 +168,14 @@ class ForumItemFragment : Fragment() {
             builder.setView(view)
                 // Add action buttons
                 .setPositiveButton("Submit") { dialog, id ->
-                    //todo email
                     if (answer.text.toString() != "") {
                         forumViewModel.addNewAnswer(
-                            Answer(email = "", answer = answer.text.toString())
+                            Answer(
+                                email = mainViewModel.user?.email.toString(),
+                                userName = mainViewModel.user?.displayName.toString(),
+                                uri = mainViewModel.user?.photoUrl.toString(),
+                                answer = answer.text.toString()
+                            )
                         )
                     } else {
                         Toast.makeText(

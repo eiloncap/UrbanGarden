@@ -9,6 +9,7 @@ data class Question(
     override val uid: String = "",
     override val imgFileName: String = "",
     val email: String = "",
+    val userName: String = "",
     val uri: String = "",
     var title: String = "",
     var question: String = "",

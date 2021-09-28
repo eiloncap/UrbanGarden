@@ -2,6 +2,7 @@ package il.co.urbangarden.ui.forum
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import il.co.urbangarden.R
 import il.co.urbangarden.data.forum.Answer
@@ -11,6 +12,7 @@ import java.text.SimpleDateFormat
 class AnswersAdapter : RecyclerView.Adapter<AnswerHolder>() {
 
     private val _answers: MutableList<Answer> = ArrayList()
+    var setAvatar: ((ImageView, String) -> Unit)? = null
 
     fun setAnswers(answers: List<Answer>) {
         _answers.clear()
@@ -31,8 +33,11 @@ class AnswersAdapter : RecyclerView.Adapter<AnswerHolder>() {
     override fun onBindViewHolder(holder: AnswerHolder, position: Int) {
         val answer = _answers[position]
         holder.answer.text = answer.answer
+        val dateFormatHour: DateFormat = SimpleDateFormat("hh:mm")
+        holder.dateHour.text = dateFormatHour.format(answer.date).toString()
         val dateFormat: DateFormat = SimpleDateFormat("dd-MM-yy")
         holder.date.text = dateFormat.format(answer.date).toString()
+        setAvatar?.let { it(holder.avatar, answer.uri) }
     }
 
     override fun getItemCount(): Int {

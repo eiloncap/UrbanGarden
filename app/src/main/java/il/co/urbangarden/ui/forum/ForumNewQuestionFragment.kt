@@ -56,7 +56,7 @@ class ForumNewQuestionFragment : Fragment() {
         val question: EditText = binding.newQuestion
         val imgView: ImageView = binding.imageView
 
-//        var imgPath: String = ""
+        var imgPath: String = ""
 
         val id = UUID.randomUUID()
 
@@ -64,8 +64,9 @@ class ForumNewQuestionFragment : Fragment() {
             //add new question to firebase
             val newQuestion = Question(
                 uid = id.toString(),
-                imgFileName = "$id.jpeg",
+                imgFileName = imgPath,
                 email = mainViewModel.user?.email.toString(),
+                userName = mainViewModel.user?.displayName.toString(),
                 uri = mainViewModel.user?.photoUrl.toString(),
                 title = title.text.toString(),
                 question = question.text.toString(),
@@ -107,7 +108,7 @@ class ForumNewQuestionFragment : Fragment() {
 
                 val imageBitmap = result.data?.extras?.get("data") as Bitmap
                 imgView.setImageBitmap(imageBitmap)
-//                imgPath = "Forum/$id"
+                imgPath = "$id.jpeg"
             }
         }
 

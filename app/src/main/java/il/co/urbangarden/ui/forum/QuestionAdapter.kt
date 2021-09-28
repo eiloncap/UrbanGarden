@@ -3,6 +3,7 @@ package il.co.urbangarden.ui.forum
 import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
@@ -45,10 +46,12 @@ class QuestionAdapter : RecyclerView.Adapter<QuestionHolder>() {
 
     override fun onBindViewHolder(holder: QuestionHolder, position: Int) {
         val question = _questions[position]
-        if (question.imgFileName != "" && holder.image.alpha == 0.5F) {
+        if (question.imgFileName != "") {
             holder.image.alpha = 1F
             Log.d("Tag_q adapter img debug", question.imgFileName)
             setImg?.let { it(question, holder.image) }
+        } else {
+            holder.image.visibility = View.GONE
         }
         holder.title.text = question.title
 
