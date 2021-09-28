@@ -128,7 +128,7 @@ class CameraNavigationFragment : Fragment() {
                 // Releases model resources if no longer used.
                 model.close()
 
-                mainViewModel.getPlantByLabel(res[0].label).let {
+                mainViewModel.getPlant(res[0].label).let {
                     Log.d("eilon-re", "gor plant $it")
                     if (it != null) {
                         classifiedPlantDialog(it).show()
