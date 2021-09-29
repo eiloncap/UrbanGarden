@@ -11,5 +11,6 @@ data class PlantInstance(
     var lastWatered: Date = Date(),
     var name: String = "",
     var notes: String = "",
-    var locationUid: String = ""
+    var locationUid: String = "",
+    var watering: Int = 0,
 ) : FirebaseViewableObject
