@@ -18,6 +18,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -51,6 +52,26 @@ class PlantInfo : Fragment() {
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var adapter: LocationAdapter
 
+    private lateinit var imgView : ImageView
+    private lateinit var nameText: TextView
+    private lateinit var nameEdit: EditText
+    //        val speciesText: TextView = view.findViewById(R.id.species)
+//        val speciesEdit: EditText = view.findViewById(R.id.species_edit)
+    private lateinit var lastWatringTitle: TextView
+    private lateinit var lastStamp: TextView
+    private lateinit var nextWatering: TextView
+    private lateinit var inputDays: EditText
+    private lateinit var days: TextView
+    private lateinit var dropButton: FloatingActionButton
+    private lateinit var notesText: TextView
+    private lateinit var notesEdit: EditText
+    private lateinit var saveButton: ExtendedFloatingActionButton
+    private lateinit var shareButton: FloatingActionButton
+    private lateinit var pencil: ImageView
+    private lateinit var delete: ImageView
+    private lateinit var locationImg: ImageView
+    private lateinit var locationName: TextView
+
 
 
     override fun onCreateView(
@@ -70,21 +91,25 @@ class PlantInfo : Fragment() {
         adapter = LocationAdapter()
 
         //finds views
-        val imgView : ImageView = view.findViewById(R.id.plant_photo)
-        val nameText: TextView = view.findViewById(R.id.name)
-        val nameEdit: EditText = view.findViewById(R.id.edit_name)
+        imgView = view.findViewById(R.id.plant_photo)
+        nameText = view.findViewById(R.id.name)
+        nameEdit = view.findViewById(R.id.edit_name)
 //        val speciesText: TextView = view.findViewById(R.id.species)
 //        val speciesEdit: EditText = view.findViewById(R.id.species_edit)
-        val lastStamp: TextView = view.findViewById(R.id.time)
-        val dropButton: FloatingActionButton = view.findViewById(R.id.watering_button)
-        val notesText: TextView = view.findViewById(R.id.notes_text)
-        val notesEdit: EditText = view.findViewById(R.id.notes_edit)
-        val saveButton: ExtendedFloatingActionButton = view.findViewById(R.id.save_button)
-        val shareButton: FloatingActionButton = view.findViewById(R.id.share_button)
-        val pencil: ImageView = view.findViewById(R.id.pencil)
-        val delete: ImageView = view.findViewById(R.id.delete)
-        val locationImg: ImageView = view.findViewById(R.id.location_photo)
-        val locationName: TextView = view.findViewById(R.id.location_name)
+        lastWatringTitle = view.findViewById(R.id.last_watering)
+        lastStamp = view.findViewById(R.id.time)
+        dropButton = view.findViewById(R.id.watering_button)
+        nextWatering = view.findViewById(R.id.next_watering)
+        inputDays = view.findViewById(R.id.input_days)
+        days = view.findViewById(R.id.days)
+        notesText = view.findViewById(R.id.notes_text)
+        notesEdit = view.findViewById(R.id.notes_edit)
+        saveButton = view.findViewById(R.id.save_button)
+        shareButton = view.findViewById(R.id.share_button)
+        pencil = view.findViewById(R.id.pencil)
+        delete = view.findViewById(R.id.delete)
+        locationImg = view.findViewById(R.id.location_photo)
+        locationName = view.findViewById(R.id.location_name)
 
 
         //init the camera launcher
@@ -106,10 +131,10 @@ class PlantInfo : Fragment() {
             }
         }
 
-        setViews(nameText, nameEdit, notesText, notesEdit, saveButton, pencil, imgView, locationImg, lastStamp, locationName)
+        setViews()
 
         pencil.setOnClickListener {
-            editMode(nameText, nameEdit, notesText, notesEdit, saveButton, pencil)
+            editMode()
         }
 
         nameEdit.addTextChangedListener(object : TextWatcher {
@@ -132,11 +157,16 @@ class PlantInfo : Fragment() {
         })
 
         saveButton.setOnClickListener {
-            plantsViewModel.plant.name = nameEdit.text.toString()
+            if (plantsViewModel.plant.name.isEmpty()){
+                Toast.makeText(context, "Please Enter Plant Name", Toast.LENGTH_SHORT)
+            }
+            else {
+                plantsViewModel.plant.name = nameEdit.text.toString()
 //            plantsViewModel.plant.species = speciesEdit.text.toString()
-            plantsViewModel.plant.notes = notesEdit.text.toString()
-            mainViewModel.uploadObject(plantsViewModel.plant)
-            showMode(nameText, nameEdit, notesText, notesEdit, saveButton, pencil)
+                plantsViewModel.plant.notes = notesEdit.text.toString()
+                mainViewModel.uploadObject(plantsViewModel.plant)
+                showMode()
+            }
         }
 
         delete.setOnClickListener {
@@ -169,24 +199,13 @@ class PlantInfo : Fragment() {
         //todo share button on click
     }
 
-    private fun setViews(
-        nameText: TextView,
-        nameEdit: EditText,
-        notesText: TextView,
-        notesEdit: EditText,
-        saveButton: ExtendedFloatingActionButton,
-        pencil: ImageView,
-        imgView: ImageView,
-        locationImgView: ImageView,
-        lastStamp: TextView,
-        locationName: TextView
-    ){
+    private fun setViews(){
         val dateFormat: DateFormat = SimpleDateFormat("dd-MM-yy  hh:mm")
         lastStamp.text = dateFormat.format(plantsViewModel.plant.lastWatered).toString()
 
         if (plantsViewModel.plant.locationUid.isNotEmpty()){
             val location: Location? = mainViewModel.getLocation(plantsViewModel.plant.locationUid)
-            location.let{ mainViewModel.setImgFromPath(location!!, locationImgView)
+            location.let{ mainViewModel.setImgFromPath(location!!, locationImg)
             locationName.text = location.name
             }
         }
@@ -197,52 +216,48 @@ class PlantInfo : Fragment() {
         if (plantsViewModel.plant.name.isEmpty()){
             saveButton.visibility = View.GONE
             saveButton.isClickable = false
-            editMode(nameText, nameEdit, notesText, notesEdit, saveButton, pencil)
+            editMode()
         }
         else {
-            showMode(nameText, nameEdit,notesText, notesEdit, saveButton, pencil)
+            showMode()
 
         }
     }
 
-    private fun editMode(
-        nameText: TextView,
-        editName: EditText,
-        notesText: TextView,
-        editNotes: EditText,
-        saveButton: ExtendedFloatingActionButton,
-        pencil: ImageView
-    ){
+    private fun editMode(){
         nameText.visibility = View.GONE
 //        speciesText.visibility = View.GONE
         notesText.visibility = View.GONE
         pencil.visibility = View.GONE
+        dropButton.visibility = View.GONE
+        dropButton.isClickable = false
+        lastStamp.visibility = View.GONE
+        lastWatringTitle.visibility = View.GONE
+        saveButton.visibility = View.VISIBLE
+        saveButton.isClickable = true
 
-        if (plantsViewModel.plant.name.isNotEmpty()){
-            saveButton.visibility = View.VISIBLE
-            saveButton.isClickable = true
-        }
 
-        editName.visibility = View.VISIBLE
+        nextWatering.visibility = View.VISIBLE
+        inputDays.visibility = View.VISIBLE
+        nameEdit.visibility = View.VISIBLE
 //        editSpecies.visibility = View.VISIBLE
-        editNotes.visibility = View.VISIBLE
+        notesEdit.visibility = View.VISIBLE
 
-        editName.setText(plantsViewModel.plant.name)
+        nameEdit.setText(plantsViewModel.plant.name)
 //        editSpecies.setText(plantsViewModel.plant.species)
-        editNotes.setText(plantsViewModel.plant.notes)
+        notesEdit.setText(plantsViewModel.plant.notes)
 
     }
 
-    private fun showMode(nameText: TextView, editName: EditText, notesText: TextView, editNotes: EditText,
-                         saveButton: ExtendedFloatingActionButton, pencil: ImageView){
+    private fun showMode(){
         nameText.visibility = View.VISIBLE
 //        speciesText.visibility = View.VISIBLE
         notesText.visibility = View.VISIBLE
         pencil.visibility = View.VISIBLE
 
-        editName.visibility = View.GONE
+        nameEdit.visibility = View.GONE
 //        editSpecies.visibility = View.GONE
-        editNotes.visibility = View.GONE
+        notesEdit.visibility = View.GONE
         saveButton.visibility = View.GONE
         saveButton.isClickable = false
 
@@ -281,7 +296,7 @@ class PlantInfo : Fragment() {
             adapter.onItemClick = { location: Location ->
                 plantsViewModel.plant.locationUid = location.uid
                 dialog.dismiss()
-
+                setViews()
             }
 
             recyclerView.adapter = adapter
