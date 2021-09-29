@@ -42,7 +42,9 @@ class SubPlantAdapter : RecyclerView.Adapter<SubPlantHolder>() {
         // Get the data model based on position
         val item = plantsList[position]
         // Set item views based on your views and data model
-        holder.name.text = item.name
+//        holder.name.text = item.name
+        setImg?.let { it(item , holder.image) }
+
     }
 
     override fun getItemCount(): Int {

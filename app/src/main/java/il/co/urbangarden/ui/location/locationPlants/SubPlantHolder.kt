@@ -8,5 +8,6 @@ import il.co.urbangarden.R
 
 class SubPlantHolder(itemView: View): RecyclerView.ViewHolder(itemView){
     var view: View = itemView
-    var name: TextView = itemView.findViewById(R.id.name)
+//    var name: TextView = itemView.findViewById(R.id.title)
+    var image: ImageView = itemView.findViewById(R.id.image)
 }

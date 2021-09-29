@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import il.co.urbangarden.R
 import il.co.urbangarden.data.FirebaseViewableObject
 import il.co.urbangarden.data.location.Location
@@ -78,7 +79,7 @@ class MyLocationsFragment : Fragment() {
         mainViewModel.locationsList.observe(viewLifecycleOwner, locationObserver)
         setUpLocationAdapter(getListOfLocations())
 
-        val addButton: Button = view.findViewById(R.id.add_button)
+        val addButton: ExtendedFloatingActionButton = view.findViewById(R.id.add_new_location)
 
         addButton.setOnClickListener {
             setUpLocationAdapter(mainViewModel.locationsList.value)

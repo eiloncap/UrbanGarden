@@ -249,8 +249,10 @@ class MainViewModel : ViewModel() {
 
     fun getPlantsByLocation(loc: Location): ArrayList<PlantInstance> {
         val res = ArrayList<PlantInstance>()
-        loc.plants.forEach { uid ->
-            getPlantInstance(uid)?.let { plant -> res.add(plant) }
+        _plantsList.value?.forEach {
+            if (it.locationUid == loc.uid){
+                res.add(it)
+            }
         }
         return res
     }
