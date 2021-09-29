@@ -132,9 +132,11 @@ class MainViewModel : ViewModel() {
     fun removeObject(item: FirebaseObject) {
         val collection: String = when (item) {
             is PlantInstance -> {
+                deletePlantFromLocation(item)
                 USER_PLANTS_COLLECTION_TAG
             }
             is Location -> {
+                deleteLocationFromPlants(item)
                 USER_LOCATIONS_COLLECTION_TAG
             }
             else -> {
@@ -160,7 +162,7 @@ class MainViewModel : ViewModel() {
             is Question -> {
                 "Forum"
             }
-            is Location ->{
+            is Location -> {
                 "Location"
             }
             else -> {
@@ -267,4 +269,20 @@ class MainViewModel : ViewModel() {
 
     }
 
+    fun deletePlantFromLocation(plant: PlantInstance) {
+        val location = getLocation(plant.locationUid)
+        val mutableList: MutableList<String> = ArrayList()
+        location?.plants?.let { mutableList.addAll(it) }
+        mutableList.remove(plant.uid)
+        if (location != null) {
+            location.plants = mutableList
+        }
+    }
+
+    fun deleteLocationFromPlants(location: Location) {
+        val plantsByLocation = getPlantsByLocation(location)
+        plantsByLocation.forEach {
+            it.locationUid = ""
+        }
+    }
 }
