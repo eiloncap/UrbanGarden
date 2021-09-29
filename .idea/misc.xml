@@ -17,18 +17,20 @@
         <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/dialog_new_answer.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/dialog_plant.xml" value="0.33" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/dialog_recycler.xml" value="0.18" />
-        <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/fragment_camera.xml" value="0.18" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/fragment_camera.xml" value="0.25" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/fragment_camera2.xml" value="0.15" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/fragment_choose_plant.xml" value="0.18958333333333333" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/fragment_forum.xml" value="0.15555555555555556" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/fragment_home.xml" value="0.290625" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/location_dialog.xml" value="0.22291666666666668" />
-        <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/location_info_fragment.xml" value="0.25" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/location_info_fragment.xml" value="0.30151843817787416" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/my_locations_fragment.xml" value="0.18" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/one_location.xml" value="0.2953125" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/one_plant.xml" value="0.25" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/one_seggest_plant.xml" value="0.25" />
-        <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/plant_info_fragment.xml" value="0.44398340248962653" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/one_sub_plant.xml" value="0.33" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/plant_info_fragment.xml" value="0.33" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/recognize_plant.xml" value="0.16614583333333333" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/rounded_bg.xml" value="0.36770833333333336" />
       </map>
     </option>

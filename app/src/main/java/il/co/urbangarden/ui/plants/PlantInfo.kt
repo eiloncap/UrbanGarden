@@ -137,44 +137,20 @@ class PlantInfo : Fragment() {
             editMode()
         }
 
-        nameEdit.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                plantsViewModel.plant.name = s.toString()
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-        })
-
-        inputDays.addTextChangedListener(object : TextWatcher{
-            override fun afterTextChanged(s: Editable?) {
-                plantsViewModel.plant.watering = s.toString().toInt()
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-        })
 
         saveButton.setOnClickListener {
-            if (plantsViewModel.plant.name.isEmpty()){
+            if (nameEdit.text.toString().isEmpty()){
                 Toast.makeText(context, "Please Enter Plant Name", Toast.LENGTH_SHORT).show()
             }
-            else if (plantsViewModel.plant.watering == 0){
+            else if (inputDays.text.toString().toInt() == 0){
                 Toast.makeText(context, "Please enter ", Toast.LENGTH_SHORT).show()
             }
             else {
                 plantsViewModel.plant.watering = inputDays.text.toString().toInt()
                 plantsViewModel.plant.name = nameEdit.text.toString()
-//            plantsViewModel.plant.species = speciesEdit.text.toString()
                 plantsViewModel.plant.notes = notesEdit.text.toString()
-                showMode()
                 mainViewModel.uploadObject(plantsViewModel.plant)
+                showMode()
             }
         }
 
@@ -310,6 +286,7 @@ class PlantInfo : Fragment() {
             }
             adapter.onItemClick = { location: Location ->
                 plantsViewModel.plant.locationUid = location.uid
+                mainViewModel.uploadObject(plantsViewModel.plant)
                 dialog.dismiss()
                 setViews()
             }

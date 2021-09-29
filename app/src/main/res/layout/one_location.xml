@@ -2,10 +2,10 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_margin="5dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="5dp"
-    app:cardBackgroundColor="@color/light_green"
-    android:layout_margin="10dp"
     app:cardElevation="8dp">
 
     <LinearLayout
@@ -14,20 +14,29 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            app:cardCornerRadius="5dp">
+
         <ImageView
+            android:id="@+id/image"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:id="@+id/image"
-            android:scaleType="fitXY"
+            android:scaleType="center"
             android:src="@drawable/location"/>
+        </androidx.cardview.widget.CardView>
+
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/title"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
             android:textColor="@android:color/black"
-            android:textSize="21dp"
+            android:textSize="24sp"
+            android:layout_gravity="center"
             android:text="Title"
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="10dp"/>
+            android:textAlignment="center"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

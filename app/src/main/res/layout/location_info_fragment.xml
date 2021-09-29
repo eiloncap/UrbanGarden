@@ -88,12 +88,11 @@
                         android:id="@+id/get_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Get\nRecommended\nPlants"
+                        android:text="Get\nRecommendation"
                         android:textColor="@color/grey"
                         android:textSize="14sp"
                         android:layout_marginLeft="10dp"
                         app:layout_constraintLeft_toRightOf="@id/get_plant_button"
-                        app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"/>
 
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -102,6 +101,7 @@
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/light_green"
                         android:clickable="true"
+                        app:borderWidth="0dp"
                         android:src="@drawable/get_plant_icon"
                         app:layout_constraintHorizontal_bias="0.1"
                         app:layout_constraintLeft_toLeftOf="parent"
@@ -117,7 +117,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginTop="100dp">
+                    android:layout_marginTop="110dp">
 
                     <ImageView
                         android:id="@+id/sun_icon"
@@ -151,6 +151,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toRightOf="@id/minus"
                         android:layout_marginLeft="10dp"
+                        android:textSize="20sp"
                         android:textColor="@color/grey"
                         android:text="0"/>
 
@@ -209,14 +210,12 @@
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/plants_recycle_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="100dp"
-                        android:layout_marginLeft="90dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
                         android:orientation="horizontal"
-                        app:layout_constraintHorizontal_bias="0.927"
                         app:layout_constraintLeft_toLeftOf="@id/plants_title"
-                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintRight_toRightOf="@id/plants_title"
                         app:layout_constraintTop_toBottomOf="@+id/plants_title" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -227,6 +226,7 @@
                     android:layout_height="wrap_content"
                     android:clickable="true"
                     android:text="Save"
+                    app:borderWidth="0dp"
                     android:textAlignment="center"
                     android:layout_marginBottom="10dp"
                     android:layout_marginTop="10dp"
@@ -244,6 +244,7 @@
                     android:src="@android:drawable/ic_menu_share"
                     android:backgroundTint="@color/light_green"
                     android:layout_marginTop="10dp"
+                    app:borderWidth="0dp"
                     app:layout_constraintHorizontal_bias="0.1"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"

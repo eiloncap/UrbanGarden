@@ -1,6 +1,8 @@
 package il.co.urbangarden.ui.forum
 
 import android.app.Dialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,6 +14,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
@@ -24,6 +27,7 @@ import il.co.urbangarden.data.forum.Answer
 import il.co.urbangarden.databinding.FragmentForumItemBinding
 import il.co.urbangarden.ui.MainViewModel
 import il.co.urbangarden.utils.ImageCropOption
+import java.io.File
 import java.text.DateFormat
 import il.co.urbangarden.data.forum.Question
 import java.text.SimpleDateFormat
@@ -32,6 +36,7 @@ import android.view.Window
 
 //todo enlage photo on press
 //todo share forum and plant
+
 
 class ForumItemFragment : Fragment() {
 
@@ -132,6 +137,8 @@ class ForumItemFragment : Fragment() {
             setupAnswerListAdapter(forumViewModel.currAnswers.value!!)
         }
 
+//        setShareButton(img)
+
         return root
     }
 
@@ -164,6 +171,7 @@ class ForumItemFragment : Fragment() {
 //        answersRecycler.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         answersRecycler.layoutManager = manager
     }
+
 
     private fun newAnswerDialog(): Dialog {
         return this.let {
