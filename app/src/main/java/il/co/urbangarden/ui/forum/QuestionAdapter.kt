@@ -48,7 +48,6 @@ class QuestionAdapter : RecyclerView.Adapter<QuestionHolder>() {
         val question = _questions[position]
         if (question.imgFileName != "") {
             holder.image.alpha = 1F
-            Log.d("Tag_q adapter img debug", question.imgFileName)
             setImg?.let { it(question, holder.image) }
         } else {
             holder.image.visibility = View.GONE

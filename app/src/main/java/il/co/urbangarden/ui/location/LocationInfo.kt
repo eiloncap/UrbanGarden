@@ -61,11 +61,11 @@ class LocationInfo : Fragment() {
         //finds views
         val imgView: ImageView = view.findViewById(R.id.location_photo)
         val sunHours: EditText = view.findViewById(R.id.sun_hours)
-        val name: EditText = view.findViewById(R.id.edit_name)
+//        val name: EditText = view.findViewById(R.id.edit_name)
         val saveButton: Button = view.findViewById(R.id.save_button)
         val shareButton: FloatingActionButton = view.findViewById(R.id.share_button)
-        val cameraButton: FloatingActionButton = view.findViewById(R.id.camera_button)
-        val getPlantsButton: Button = view.findViewById(R.id.get_plants)
+//        val cameraButton: FloatingActionButton = view.findViewById(R.id.camera_button)
+//        val getPlantsButton: Button = view.findViewById(R.id.get_plants)
 
         //sets views
         mainViewModel.setImgFromPath(locationViewModel.location, imgView)
@@ -93,7 +93,7 @@ class LocationInfo : Fragment() {
 
         saveButton.setOnClickListener {
             val imgFileName: String = locationViewModel.location.uid + ".jpeg"
-            locationViewModel.location.name = edit_name.text.toString()
+//            locationViewModel.location.name = edit_name.text.toString()
             locationViewModel.location.imgFileName = imgFileName
             locationViewModel.location.sunny = sunHours.text.toString().toInt()
             mainViewModel.uploadObject(locationViewModel.location)
@@ -103,16 +103,16 @@ class LocationInfo : Fragment() {
         }
         //todo share button on click and camera on click
 
-        cameraButton.setOnClickListener {
-            if (activity?.packageManager?.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY) == true) {
-                val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                resultLauncher.launch(takePictureIntent)
-            }
-        }
-
-        getPlantsButton.setOnClickListener {
-            showDialog().show()
-        }
+//        cameraButton.setOnClickListener {
+//            if (activity?.packageManager?.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY) == true) {
+//                val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+//                resultLauncher.launch(takePictureIntent)
+//            }
+//        }
+//
+//        getPlantsButton.setOnClickListener {
+//            showDialog().show()
+//        }
     }
 
 

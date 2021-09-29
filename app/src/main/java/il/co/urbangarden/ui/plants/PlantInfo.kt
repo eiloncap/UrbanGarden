@@ -55,11 +55,11 @@ class PlantInfo : Fragment() {
         //finds views
         val imgView : ImageView = view.findViewById(R.id.plant_photo)
         val care: TextView = view.findViewById(R.id.notes)
-        val name: EditText = view.findViewById(R.id.edit_name)
+//        val name: EditText = view.findViewById(R.id.edit_name)
         val lastStamp: TextView = view.findViewById(R.id.watering_text)
         val saveButton: Button = view.findViewById(R.id.save_button)
         val shareButton: FloatingActionButton = view.findViewById(R.id.share_button)
-        val cameraButton: FloatingActionButton = view.findViewById(R.id.camera_button)
+//        val cameraButton: FloatingActionButton = view.findViewById(R.id.camera_button)
 
         //sets views
         mainViewModel.setImgFromPath(plantsViewModel.plant, imgView)
@@ -97,12 +97,11 @@ class PlantInfo : Fragment() {
         }
         //todo share button on click and camera on click
 
-        cameraButton.setOnClickListener{
-            if (activity?.packageManager?.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY) == true) {
-                val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                resultLauncher.launch(takePictureIntent)
-            }
-
-        }
+//        cameraButton.setOnClickListener{
+//            if (activity?.packageManager?.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY) == true) {
+//                val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+//                resultLauncher.launch(takePictureIntent)
+//            }
+//        }
     }
 }

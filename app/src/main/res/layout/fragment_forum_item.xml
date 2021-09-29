@@ -91,7 +91,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_column="1"
-                    android:layout_weight="13"
+                    android:layout_weight="12"
                     android:text="INB"
                     android:textStyle="bold" />
 
@@ -138,7 +138,7 @@
 
                 <TextView
                     android:id="@+id/answers2"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"

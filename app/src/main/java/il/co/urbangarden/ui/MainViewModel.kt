@@ -31,7 +31,7 @@ class MainViewModel : ViewModel() {
     val user = Firebase.auth.currentUser
     private val userUid: String? = user?.uid
     private val storage = FirebaseStorage.getInstance()
-    public val db = FirebaseFirestore.getInstance()
+    val db = FirebaseFirestore.getInstance()
     val plantsLiveData: MutableLiveData<ArrayList<Plant>> = MutableLiveData()
     private val _plantsList = MutableLiveData<List<PlantInstance>>()
     val plantsList: LiveData<List<PlantInstance>> = _plantsList

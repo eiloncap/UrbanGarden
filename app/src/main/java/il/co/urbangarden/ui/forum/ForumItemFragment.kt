@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -24,7 +25,13 @@ import il.co.urbangarden.databinding.FragmentForumItemBinding
 import il.co.urbangarden.ui.MainViewModel
 import il.co.urbangarden.utils.ImageCropOption
 import java.text.DateFormat
+import il.co.urbangarden.data.forum.Question
 import java.text.SimpleDateFormat
+import android.view.Window
+
+
+//todo enlage photo on press
+//todo share forum and plant
 
 class ForumItemFragment : Fragment() {
 
@@ -56,10 +63,8 @@ class ForumItemFragment : Fragment() {
 
         val currQuestion = forumViewModel.currQuestion
 
-        val userName = binding.userName
-        val avatarIcon = binding.avatarIcon2
         binding.answers2.text = currQuestion?.numOfAnswers.toString()
-        val dateFormat: DateFormat = SimpleDateFormat("dd-MM-yy  hh:mm")
+        val dateFormat: DateFormat = SimpleDateFormat("dd-MMM-yy  HH:mm")
         binding.date2.text = dateFormat.format(currQuestion?.date).toString()
 
         val questionTitle: TextView = binding.questionViewTitle
@@ -87,11 +92,11 @@ class ForumItemFragment : Fragment() {
                 question.text = currQuestion.question
             }
         }
-        userName.text = currQuestion?.userName ?: ""
+        binding.userName.text = currQuestion?.userName ?: ""
         Glide.with(requireContext())
             .load(currQuestion?.uri)
             .circleCrop()
-            .into(avatarIcon)
+            .into(binding.avatarIcon2)
 
         val deleteButton = binding.delete
         if (currQuestion!!.email != mainViewModel.user!!.email) {
@@ -112,15 +117,20 @@ class ForumItemFragment : Fragment() {
             }
         }
 
+
+        card.setOnClickListener {
+            bigPhotoDialog(currQuestion).show()
+        }
+
+
+        // set answers
         if (forumViewModel.currAnswers.value == null) {
-//            forumViewModel.getListOfAnswers()
             forumViewModel.currAnswers.observe(requireActivity(),
                 { listOfAnswers -> setupAnswerListAdapter(listOfAnswers) })
             forumViewModel.addAnswerSnapShot()
         } else {
             setupAnswerListAdapter(forumViewModel.currAnswers.value!!)
         }
-
 
         return root
     }
@@ -189,9 +199,33 @@ class ForumItemFragment : Fragment() {
                 .setNegativeButton("Cancel") { dialog, id ->
                 }
             builder.setCancelable(false);
-//            builder.setCanceledOnTouchOutside(false);
-//            builder.set
             builder.create()
+        }
+    }
+
+    private fun bigPhotoDialog(currQuestion: Question?): Dialog {
+        return this.let {
+            val builder = AlertDialog.Builder(requireContext())
+            // Get the layout inflater
+            val view = LayoutInflater.from(requireContext())
+                .inflate(R.layout.preview_image, null)
+            val ivPreview: ImageView = view.findViewById(R.id.iv_preview_image)
+
+            currQuestion?.let {
+                mainViewModel.setImgFromPath(
+                    it,
+                    ivPreview,
+                    ImageCropOption.SQUARE
+                )
+            }
+
+            builder.setView(view)
+            val ad = builder.create()
+            ivPreview.setOnClickListener {
+                ad.dismiss()
+            }
+
+            ad
         }
     }
 }

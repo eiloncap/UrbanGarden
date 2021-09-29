@@ -90,10 +90,9 @@ class ForumFragment : Fragment() {
                 .into(imageView)
         }
 
-        val questionRecycler = binding.recycleView
+        val questionRecycler = _binding!!.recycleView
         questionRecycler.adapter = adapter
-        questionRecycler.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-
+        questionRecycler.layoutManager =
+            LinearLayoutManager(context, RecyclerView.VERTICAL, false)
     }
-
 }

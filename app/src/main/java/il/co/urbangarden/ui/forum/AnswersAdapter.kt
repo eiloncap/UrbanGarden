@@ -33,7 +33,7 @@ class AnswersAdapter : RecyclerView.Adapter<AnswerHolder>() {
     override fun onBindViewHolder(holder: AnswerHolder, position: Int) {
         val answer = _answers[position]
         holder.answer.text = answer.answer
-        val dateFormatHour: DateFormat = SimpleDateFormat("hh:mm")
+        val dateFormatHour: DateFormat = SimpleDateFormat("HH:mm")
         holder.dateHour.text = dateFormatHour.format(answer.date).toString()
         val dateFormat: DateFormat = SimpleDateFormat("dd-MM-yy")
         holder.date.text = dateFormat.format(answer.date).toString()
