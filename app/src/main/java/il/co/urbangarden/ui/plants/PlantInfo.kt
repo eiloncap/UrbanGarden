@@ -1,5 +1,6 @@
 package il.co.urbangarden.ui.plants
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
@@ -34,6 +35,10 @@ import il.co.urbangarden.ui.location.LocationInfo
 import il.co.urbangarden.utils.ImageCropOption
 import kotlinx.android.synthetic.main.one_seggest_plant.*
 import kotlinx.android.synthetic.main.plant_info_fragment.*
+import kotlinx.android.synthetic.main.plant_info_fragment.view.*
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 class PlantInfo : Fragment() {
 
@@ -55,6 +60,7 @@ class PlantInfo : Fragment() {
         return inflater.inflate(R.layout.plant_info_fragment, container, false)
     }
 
+    @SuppressLint("SimpleDateFormat")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -69,7 +75,7 @@ class PlantInfo : Fragment() {
         val nameEdit: EditText = view.findViewById(R.id.edit_name)
 //        val speciesText: TextView = view.findViewById(R.id.species)
 //        val speciesEdit: EditText = view.findViewById(R.id.species_edit)
-        val lastStamp: TextView = view.findViewById(R.id.get_text)
+        val lastStamp: TextView = view.findViewById(R.id.time)
         val dropButton: FloatingActionButton = view.findViewById(R.id.watering_button)
         val notesText: TextView = view.findViewById(R.id.notes_text)
         val notesEdit: EditText = view.findViewById(R.id.notes_edit)
@@ -78,6 +84,7 @@ class PlantInfo : Fragment() {
         val pencil: ImageView = view.findViewById(R.id.pencil)
         val delete: ImageView = view.findViewById(R.id.delete)
         val locationImg: ImageView = view.findViewById(R.id.location_photo)
+        val locationName: TextView = view.findViewById(R.id.location_name)
 
 
         //init the camera launcher
@@ -99,7 +106,7 @@ class PlantInfo : Fragment() {
             }
         }
 
-        setViews(nameText, nameEdit, notesText, notesEdit, saveButton, pencil, imgView, locationImg)
+        setViews(nameText, nameEdit, notesText, notesEdit, saveButton, pencil, imgView, locationImg, lastStamp, locationName)
 
         pencil.setOnClickListener {
             editMode(nameText, nameEdit, notesText, notesEdit, saveButton, pencil)
@@ -150,7 +157,9 @@ class PlantInfo : Fragment() {
         }
 
         dropButton.setOnClickListener {
-            lastStamp.text = Timestamp(0, 0).toDate().toString()
+            plantsViewModel.plant.lastWatered = Date()
+            val dateFormat: DateFormat = SimpleDateFormat("dd-MM-yy  hh:mm")
+            lastStamp.text = dateFormat.format(plantsViewModel.plant.lastWatered).toString()
         }
 
         locationImg.setOnClickListener {
@@ -158,7 +167,6 @@ class PlantInfo : Fragment() {
         }
 
         //todo share button on click
-        //todo last watering editing
     }
 
     private fun setViews(
@@ -169,11 +177,18 @@ class PlantInfo : Fragment() {
         saveButton: ExtendedFloatingActionButton,
         pencil: ImageView,
         imgView: ImageView,
-        locationImgView: ImageView
+        locationImgView: ImageView,
+        lastStamp: TextView,
+        locationName: TextView
     ){
+        val dateFormat: DateFormat = SimpleDateFormat("dd-MM-yy  hh:mm")
+        lastStamp.text = dateFormat.format(plantsViewModel.plant.lastWatered).toString()
+
         if (plantsViewModel.plant.locationUid.isNotEmpty()){
             val location: Location? = mainViewModel.getLocation(plantsViewModel.plant.locationUid)
-            location.let{ mainViewModel.setImgFromPath(location!!, locationImgView) }
+            location.let{ mainViewModel.setImgFromPath(location!!, locationImgView)
+            locationName.text = location.name
+            }
         }
 
         if(plantsViewModel.plant.imgFileName.isNotEmpty()){
@@ -246,14 +261,27 @@ class PlantInfo : Fragment() {
 
             val recyclerView: RecyclerView = view.findViewById(R.id.recycler_dialog)
 
+
+            // Inflate and set the layout for the dialog
+            // Pass null as the parent view because its going in the dialog layout
+            builder.setView(view)
+                .setNegativeButton("Cancel") { dialog, id ->
+                    dialog.dismiss()
+                }
+            builder.setCancelable(false);
+            val dialog = builder.create()
+
             adapter.setLocationList(mainViewModel.locationsList.value)
 
-            adapter.onItemClick = { location: Location ->
-                plantsViewModel.plant.locationUid = location.uid
-            }
+
 
             adapter.setImg = { plant: FirebaseViewableObject, img: ImageView ->
                 mainViewModel.setImgFromPath(plant, img, ImageCropOption.SQUARE)
+            }
+            adapter.onItemClick = { location: Location ->
+                plantsViewModel.plant.locationUid = location.uid
+                dialog.dismiss()
+
             }
 
             recyclerView.adapter = adapter
@@ -263,13 +291,7 @@ class PlantInfo : Fragment() {
                 false
             )
 
-            // Inflate and set the layout for the dialog
-            // Pass null as the parent view because its going in the dialog layout
-            builder.setView(view)
-                .setNegativeButton("Cancel") { dialog, id ->
-                }
-            builder.setCancelable(false);
-            builder.create()
+            dialog
         }
     }
 }

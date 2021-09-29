@@ -96,6 +96,10 @@ class LocationInfo : Fragment() {
             }
         }
 
+        pencil.setOnClickListener {
+            editMode(sunHours, minus, plus, name, nameEdit, saveButton, shareButton, pencil, getPlantText, getPlantsButton)
+        }
+
         nameEdit.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (s.toString().isEmpty()){
@@ -118,7 +122,7 @@ class LocationInfo : Fragment() {
         delete.setOnClickListener {
             mainViewModel.removeObject(locationViewModel.location)
             homeViewModel.tab = 1
-            view.findNavController().navigate(R.id.action_plantInfo_to_navigation_home)
+            view.findNavController().navigate(R.id.action_locationInfo_to_navigation_home)
         }
 
         minus.setOnClickListener {
@@ -159,6 +163,7 @@ class LocationInfo : Fragment() {
         locationImgView.setOnClickListener {
             val imgFileName: String = locationViewModel.location.uid + ".jpeg"
             locationViewModel.location.imgFileName = imgFileName
+            mainViewModel.uploadObject(locationViewModel.location)
             if (activity?.packageManager?.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY) == true) {
                 val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                 resultLauncher.launch(takePictureIntent)
@@ -208,13 +213,13 @@ class LocationInfo : Fragment() {
         plantText: TextView,
         plantsButton: FloatingActionButton
     ) {
-        pencil.visibility = View.GONE
         minus.visibility = View.GONE
         plus.visibility = View.GONE
         nameEdit.visibility = View.GONE
         saveButton.visibility = View.GONE
         saveButton.isClickable = false
 
+        pencil.visibility = View.VISIBLE
         name.visibility = View.VISIBLE
         shareButton.visibility = View.VISIBLE
         plantText.visibility = View.VISIBLE
@@ -241,7 +246,6 @@ class LocationInfo : Fragment() {
         getPlantText: TextView,
         getPlantsButton: FloatingActionButton
     ) {
-        pencil.visibility = View.VISIBLE
         minus.visibility = View.VISIBLE
         plus.visibility = View.VISIBLE
         nameEdit.visibility = View.VISIBLE
@@ -252,6 +256,7 @@ class LocationInfo : Fragment() {
             saveButton.isClickable = true
         }
 
+        pencil.visibility = View.GONE
         name.visibility = View.GONE
         shareButton.visibility = View.GONE
         getPlantText.visibility = View.GONE

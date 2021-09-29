@@ -20,6 +20,8 @@ import il.co.urbangarden.data.plant.PlantInstance
 import il.co.urbangarden.databinding.MyPlantsFragmentBinding
 
 import il.co.urbangarden.utils.ImageCropOption
+import kotlinx.android.synthetic.main.one_seggest_plant.*
+import java.util.*
 
 
 class MyPlantsFragment : Fragment() {
@@ -61,9 +63,14 @@ class MyPlantsFragment : Fragment() {
             view?.findNavController()?.navigate(R.id.action_navigation_home_to_plantInfo)
         }
 
+        adapter.onDropClick = { plant: PlantInstance->
+            plant.lastWatered = Date()
+            mainViewModel.uploadObject(plant)
+        }
+
         adapter.setImg = { plant: FirebaseViewableObject, img: ImageView ->
 
-            mainViewModel.setImgFromPath(plant, img, ImageCropOption.CIRCLE)
+            mainViewModel.setImgFromPath(plant, img, ImageCropOption.SQUARE)
             Log.d("setImg", "success")
         }
 
