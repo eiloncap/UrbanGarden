@@ -8,22 +8,20 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import il.co.urbangarden.R
 import il.co.urbangarden.data.FirebaseViewableObject
 import il.co.urbangarden.ui.MainViewModel
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import il.co.urbangarden.data.location.Location
 import il.co.urbangarden.data.plant.PlantInstance
 import il.co.urbangarden.databinding.MyPlantsFragmentBinding
-import il.co.urbangarden.ui.location.suggestPlants.PlantAdapter
 
 import il.co.urbangarden.utils.ImageCropOption
+import kotlinx.android.synthetic.main.one_seggest_plant.*
+import java.util.*
 
 
 class MyPlantsFragment : Fragment() {
@@ -65,9 +63,14 @@ class MyPlantsFragment : Fragment() {
             view?.findNavController()?.navigate(R.id.action_navigation_home_to_plantInfo)
         }
 
+        adapter.onDropClick = { plant: PlantInstance->
+            plant.lastWatered = Date()
+            mainViewModel.uploadObject(plant)
+        }
+
         adapter.setImg = { plant: FirebaseViewableObject, img: ImageView ->
 
-            mainViewModel.setImgFromPath(plant, img, ImageCropOption.CIRCLE)
+            mainViewModel.setImgFromPath(plant, img, ImageCropOption.SQUARE)
             Log.d("setImg", "success")
         }
 

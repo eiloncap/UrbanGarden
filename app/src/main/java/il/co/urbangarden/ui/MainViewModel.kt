@@ -110,6 +110,7 @@ class MainViewModel : ViewModel() {
             }
     }
 
+
     fun uploadObject(item: FirebaseObject) {
         val collection: String = when (item) {
             is PlantInstance -> {
@@ -158,6 +159,9 @@ class MainViewModel : ViewModel() {
             }
             is Question -> {
                 "Forum"
+            }
+            is Location ->{
+                "Location"
             }
             else -> {
                 userUid!!.toString()
@@ -221,13 +225,13 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun getPlant(label: String): Plant? {
-        return plantsLiveData.value?.firstOrNull { it.name == label }
-    }
-
-    fun getPlant(plant: PlantInstance): Plant? {
-        return plantsLiveData.value?.firstOrNull { it.uid == plant.speciesUid }
-    }
+//    fun getPlant(label: String): Plant? {
+//        return plantsLiveData.value?.firstOrNull { it.name == label }
+//    }
+//
+//    fun getPlant(plant: PlantInstance): Plant? {
+//        return plantsLiveData.value?.firstOrNull { it.uid == plant.speciesUid }
+//    }
 
     fun getPlantInstance(uid: String): PlantInstance? {
         return _plantsList.value?.firstOrNull { it.uid == uid }

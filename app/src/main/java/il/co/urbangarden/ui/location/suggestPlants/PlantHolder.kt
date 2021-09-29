@@ -7,14 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import il.co.urbangarden.R
 
 class PlantHolder(itemView: View): RecyclerView.ViewHolder(itemView){
-    var view: View
-    var image: ImageView
-    var name: TextView
-
-
-    init {
-        view = itemView
-        image = itemView.findViewById(R.id.image)
-        name = itemView.findViewById(R.id.title)
-    }
+    var view: View = itemView
+    var image: ImageView = itemView.findViewById(R.id.image)
+    var name: TextView = itemView.findViewById(R.id.title)
 }

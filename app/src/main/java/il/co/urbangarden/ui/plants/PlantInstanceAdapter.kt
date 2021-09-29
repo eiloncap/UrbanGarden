@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import il.co.urbangarden.R
 import il.co.urbangarden.data.FirebaseViewableObject
 import il.co.urbangarden.data.plant.PlantInstance
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -18,6 +20,7 @@ class PlantInstanceAdapter : RecyclerView.Adapter<PlantInstanceHolder>() {
 
     private var plantsList: List<PlantInstance> = ArrayList()
     var onItemClick: ((PlantInstance) -> Unit)? = null
+    var onDropClick: ((PlantInstance) -> Unit)? = null
     var setImg: ((FirebaseViewableObject, ImageView) -> Unit)? = null
 
 
@@ -44,6 +47,14 @@ class PlantInstanceAdapter : RecyclerView.Adapter<PlantInstanceHolder>() {
             val plant = plantsList[holder.bindingAdapterPosition]
             callback(plant)
         }
+
+        holder.dropButton.setOnClickListener {
+            val callback = onDropClick ?: return@setOnClickListener
+            val plant = plantsList[holder.bindingAdapterPosition]
+            callback(plant)
+            val dateFormat: DateFormat = SimpleDateFormat("dd-MM-yy  hh:mm")
+            holder.lastWatering.text = dateFormat.format(plant.lastWatered).toString()
+        }
         return holder
     }
 
@@ -53,11 +64,10 @@ class PlantInstanceAdapter : RecyclerView.Adapter<PlantInstanceHolder>() {
         // Get the data model based on position
         val item = plantsList[position]
         // Set item views based on your views and data model
-        if (item != null) {
-            instanceHolder.name.text = item.name
-            Log.d("setImgIsNull", setImg.toString())
-            setImg?.let { it(item , instanceHolder.image) }
-        }
+        instanceHolder.name.text = item.name
+        val dateFormat: DateFormat = SimpleDateFormat("dd-MM-yy  hh:mm")
+        instanceHolder.lastWatering.text = dateFormat.format(item.lastWatered).toString()
+        setImg?.let { it(item , instanceHolder.image) }
     }
 
     //  total count of items in the list

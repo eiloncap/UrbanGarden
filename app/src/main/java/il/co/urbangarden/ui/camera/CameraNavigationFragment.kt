@@ -25,12 +25,12 @@ import il.co.urbangarden.data.location.Location
 import il.co.urbangarden.data.plant.Plant
 import il.co.urbangarden.data.plant.PlantInstance
 import il.co.urbangarden.databinding.FragmentCameraBinding
-import il.co.urbangarden.ml.Model
+//import il.co.urbangarden.ml.Model
 import il.co.urbangarden.ui.MainViewModel
 import il.co.urbangarden.ui.location.MyLocationsViewModel
 import il.co.urbangarden.ui.plants.MyPlantsViewModel
 import il.co.urbangarden.utils.ImageCropOption
-import org.tensorflow.lite.support.image.TensorImage
+//import org.tensorflow.lite.support.image.TensorImage
 
 
 class CameraNavigationFragment : Fragment() {
@@ -62,7 +62,7 @@ class CameraNavigationFragment : Fragment() {
         val newPlant: Button = view.findViewById(R.id.new_plant_button)
         val newLocation: Button = view.findViewById(R.id.new_location_button)
 
-        prepareCameraIntent()
+//        prepareCameraIntent()
 
         newPlant.setOnClickListener {
             val newPlant = PlantInstance()
@@ -103,40 +103,40 @@ class CameraNavigationFragment : Fragment() {
         _binding = null
     }
 
-    private fun prepareCameraIntent() {
-        launcher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) { result ->
-            if (result.resultCode == Activity.RESULT_OK
-                && result.data != null
-                && result?.data?.extras != null
-            ) {
-                val imageBitmap = (result.data?.extras?.get("data") as Bitmap).scale(224, 224)
-
-                val model = Model.newInstance(requireContext())
-
-                // Creates inputs for reference.
-                val image = TensorImage.fromBitmap(imageBitmap)
-
-                // Runs model inference and gets result.
-                val outputs = model.process(image)
-                val probability = outputs.probabilityAsCategoryList
-                val res = probability.apply {
-                    sortByDescending { it.score }
-                }.take(1)
-
-                // Releases model resources if no longer used.
-                model.close()
-
-                mainViewModel.getPlant(res[0].label).let {
-                    Log.d("eilon-re", "gor plant $it")
-                    if (it != null) {
-                        classifiedPlantDialog(it).show()
-                    }
-                }
-            }
-        }
-    }
+//    private fun prepareCameraIntent() {
+//        launcher = registerForActivityResult(
+//            ActivityResultContracts.StartActivityForResult()
+//        ) { result ->
+//            if (result.resultCode == Activity.RESULT_OK
+//                && result.data != null
+//                && result?.data?.extras != null
+//            ) {
+//                val imageBitmap = (result.data?.extras?.get("data") as Bitmap).scale(224, 224)
+//
+//                val model = Model.newInstance(requireContext())
+//
+//                // Creates inputs for reference.
+//                val image = TensorImage.fromBitmap(imageBitmap)
+//
+//                // Runs model inference and gets result.
+//                val outputs = model.process(image)
+//                val probability = outputs.probabilityAsCategoryList
+//                val res = probability.apply {
+//                    sortByDescending { it.score }
+//                }.take(1)
+//
+//                // Releases model resources if no longer used.
+//                model.close()
+//
+//                mainViewModel.getPlant(res[0].label).let {
+//                    Log.d("eilon-re", "gor plant $it")
+//                    if (it != null) {
+//                        classifiedPlantDialog(it).show()
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     private fun openCameraForRecognitionPicture() {
         if (activity?.packageManager?.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY) == true) {
@@ -160,7 +160,7 @@ class CameraNavigationFragment : Fragment() {
             // Inflate and set the layout for the dialog
             // Pass null as the parent view because its going in the dialog layout
             builder.setView(view)
-                .setPositiveButton("Add as plant") { dialog, id ->
+                .setPositiveButton("More Info") { dialog, id ->
                 }
                 .setNegativeButton("Ok") { dialog, id ->
                 }

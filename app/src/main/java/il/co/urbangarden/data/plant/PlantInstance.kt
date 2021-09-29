@@ -1,16 +1,15 @@
 package il.co.urbangarden.data.plant
 
+import android.location.Location
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.DocumentReference
 import il.co.urbangarden.data.FirebaseViewableObject
 import java.util.*
 
 data class PlantInstance(
     override val uid: String = UUID.randomUUID().toString(),
-    override var imgFileName: String = "$uid.jpeg",
-    var lastWatered: Timestamp = Timestamp(0, 0),
+    override var imgFileName: String = "",
+    var lastWatered: Date = Date(),
     var name: String = "",
     var notes: String = "",
-    var locationUid: String? = null,
-    val speciesUid: String? = null
+    var locationUid: String = ""
 ) : FirebaseViewableObject

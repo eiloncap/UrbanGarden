@@ -1,7 +1,6 @@
 package il.co.urbangarden.ui.location
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +23,7 @@ class MyLocationsFragment : Fragment() {
 
     private lateinit var locationsViewModel: MyLocationsViewModel
     private lateinit var mainViewModel: MainViewModel
+    private lateinit var adapter: LocationAdapter
     private var _binding: MyLocationsFragmentBinding? = null
 
     private val binding get() = _binding!!
@@ -47,9 +47,6 @@ class MyLocationsFragment : Fragment() {
     }
 
     private fun setUpLocationAdapter(locations: List<Location>?) {
-        val context = requireContext()
-        val adapter = LocationAdapter()
-
         adapter.setLocationList(locations)
         adapter.onItemClick = { location: Location ->
             locationsViewModel.location = location
@@ -70,9 +67,10 @@ class MyLocationsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        locationsViewModel =
-            ViewModelProvider(requireActivity()).get(MyLocationsViewModel::class.java)
+        locationsViewModel = ViewModelProvider(requireActivity()).get(MyLocationsViewModel::class.java)
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+
+        adapter = LocationAdapter()
 
         val locationObserver = Observer<List<Location>> { locations ->
             setUpLocationAdapter(locations)
