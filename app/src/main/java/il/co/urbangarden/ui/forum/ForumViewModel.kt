@@ -41,10 +41,10 @@ class ForumViewModel : ViewModel() {
 
                     arrayList.add(newQ)
 
-                    Log.d(
-                        "TAG_Q fetch",
-                        "${document.id} => ${document.data} a:${answersCollectionRef}"
-                    )
+//                    Log.d(
+//                        "TAG_Q fetch",
+//                        "${document.id} => ${document.data} a:${answersCollectionRef}"
+//                    )
                 }
                 questionsLiveData.value = arrayList
             }
@@ -80,7 +80,7 @@ class ForumViewModel : ViewModel() {
                     arrayList.add(newA)
 
                     Log.d(
-                        "TAG_Q fetch",
+                        "TAG_Q fetch answers",
                         "${document.id} => ${document.data}"
                     )
                 }

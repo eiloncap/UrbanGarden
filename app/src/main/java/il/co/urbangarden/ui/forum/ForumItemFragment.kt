@@ -145,7 +145,7 @@ class ForumItemFragment : Fragment() {
         val adapter = AnswersAdapter()
 
         adapter.setAnswers(answers)
-        Log.d("TAG_Q ans", answers.size.toString())
+//        Log.d("TAG_Q ans", answers.size.toString())
 
         adapter.setAvatar = { imageView, uri ->
             Glide.with(context)

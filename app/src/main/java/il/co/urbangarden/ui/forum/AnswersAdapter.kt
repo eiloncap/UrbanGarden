@@ -1,5 +1,6 @@
 package il.co.urbangarden.ui.forum
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -33,6 +34,8 @@ class AnswersAdapter : RecyclerView.Adapter<AnswerHolder>() {
     override fun onBindViewHolder(holder: AnswerHolder, position: Int) {
         val answer = _answers[position]
         holder.answer.text = answer.answer
+        Log.d("Tag_q adapter", answer.answer)
+        Log.d("Tag_q adapter", "${_answers.size} pos: $position")
         val dateFormatHour: DateFormat = SimpleDateFormat("HH:mm")
         holder.dateHour.text = dateFormatHour.format(answer.date).toString()
         val dateFormat: DateFormat = SimpleDateFormat("dd-MM-yy")
