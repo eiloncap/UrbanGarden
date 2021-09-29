@@ -21,6 +21,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.Timestamp
 import il.co.urbangarden.R
@@ -60,18 +61,19 @@ class PlantInfo : Fragment() {
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         plantsViewModel = ViewModelProvider(requireActivity()).get(MyPlantsViewModel::class.java)
         homeViewModel = ViewModelProvider(requireActivity()).get(HomeViewModel::class.java)
+        adapter = LocationAdapter()
 
         //finds views
         val imgView : ImageView = view.findViewById(R.id.plant_photo)
         val nameText: TextView = view.findViewById(R.id.name)
         val nameEdit: EditText = view.findViewById(R.id.edit_name)
-        val speciesText: TextView = view.findViewById(R.id.species)
-        val speciesEdit: EditText = view.findViewById(R.id.species_edit)
-        val lastStamp: TextView = view.findViewById(R.id.watering_text)
+//        val speciesText: TextView = view.findViewById(R.id.species)
+//        val speciesEdit: EditText = view.findViewById(R.id.species_edit)
+        val lastStamp: TextView = view.findViewById(R.id.get_text)
         val dropButton: FloatingActionButton = view.findViewById(R.id.watering_button)
         val notesText: TextView = view.findViewById(R.id.notes_text)
         val notesEdit: EditText = view.findViewById(R.id.notes_edit)
-        val saveButton: FloatingActionButton = view.findViewById(R.id.save_button)
+        val saveButton: ExtendedFloatingActionButton = view.findViewById(R.id.save_button)
         val shareButton: FloatingActionButton = view.findViewById(R.id.share_button)
         val pencil: ImageView = view.findViewById(R.id.pencil)
         val delete: ImageView = view.findViewById(R.id.delete)
@@ -97,10 +99,10 @@ class PlantInfo : Fragment() {
             }
         }
 
-        setViews(nameText, nameEdit, speciesText, speciesEdit, notesText, notesEdit, saveButton, pencil, imgView, locationImg)
+        setViews(nameText, nameEdit, notesText, notesEdit, saveButton, pencil, imgView, locationImg)
 
         pencil.setOnClickListener {
-            editMode(nameText, nameEdit, speciesText, speciesEdit, notesText, notesEdit, saveButton, pencil)
+            editMode(nameText, nameEdit, notesText, notesEdit, saveButton, pencil)
         }
 
         nameEdit.addTextChangedListener(object : TextWatcher {
@@ -124,10 +126,10 @@ class PlantInfo : Fragment() {
 
         saveButton.setOnClickListener {
             plantsViewModel.plant.name = nameEdit.text.toString()
-            plantsViewModel.plant.species = speciesEdit.text.toString()
+//            plantsViewModel.plant.species = speciesEdit.text.toString()
             plantsViewModel.plant.notes = notesEdit.text.toString()
             mainViewModel.uploadObject(plantsViewModel.plant)
-            showMode(nameText, nameEdit, speciesText, speciesEdit, notesText, notesEdit, saveButton, pencil)
+            showMode(nameText, nameEdit, notesText, notesEdit, saveButton, pencil)
         }
 
         delete.setOnClickListener {
@@ -162,11 +164,9 @@ class PlantInfo : Fragment() {
     private fun setViews(
         nameText: TextView,
         nameEdit: EditText,
-        speciesText: TextView,
-        speciesEdit: EditText,
         notesText: TextView,
         notesEdit: EditText,
-        saveButton: FloatingActionButton,
+        saveButton: ExtendedFloatingActionButton,
         pencil: ImageView,
         imgView: ImageView,
         locationImgView: ImageView
@@ -182,10 +182,10 @@ class PlantInfo : Fragment() {
         if (plantsViewModel.plant.name.isEmpty()){
             saveButton.visibility = View.GONE
             saveButton.isClickable = false
-            editMode(nameText, nameEdit, speciesText, speciesEdit, notesText, notesEdit, saveButton, pencil)
+            editMode(nameText, nameEdit, notesText, notesEdit, saveButton, pencil)
         }
         else {
-            showMode(nameText, nameEdit, speciesText, speciesEdit, notesText, notesEdit, saveButton, pencil)
+            showMode(nameText, nameEdit,notesText, notesEdit, saveButton, pencil)
 
         }
     }
@@ -193,15 +193,13 @@ class PlantInfo : Fragment() {
     private fun editMode(
         nameText: TextView,
         editName: EditText,
-        speciesText: TextView,
-        editSpecies: EditText,
         notesText: TextView,
         editNotes: EditText,
-        saveButton: FloatingActionButton,
+        saveButton: ExtendedFloatingActionButton,
         pencil: ImageView
     ){
         nameText.visibility = View.GONE
-        speciesText.visibility = View.GONE
+//        speciesText.visibility = View.GONE
         notesText.visibility = View.GONE
         pencil.visibility = View.GONE
 
@@ -211,31 +209,30 @@ class PlantInfo : Fragment() {
         }
 
         editName.visibility = View.VISIBLE
-        editSpecies.visibility = View.VISIBLE
+//        editSpecies.visibility = View.VISIBLE
         editNotes.visibility = View.VISIBLE
 
         editName.setText(plantsViewModel.plant.name)
-        editSpecies.setText(plantsViewModel.plant.species)
+//        editSpecies.setText(plantsViewModel.plant.species)
         editNotes.setText(plantsViewModel.plant.notes)
 
     }
 
-    private fun showMode(nameText: TextView, editName: EditText, speciesText: TextView,
-                         editSpecies: EditText, notesText: TextView, editNotes: EditText,
-                         saveButton: FloatingActionButton, pencil: ImageView){
+    private fun showMode(nameText: TextView, editName: EditText, notesText: TextView, editNotes: EditText,
+                         saveButton: ExtendedFloatingActionButton, pencil: ImageView){
         nameText.visibility = View.VISIBLE
-        speciesText.visibility = View.VISIBLE
+//        speciesText.visibility = View.VISIBLE
         notesText.visibility = View.VISIBLE
         pencil.visibility = View.VISIBLE
 
         editName.visibility = View.GONE
-        editSpecies.visibility = View.GONE
+//        editSpecies.visibility = View.GONE
         editNotes.visibility = View.GONE
         saveButton.visibility = View.GONE
         saveButton.isClickable = false
 
         nameText.text = plantsViewModel.plant.name
-        speciesText.text = plantsViewModel.plant.species
+//        speciesText.text = plantsViewModel.plant.species
         notesText.text = plantsViewModel.plant.notes
     }
 

@@ -53,18 +53,19 @@
                     tools:text="Living Room Window" />
 
                 <EditText
-                    android:layout_width="wrap_content"
+                    android:id="@+id/name_edit"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:hint="Plant Name"
-                    android:textColor="#70DE75"
+                    android:fontFamily="sans-serif-medium"
+                    android:textColor="@color/light_green"
                     android:textSize="40sp"
-                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintHorizontal_bias="0.2"
+                    app:layout_constraintHorizontal_bias="0.1"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Living Room Window" />
+                    app:layout_constraintVertical_bias="0.8" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -83,7 +84,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
-                        android:id="@+id/watering_text"
+                        android:id="@+id/get_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Get Recommended\nPlants"
@@ -139,6 +140,39 @@
                         android:textSize="20sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toRightOf="@id/sun_icon"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/num_hours"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toRightOf="@id/minus"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/grey"
+                        android:text="0"/>
+
+                    <ImageView
+                        android:id="@+id/minus"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="20dp"
+                        android:src="@drawable/minus_icon"
+                        android:scaleType="fitXY"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toRightOf="@id/sun_hours"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/plus"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="10dp"
+                        android:src="@drawable/plus_icon"
+                        android:scaleType="fitXY"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toRightOf="@id/num_hours"
                         app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -216,6 +250,16 @@
                     app:layout_constraintTop_toBottomOf="@id/share_button"
                     app:layout_constraintVertical_bias="0.0" />
 
+                <ImageView
+                    android:id="@+id/delete"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/delete_icon"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginRight="10dp"/>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
             <ImageView
                 android:id="@+id/location_photo"
@@ -229,7 +273,7 @@
                 android:adjustViewBounds="true"
                 android:scaleType="fitXY"
                 android:padding="5dp"
-                tools:src="@drawable/location" />
+                android:src="@drawable/location" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/camera_layout"

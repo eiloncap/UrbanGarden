@@ -7,6 +7,8 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +22,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import il.co.urbangarden.R
 import il.co.urbangarden.data.FirebaseViewableObject
@@ -29,6 +32,7 @@ import il.co.urbangarden.ui.home.HomeViewModel
 import il.co.urbangarden.ui.location.suggestPlants.PlantAdapter
 import il.co.urbangarden.utils.ImageCropOption
 import kotlinx.android.synthetic.main.location_info_fragment.*
+import kotlin.math.min
 
 
 class LocationInfo : Fragment() {
@@ -58,17 +62,20 @@ class LocationInfo : Fragment() {
 
 
         //finds views
-        val imgView: ImageView = view.findViewById(R.id.location_photo)
-        val sunHours: EditText = view.findViewById(R.id.sun_hours)
-        val name: EditText = view.findViewById(R.id.edit_name)
-        val saveButton: Button = view.findViewById(R.id.save_button)
+        val locationImgView: ImageView = view.findViewById(R.id.location_photo)
+        val sunHours: TextView = view.findViewById(R.id.num_hours)
+        val minus: ImageView = view.findViewById(R.id.minus)
+        val plus: ImageView = view.findViewById(R.id.plus)
+        val name: TextView = view.findViewById(R.id.name)
+        val nameEdit: EditText = view.findViewById(R.id.name_edit)
+        val saveButton: ExtendedFloatingActionButton = view.findViewById(R.id.save_button)
         val shareButton: FloatingActionButton = view.findViewById(R.id.share_button)
         val getPlantsButton: FloatingActionButton = view.findViewById(R.id.get_plant_button)
+        val getPlantText: TextView = view.findViewById(R.id.get_text)
+        val pencil: ImageView = view.findViewById(R.id.pencil)
+        val delete: ImageView = view.findViewById(R.id.delete)
 
-        //sets views
-        mainViewModel.setImgFromPath(locationViewModel.location, imgView)
-        sunHours.setText(locationViewModel.location.sunny.toString())
-        name.setText(locationViewModel.location.name)
+        setViews(locationImgView, sunHours, minus, plus,name, nameEdit, saveButton, shareButton, pencil, getPlantText, getPlantsButton)
 
         //init the camera launcher
         val resultLauncher = registerForActivityResult(
@@ -85,23 +92,73 @@ class LocationInfo : Fragment() {
                 )
 
                 val imageBitmap = result.data?.extras?.get("data") as Bitmap
-                imgView.setImageBitmap(imageBitmap)
+                locationImgView.setImageBitmap(imageBitmap)
+            }
+        }
+
+        nameEdit.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                if (s.toString().isEmpty()){
+                    saveButton.visibility = View.GONE
+                    saveButton.isClickable = false
+                }
+                else{
+                    saveButton.visibility = View.VISIBLE
+                    saveButton.isClickable = true
+                }
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+        })
+
+        delete.setOnClickListener {
+            mainViewModel.removeObject(locationViewModel.location)
+            homeViewModel.tab = 1
+            view.findNavController().navigate(R.id.action_plantInfo_to_navigation_home)
+        }
+
+        minus.setOnClickListener {
+            if (locationViewModel.location.sunny == 10){
+                plus.visibility = View.VISIBLE
+            }
+            if (locationViewModel.location.sunny > 1){
+                locationViewModel.location.sunny -= 1
+                sunHours.text = locationViewModel.location.sunny.toString()
+            }
+            if (locationViewModel.location.sunny == 1){
+                minus.visibility = View.GONE
+            }
+        }
+
+        plus.setOnClickListener {
+            if (locationViewModel.location.sunny == 1){
+                minus.visibility = View.VISIBLE
+            }
+            if (locationViewModel.location.sunny < 10){
+                locationViewModel.location.sunny += 1
+                sunHours.text = locationViewModel.location.sunny.toString()
+            }
+            if (locationViewModel.location.sunny == 10){
+                plus.visibility = View.GONE
             }
         }
 
         saveButton.setOnClickListener {
-            val imgFileName: String = locationViewModel.location.uid + ".jpeg"
-            locationViewModel.location.name = edit_name.text.toString()
-            locationViewModel.location.imgFileName = imgFileName
+
+            locationViewModel.location.name = nameEdit.text.toString()
             locationViewModel.location.sunny = sunHours.text.toString().toInt()
             mainViewModel.uploadObject(locationViewModel.location)
             homeViewModel.tab = 1
-            view.findNavController()
-                .navigate(il.co.urbangarden.R.id.action_locationInfo_to_navigation_home)
+            showMode(sunHours, minus, plus, name, nameEdit, saveButton, shareButton, pencil, getPlantText, getPlantsButton)
         }
-        //todo share button on click and camera on click
 
-        cameraButton.setOnClickListener {
+        locationImgView.setOnClickListener {
+            val imgFileName: String = locationViewModel.location.uid + ".jpeg"
+            locationViewModel.location.imgFileName = imgFileName
             if (activity?.packageManager?.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY) == true) {
                 val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                 resultLauncher.launch(takePictureIntent)
@@ -111,6 +168,100 @@ class LocationInfo : Fragment() {
         getPlantsButton.setOnClickListener {
             showDialog().show()
         }
+        //todo share button on click and camera on click
+    }
+
+    private fun setViews(
+        locationImgView: ImageView,
+        sunHours: TextView,
+        minus: ImageView,
+        plus: ImageView,
+        name: TextView,
+        nameEdit: EditText,
+        saveButton: ExtendedFloatingActionButton,
+        shareButton: FloatingActionButton,
+        pencil: ImageView,
+        getPlantText: TextView,
+        getPlantsButton: FloatingActionButton
+    ) {
+        if (locationViewModel.location.name.isEmpty()){
+            editMode(sunHours, minus, plus, name, nameEdit, saveButton, shareButton, pencil, getPlantText, getPlantsButton)
+        }
+        else{
+            if (locationViewModel.location.imgFileName.isNotEmpty()){
+                mainViewModel.setImgFromPath(locationViewModel.location, locationImgView, ImageCropOption.SQUARE)
+            }
+            showMode(sunHours, minus, plus, name, nameEdit, saveButton, shareButton, pencil,getPlantText, getPlantsButton)
+        }
+
+    }
+
+    private fun showMode(
+        sunHours: TextView,
+        minus: ImageView,
+        plus: ImageView,
+        name: TextView,
+        nameEdit: EditText,
+        saveButton: ExtendedFloatingActionButton,
+        shareButton: FloatingActionButton,
+        pencil: ImageView,
+        plantText: TextView,
+        plantsButton: FloatingActionButton
+    ) {
+        pencil.visibility = View.GONE
+        minus.visibility = View.GONE
+        plus.visibility = View.GONE
+        nameEdit.visibility = View.GONE
+        saveButton.visibility = View.GONE
+        saveButton.isClickable = false
+
+        name.visibility = View.VISIBLE
+        shareButton.visibility = View.VISIBLE
+        plantText.visibility = View.VISIBLE
+        plantsButton.visibility = View.VISIBLE
+        plantsButton.isClickable = true
+
+        name.text = locationViewModel.location.name
+
+        if (locationViewModel.location.sunny > 0){
+            sunHours.text = locationViewModel.location.sunny.toString()
+        }
+
+    }
+
+    private fun editMode(
+        sunHours: TextView,
+        minus: ImageView,
+        plus: ImageView,
+        name: TextView,
+        nameEdit: EditText,
+        saveButton: ExtendedFloatingActionButton,
+        shareButton: FloatingActionButton,
+        pencil: ImageView,
+        getPlantText: TextView,
+        getPlantsButton: FloatingActionButton
+    ) {
+        pencil.visibility = View.VISIBLE
+        minus.visibility = View.VISIBLE
+        plus.visibility = View.VISIBLE
+        nameEdit.visibility = View.VISIBLE
+
+        if (locationViewModel.location.name.isNotEmpty()){
+            nameEdit.setText(locationViewModel.location.name)
+            saveButton.visibility = View.VISIBLE
+            saveButton.isClickable = true
+        }
+
+        name.visibility = View.GONE
+        shareButton.visibility = View.GONE
+        getPlantText.visibility = View.GONE
+        getPlantsButton.visibility = View.GONE
+        getPlantsButton.isClickable = false
+
+        if (locationViewModel.location.sunny > 0){
+            sunHours.text = locationViewModel.location.sunny.toString()
+        }
+
     }
 
 
