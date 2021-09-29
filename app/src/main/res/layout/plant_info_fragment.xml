@@ -204,6 +204,7 @@
                             android:id="@+id/input_days"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:inputType="number"
                             android:textSize="20sp"
                             android:layout_marginLeft="5dp"
                             app:layout_constraintBottom_toBottomOf="@id/clock_icon"

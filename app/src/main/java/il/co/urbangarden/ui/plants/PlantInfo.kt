@@ -139,14 +139,19 @@ class PlantInfo : Fragment() {
 
         nameEdit.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                if (s.toString().isEmpty()){
-                    saveButton.visibility = View.GONE
-                    saveButton.isClickable = false
-                }
-                else{
-                    saveButton.visibility = View.VISIBLE
-                    saveButton.isClickable = true
-                }
+                plantsViewModel.plant.name = s.toString()
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+        })
+
+        inputDays.addTextChangedListener(object : TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+                plantsViewModel.plant.watering = s.toString().toInt()
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -158,14 +163,18 @@ class PlantInfo : Fragment() {
 
         saveButton.setOnClickListener {
             if (plantsViewModel.plant.name.isEmpty()){
-                Toast.makeText(context, "Please Enter Plant Name", Toast.LENGTH_SHORT)
+                Toast.makeText(context, "Please Enter Plant Name", Toast.LENGTH_SHORT).show()
+            }
+            else if (plantsViewModel.plant.watering == 0){
+                Toast.makeText(context, "Please enter ", Toast.LENGTH_SHORT).show()
             }
             else {
+                plantsViewModel.plant.watering = inputDays.text.toString().toInt()
                 plantsViewModel.plant.name = nameEdit.text.toString()
 //            plantsViewModel.plant.species = speciesEdit.text.toString()
                 plantsViewModel.plant.notes = notesEdit.text.toString()
-                mainViewModel.uploadObject(plantsViewModel.plant)
                 showMode()
+                mainViewModel.uploadObject(plantsViewModel.plant)
             }
         }
 
@@ -214,8 +223,6 @@ class PlantInfo : Fragment() {
             mainViewModel.setImgFromPath(plantsViewModel.plant, imgView)
         }
         if (plantsViewModel.plant.name.isEmpty()){
-            saveButton.visibility = View.GONE
-            saveButton.isClickable = false
             editMode()
         }
         else {
@@ -239,6 +246,7 @@ class PlantInfo : Fragment() {
 
         nextWatering.visibility = View.VISIBLE
         inputDays.visibility = View.VISIBLE
+        days.visibility = View.VISIBLE
         nameEdit.visibility = View.VISIBLE
 //        editSpecies.visibility = View.VISIBLE
         notesEdit.visibility = View.VISIBLE
@@ -254,12 +262,19 @@ class PlantInfo : Fragment() {
 //        speciesText.visibility = View.VISIBLE
         notesText.visibility = View.VISIBLE
         pencil.visibility = View.VISIBLE
+        dropButton.visibility = View.VISIBLE
+        dropButton.isClickable = true
+        lastStamp.visibility = View.VISIBLE
+        lastWatringTitle.visibility = View.VISIBLE
 
         nameEdit.visibility = View.GONE
 //        editSpecies.visibility = View.GONE
         notesEdit.visibility = View.GONE
         saveButton.visibility = View.GONE
         saveButton.isClickable = false
+        nextWatering.visibility = View.GONE
+        inputDays.visibility = View.GONE
+        days.visibility = View.GONE
 
         nameText.text = plantsViewModel.plant.name
 //        speciesText.text = plantsViewModel.plant.species
