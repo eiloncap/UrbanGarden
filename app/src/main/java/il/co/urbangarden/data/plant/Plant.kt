@@ -10,6 +10,8 @@ data class Plant(
     override val imgFileName: String = "$uid.jpeg",
     val name: String = "",
     val care: String = "",
-    val sun: Int = 5
+    val sun: Int = 5,
+    val waterAmount: Int = 0,
+    val daysWatering: Int = 0
 
 ) : FirebaseViewableObject
