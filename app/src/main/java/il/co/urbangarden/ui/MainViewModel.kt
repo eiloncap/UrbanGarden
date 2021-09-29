@@ -39,6 +39,8 @@ class MainViewModel : ViewModel() {
     val locationsList: LiveData<List<Location>> = _locationsList
 
     companion object {
+        private const val PLANTS_IMAGES_STORAGE_TAG = "Plants"
+        private const val FORUM_IMAGES_STORAGE_TAG = "Forum"
         private const val USERS_COLLECTION_TAG = "Users"
         private const val USER_PLANTS_COLLECTION_TAG = "plants"
         private const val USER_LOCATIONS_COLLECTION_TAG = "locations"
@@ -147,26 +149,26 @@ class MainViewModel : ViewModel() {
             .document(item.uid).delete()
     }
 
-    fun setImgFromPath(
-        item: FirebaseViewableObject,
-        imageView: ImageView,
-        crop: ImageCropOption = ImageCropOption.NONE
-    ) {
-
-        val dir: String = when (item) {
+    private fun getObjectImageDirectory(obj: FirebaseViewableObject): String {
+        return when (obj) {
             is Plant -> {
-                "Plants"
+                PLANTS_IMAGES_STORAGE_TAG
             }
             is Question -> {
-                "Forum"
-            }
-            is Location ->{
-                "Location"
+                FORUM_IMAGES_STORAGE_TAG
             }
             else -> {
                 userUid!!.toString()
             }
         }
+    }
+
+    fun setImgFromPath(
+        item: FirebaseViewableObject,
+        imageView: ImageView,
+        crop: ImageCropOption = ImageCropOption.NONE
+    ) {
+        val dir = getObjectImageDirectory(item)
 
         // Reference to an image file in Firebase Storage
         val storageReference: StorageReference =
@@ -183,7 +185,15 @@ class MainViewModel : ViewModel() {
             .into(imageView)
     }
 
-    private fun getImageUri(inContext: Context, inImage: Bitmap): Uri? {
+    fun callbackOnFirebaseImageUri(obj: FirebaseViewableObject, callback: (Uri) -> Unit) {
+        val dir = getObjectImageDirectory(obj)
+        storage.reference.child("$dir/${obj.imgFileName}")
+            .downloadUrl.addOnSuccessListener { uri ->
+                callback(uri)
+            }
+    }
+
+    fun getImageUri(inContext: Context, inImage: Bitmap): Uri? {
         val file = File(inContext.cacheDir, "lcl_urban_garden") // Get Access to a local file.
         file.delete() // Delete the File, just in Case, that there was still another File
         file.createNewFile()
@@ -225,13 +235,9 @@ class MainViewModel : ViewModel() {
         }
     }
 
-//    fun getPlant(label: String): Plant? {
-//        return plantsLiveData.value?.firstOrNull { it.name == label }
-//    }
-//
-//    fun getPlant(plant: PlantInstance): Plant? {
-//        return plantsLiveData.value?.firstOrNull { it.uid == plant.speciesUid }
-//    }
+    fun getPlant(label: String): Plant? {
+        return plantsLiveData.value?.firstOrNull { it.name == label }
+    }
 
     fun getPlantInstance(uid: String): PlantInstance? {
         return _plantsList.value?.firstOrNull { it.uid == uid }
@@ -264,7 +270,5 @@ class MainViewModel : ViewModel() {
             }
             .addOnFailureListener { exception ->
             }
-
     }
-
 }
