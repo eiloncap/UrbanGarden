@@ -13,12 +13,13 @@ import il.co.urbangarden.data.plant.PlantInstance
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 class PlantInstanceAdapter : RecyclerView.Adapter<PlantInstanceHolder>() {
 
 
-    private var plantsList: List<PlantInstance> = ArrayList()
+    private var plantsList: MutableList<PlantInstance> = ArrayList()
     var onItemClick: ((PlantInstance) -> Unit)? = null
     var onDropClick: ((PlantInstance) -> Unit)? = null
     var setImg: ((FirebaseViewableObject, ImageView) -> Unit)? = null
@@ -27,12 +28,18 @@ class PlantInstanceAdapter : RecyclerView.Adapter<PlantInstanceHolder>() {
     @SuppressLint("NotifyDataSetChanged")
     fun setPlantList(dataList: List<PlantInstance>?) {
         if (dataList != null) {
-            this.plantsList = dataList
+            plantsList.clear()
+            plantsList.addAll(dataList)
+            plantsList.sortBy {
+                it.watering - TimeUnit.DAYS.convert(
+                    Date().time - it.lastWatered.time, TimeUnit.MILLISECONDS
+                )
+            }
             notifyDataSetChanged()
         }
     }
 
-    // Provide a direct reference to each of the views with data items
+// Provide a direct reference to each of the views with data items
 
 
     // Usually involves inflating a layout from XML and returning the holder
@@ -42,7 +49,7 @@ class PlantInstanceAdapter : RecyclerView.Adapter<PlantInstanceHolder>() {
         var view = LayoutInflater.from(parent.context).inflate(R.layout.one_plant, parent, false)
         var holder = PlantInstanceHolder(view)
 
-        holder.view.setOnClickListener{
+        holder.view.setOnClickListener {
             val callback = onItemClick ?: return@setOnClickListener
             val plant = plantsList[holder.bindingAdapterPosition]
             callback(plant)
@@ -67,7 +74,7 @@ class PlantInstanceAdapter : RecyclerView.Adapter<PlantInstanceHolder>() {
         instanceHolder.name.text = item.name
         val dateFormat: DateFormat = SimpleDateFormat("dd-MM-yy  hh:mm")
         instanceHolder.lastWatering.text = dateFormat.format(item.lastWatered).toString()
-        setImg?.let { it(item , instanceHolder.image) }
+        setImg?.let { it(item, instanceHolder.image) }
     }
 
     //  total count of items in the list
