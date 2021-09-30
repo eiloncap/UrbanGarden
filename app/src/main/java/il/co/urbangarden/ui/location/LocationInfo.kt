@@ -18,6 +18,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -30,6 +31,7 @@ import il.co.urbangarden.ui.MainViewModel
 import il.co.urbangarden.ui.home.HomeViewModel
 import il.co.urbangarden.ui.location.locationPlants.SubPlantAdapter
 import il.co.urbangarden.ui.location.suggestPlants.PlantAdapter
+import il.co.urbangarden.ui.plants.MyPlantsViewModel
 import il.co.urbangarden.utils.ImageCropOption
 import kotlinx.android.synthetic.main.location_info_fragment.*
 import kotlin.math.min
@@ -43,7 +45,9 @@ class LocationInfo : Fragment() {
 
     private lateinit var mainViewModel: MainViewModel
     private lateinit var locationViewModel: MyLocationsViewModel
+    private lateinit var plantViewModel: MyPlantsViewModel
     private lateinit var homeViewModel: HomeViewModel
+
     private lateinit var locationImgView: ImageView
     private lateinit var sunHours: TextView
     private lateinit var minus: ImageView
@@ -72,6 +76,7 @@ class LocationInfo : Fragment() {
         locationViewModel =
             ViewModelProvider(requireActivity()).get(MyLocationsViewModel::class.java)
         homeViewModel = ViewModelProvider(requireActivity()).get(HomeViewModel::class.java)
+        plantViewModel = ViewModelProvider(requireActivity()).get(MyPlantsViewModel::class.java)
 
 
         //finds views
@@ -188,6 +193,8 @@ class LocationInfo : Fragment() {
 
             val adapter = SubPlantAdapter()
             adapter.onItemClick = { plant: PlantInstance ->
+                plantViewModel.plant = plant
+                view?.findNavController()?.navigate(R.id.action_locationInfo_to_plantInfo)
             }
 
             adapter.setImg = { plant: FirebaseViewableObject, img: ImageView ->
@@ -216,6 +223,7 @@ class LocationInfo : Fragment() {
         pencil.visibility = View.VISIBLE
         name.visibility = View.VISIBLE
         shareButton.visibility = View.VISIBLE
+        shareButton.isClickable = true
         getPlantText.visibility = View.VISIBLE
         getPlantsButton.visibility = View.VISIBLE
         getPlantsButton.isClickable = true
@@ -242,6 +250,7 @@ class LocationInfo : Fragment() {
         pencil.visibility = View.GONE
         name.visibility = View.GONE
         shareButton.visibility = View.GONE
+        shareButton.isClickable = false
         getPlantText.visibility = View.GONE
         getPlantsButton.visibility = View.GONE
         getPlantsButton.isClickable = false

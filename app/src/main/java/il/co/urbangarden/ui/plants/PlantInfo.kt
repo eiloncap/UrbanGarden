@@ -216,10 +216,11 @@ class PlantInfo : Fragment() {
         dropButton.isClickable = false
         lastStamp.visibility = View.GONE
         lastWatringTitle.visibility = View.GONE
+        shareButton.visibility = View.GONE
+        shareButton.isClickable = false
+
         saveButton.visibility = View.VISIBLE
         saveButton.isClickable = true
-
-
         nextWatering.visibility = View.VISIBLE
         inputDays.visibility = View.VISIBLE
         days.visibility = View.VISIBLE
@@ -240,6 +241,8 @@ class PlantInfo : Fragment() {
         pencil.visibility = View.VISIBLE
         dropButton.visibility = View.VISIBLE
         dropButton.isClickable = true
+        shareButton.visibility = View.VISIBLE
+        shareButton.isClickable = true
         lastStamp.visibility = View.VISIBLE
         lastWatringTitle.visibility = View.VISIBLE
 

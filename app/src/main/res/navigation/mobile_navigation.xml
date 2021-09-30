@@ -59,6 +59,9 @@
         <action
             android:id="@+id/action_locationInfo_to_navigation_home"
             app:destination="@id/navigation_home" />
+        <action
+            android:id="@+id/action_locationInfo_to_plantInfo"
+            app:destination="@id/plantInfo" />
     </fragment>
     <fragment
         android:id="@+id/plantInfo"

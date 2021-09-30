@@ -16,6 +16,7 @@ import il.co.urbangarden.data.FirebaseViewableObject
 import il.co.urbangarden.ui.MainViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import il.co.urbangarden.data.plant.PlantInstance
 import il.co.urbangarden.databinding.MyPlantsFragmentBinding
 
@@ -94,7 +95,7 @@ class MyPlantsFragment : Fragment() {
         }
         mainViewModel.plantsList.observe(viewLifecycleOwner, plantsObserver)
 
-        val addButton: Button = view.findViewById(R.id.add_button)
+        val addButton: ExtendedFloatingActionButton = view.findViewById(R.id.add_new_plant)
 
         addButton.setOnClickListener {
             val newPlant = PlantInstance()
