@@ -26,14 +26,12 @@ import il.co.urbangarden.data.plant.Plant
 import il.co.urbangarden.data.plant.PlantInstance
 import il.co.urbangarden.databinding.FragmentCameraBinding
 import il.co.urbangarden.ml.Model
-//import il.co.urbangarden.ml.Model
+import org.tensorflow.lite.support.image.TensorImage
 import il.co.urbangarden.ui.MainViewModel
 import il.co.urbangarden.ui.location.MyLocationsViewModel
 import il.co.urbangarden.ui.plants.MyPlantsViewModel
 import il.co.urbangarden.utils.ImageCropOption
-import org.tensorflow.lite.support.image.TensorImage
 
-//import org.tensorflow.lite.support.image.TensorImage
 
 
 class CameraNavigationFragment : Fragment() {

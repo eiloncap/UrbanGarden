@@ -13,8 +13,12 @@ class MyLocationsViewModel : ViewModel() {
     //should do observe
     fun relevantPlants(location: Location, plantList:List<Plant>?): List<Plant> {
         return ArrayList(plantList)
-            .filter { it.sun <= location.sunny }
-            .sortedByDescending { it.sun }
+            .filter { getSun(it) <= location.sunny }
+            .sortedByDescending { getSun(it) }
+    }
+
+    fun getSun(plant: Plant): Int{
+        return 5
     }
 
 }

@@ -56,7 +56,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/new_plant_button"
-        android:drawableLeft="@drawable/small_location"/>
+        android:drawableLeft="@drawable/ic_add_location_alt"/>
 
 
 

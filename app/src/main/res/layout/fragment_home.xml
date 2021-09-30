@@ -20,7 +20,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layoutDirection="ltr"
-                app:tabIndicator="@android:drawable/button_onoff_indicator_off"
                 app:tabIndicatorColor="@color/dark_green"
                 app:tabMode="fixed">
 

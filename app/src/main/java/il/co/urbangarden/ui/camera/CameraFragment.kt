@@ -35,19 +35,11 @@ class CameraFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        Log.d("amit", "what")
-
         mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        Log.d("amit", "the")
         cameraViewModel = ViewModelProvider(this).get(CameraViewModel::class.java)
-        Log.d("amit", "fuck")
 
-        Log.d("amit1", cameraViewModel.fileName)
+        openCameraTakePictureAndUploadToDb(cameraViewModel.fileName)
 
-//        openCameraTakePictureAndUploadToDb(cameraViewModel.fileName)
-
-        Log.d("amit", cameraViewModel.state)
         navigateFragmentByState(view)
     }
 
