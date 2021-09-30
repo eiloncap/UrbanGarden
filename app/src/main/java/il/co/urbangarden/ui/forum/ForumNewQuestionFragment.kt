@@ -84,9 +84,6 @@ class ForumNewQuestionFragment : Fragment() {
 
             forumViewModel.addNewQuestion(newQuestion, id)
             Log.d("TAG_Q new", title.text.toString())
-//            parentFragmentManager.popBackStack()
-//            parentFragmentManager.popBackStackImmediate()
-//            view?.findNavController().navigateUp()
             val navController = Navigation.findNavController(requireView())
             navController.navigateUp()
         }

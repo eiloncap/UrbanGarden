@@ -1,24 +1,25 @@
 package il.co.urbangarden.ui.forum
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
+import android.widget.EditText
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import il.co.urbangarden.R
-import il.co.urbangarden.data.FirebaseViewableObject
-import il.co.urbangarden.data.forum.Question
+import il.co.urbangarden.data.forum.Answer
+import il.co.urbangarden.data.forum.Topic
 import il.co.urbangarden.databinding.FragmentForumBinding
 import il.co.urbangarden.ui.MainViewModel
-import il.co.urbangarden.utils.ImageCropOption
 
 class ForumFragment : Fragment() {
 
@@ -43,18 +44,17 @@ class ForumFragment : Fragment() {
         val root: View = binding.root
 
 
-        val addQuestionButton: ExtendedFloatingActionButton = binding.addNewQuestion
-        addQuestionButton.setOnClickListener {
-            view?.findNavController()
-                ?.navigate(R.id.action_navigation_forum_to_forumNewQuestionFragment)
+        val addTopicButton: ExtendedFloatingActionButton = binding.addNewTopic
+        addTopicButton.setOnClickListener {
+            newTopicDialog().show()
         }
 
-        if (forumViewModel.questionsLiveData.value == null) {
-            forumViewModel.questionsLiveData.observe(requireActivity(),
-                { listOfQuestion -> setupQuestionListAdapter(listOfQuestion) })
-            forumViewModel.addQuestionSnapShot()
+        if (forumViewModel.topicsLiveData.value == null) {
+            forumViewModel.topicsLiveData.observe(requireActivity(),
+                { listOfTopic -> setupTopicListAdapter(listOfTopic) })
+            forumViewModel.addTopicSnapShot()
         } else {
-            setupQuestionListAdapter(forumViewModel.questionsLiveData.value!!)
+            setupTopicListAdapter(forumViewModel.topicsLiveData.value!!)
         }
 
         return root
@@ -65,34 +65,59 @@ class ForumFragment : Fragment() {
         _binding = null
     }
 
-    private fun setupQuestionListAdapter(questions: List<Question>) {
+    private fun setupTopicListAdapter(topics: List<Topic>) {
         val context = requireContext()
-        val adapter = QuestionAdapter()
+        val adapter = TopicAdapter()
 
-        adapter.setQuestions(questions)
+        adapter.setTopics(topics)
 
-        adapter.onItemClick = { question: Question ->
-            forumViewModel.currQuestion = question
-            forumViewModel.currAnswers = MutableLiveData()
+        adapter.onItemClick = { topic: Topic ->
+            forumViewModel.currTopic = topic
+            forumViewModel.questionsLiveData = MutableLiveData()
 
             // navigate to forum item
-            view?.findNavController()?.navigate(R.id.action_navigation_forum_to_forumItemFragment2)
+            view?.findNavController()?.navigate(R.id.action_navigation_forum_to_placeholder)
         }
 
-        adapter.setImg = { question: FirebaseViewableObject, img: ImageView ->
-            mainViewModel.setImgFromPath(question, img, ImageCropOption.SQUARE)
-        }
-
-        adapter.setAvatar = { imageView, uri ->
-            Glide.with(context)
-                .load(uri)
-                .circleCrop()
-                .into(imageView)
-        }
-
-        val questionRecycler = _binding!!.recycleView
-        questionRecycler.adapter = adapter
-        questionRecycler.layoutManager =
+        val topicRecycler = _binding!!.recycleView
+        topicRecycler.adapter = adapter
+        topicRecycler.layoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
     }
+
+    private fun newTopicDialog(): Dialog {
+        return this.let {
+            val builder = AlertDialog.Builder(requireContext())
+            // Get the layout inflater
+            val view = LayoutInflater.from(requireContext())
+                .inflate(R.layout.dialog_new_answer, null)
+            val answer: EditText = view.findViewById(R.id.newAnswer)
+
+            // Inflate and set the layout for the dialog
+            // Pass null as the parent view because its going in the dialog layout
+            builder.setView(view)
+                // Add action buttons
+                .setPositiveButton("Submit") { dialog, id ->
+                    if (answer.text.toString() != "") {
+                        forumViewModel.addNewTopic(
+                            Topic(
+                                topic = answer.text.toString()
+                            )
+                        )
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Please type something",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    }
+                }
+                .setNegativeButton("Cancel") { dialog, id ->
+                }
+            builder.setCancelable(false);
+            builder.create()
+        }
+    }
+
 }

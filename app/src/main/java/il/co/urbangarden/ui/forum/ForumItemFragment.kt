@@ -113,7 +113,7 @@ class ForumItemFragment : Fragment() {
                 builder.setTitle("Are you sure you want to delete the question?")
                     .setPositiveButton("Delete") { dialog, id ->
                         //delete from firebase
-                        mainViewModel.db.collection("Forum").document(currQuestion.uid).delete()
+                        forumViewModel.currTopic!!.questions!!.document(currQuestion.uid).delete()
                         val navController = Navigation.findNavController(requireView())
                         navController.navigateUp()
                     }
