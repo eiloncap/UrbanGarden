@@ -219,14 +219,14 @@ class MainViewModel : ViewModel() {
         dir: String = userUid.toString()
     ) {
         if (imgBitmap != null && inContext != null) {
-            val img =
-                ImageUriConverter.getImageUri(inContext, imgBitmap) ?: return // TODO: deal better
+            val img = ImageUriConverter.getImageUri(inContext, imgBitmap)
+
             // Defining the child of storageReference
             val ref: StorageReference = storage.reference
                 .child("$dir/$filename.jpeg")
 
-            // adding listeners on upload
-            // or failure of image
+
+            // adding listeners on upload or failure of image
             ref.putFile(img)
                 .addOnSuccessListener { // Image uploaded successfully
                     // TODO: implement

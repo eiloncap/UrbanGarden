@@ -1,20 +1,16 @@
 package il.co.urbangarden.ui.forum
 
 import android.app.Dialog
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
@@ -24,14 +20,13 @@ import com.bumptech.glide.Glide
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import il.co.urbangarden.R
 import il.co.urbangarden.data.forum.Answer
+import il.co.urbangarden.data.forum.Question
 import il.co.urbangarden.databinding.FragmentForumItemBinding
 import il.co.urbangarden.ui.MainViewModel
 import il.co.urbangarden.utils.ImageCropOption
-import java.io.File
+import il.co.urbangarden.utils.ShareExecutor
 import java.text.DateFormat
-import il.co.urbangarden.data.forum.Question
 import java.text.SimpleDateFormat
-import android.view.Window
 
 
 //todo enlage photo on press
@@ -130,6 +125,7 @@ class ForumItemFragment : Fragment() {
 
         // set answers
         if (forumViewModel.currAnswers.value == null) {
+//            forumViewModel.getListOfAnswers()
             forumViewModel.currAnswers.observe(requireActivity(),
                 { listOfAnswers -> setupAnswerListAdapter(listOfAnswers) })
             forumViewModel.addAnswerSnapShot()
@@ -137,7 +133,7 @@ class ForumItemFragment : Fragment() {
             setupAnswerListAdapter(forumViewModel.currAnswers.value!!)
         }
 
-//        setShareButton(img)
+        setShareButton(currQuestion)
 
         return root
     }
@@ -172,6 +168,23 @@ class ForumItemFragment : Fragment() {
         answersRecycler.layoutManager = manager
     }
 
+    private fun setShareButton(currQuestion: Question) {
+        if (forumViewModel.currQuestion != null) {
+            binding.share.setOnClickListener {
+                mainViewModel.callbackOnImageDownloadedFromStorage(
+                    requireContext(),
+                    currQuestion
+                ) { uri ->
+                    ShareExecutor.shareContent(
+                        requireContext(),
+                        "check this question by ${currQuestion.userName}:\n\n" +
+                                "${currQuestion.title}\n" +
+                                currQuestion.question, uri
+                    )
+                }
+            }
+        }
+    }
 
     private fun newAnswerDialog(): Dialog {
         return this.let {
@@ -207,6 +220,8 @@ class ForumItemFragment : Fragment() {
                 .setNegativeButton("Cancel") { dialog, id ->
                 }
             builder.setCancelable(false);
+//            builder.setCanceledOnTouchOutside(false);
+//            builder.set
             builder.create()
         }
     }
