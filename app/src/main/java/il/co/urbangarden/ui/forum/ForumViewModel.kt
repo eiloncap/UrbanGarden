@@ -50,23 +50,6 @@ class ForumViewModel : ViewModel() {
             .addOnFailureListener { exception ->
                 Log.d("TAG_Q fetch fail", "Error getting documents: ", exception)
             }
-
-//        return listOf(
-//            Question(image = " ", title = " yoyoyoy yo"),
-//            Question(
-//                title = "what is wronng with my fucking plant the hel",
-//                answers = listOf(
-//                    "1",
-//                    "2",
-//                    "3",
-//                    "asdfjs;alkdjflk alsdfjl; asdlkj  f sdf fdf  fdsf sdf lsdkafj"
-//                )
-//            ),
-//            Question(),
-//            Question(),
-//            Question(),
-//            Question()
-//        )
     }
 
     private fun getListOfQuestions() {

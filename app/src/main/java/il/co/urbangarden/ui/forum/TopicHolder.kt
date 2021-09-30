@@ -11,4 +11,5 @@ class TopicHolder(view: View) : RecyclerView.ViewHolder(view) {
     val title: TextView = view.findViewById(R.id.topicTitle)
     val numQuestions: TextView = view.findViewById(R.id.numQ)
     val date: TextView = view.findViewById(R.id.lastQDate)
+    val dateText: TextView = view.findViewById(R.id.lastQDateText)
 }

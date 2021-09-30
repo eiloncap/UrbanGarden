@@ -20,6 +20,7 @@ import il.co.urbangarden.data.forum.Answer
 import il.co.urbangarden.data.forum.Topic
 import il.co.urbangarden.databinding.FragmentForumBinding
 import il.co.urbangarden.ui.MainViewModel
+import java.util.*
 
 class ForumFragment : Fragment() {
 
@@ -66,7 +67,7 @@ class ForumFragment : Fragment() {
     }
 
     private fun setupTopicListAdapter(topics: List<Topic>) {
-        val context = requireContext()
+        val context = requireActivity()
         val adapter = TopicAdapter()
 
         adapter.setTopics(topics)

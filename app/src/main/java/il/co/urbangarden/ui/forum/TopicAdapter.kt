@@ -23,7 +23,8 @@ class TopicAdapter : RecyclerView.Adapter<TopicHolder>() {
     fun setTopics(topics: List<Topic>) {
         _topics.clear()
         _topics.addAll(topics)
-        _topics.sortByDescending { it.date }
+//        _topics.sortByDescending { it.date }
+        _topics.sortWith(compareByDescending(nullsFirst()) { it.date })
         notifyDataSetChanged()
     }
 
@@ -47,7 +48,13 @@ class TopicAdapter : RecyclerView.Adapter<TopicHolder>() {
         holder.title.text = topic.topic
         holder.numQuestions.text = topic.numOfQuestions.toString()
         val dateFormat: DateFormat = SimpleDateFormat("dd-MM-yy")
-        holder.date.text = dateFormat.format(topic.date).toString()
+        if (topic.date != null) {
+            holder.date.text = dateFormat.format(topic.date).toString()
+        }
+        else {
+            holder.date.text = ""
+            holder.dateText.text = ""
+        }
     }
 
     override fun getItemCount(): Int {

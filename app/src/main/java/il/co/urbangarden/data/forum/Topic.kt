@@ -8,7 +8,7 @@ import java.util.*
 data class Topic(
     val uid: String = "",
     var topic: String = "",
-    var date: Date = Date(),
+    var date: Date? = null,
     var questions: CollectionReference? = null,
     var numOfQuestions: Int = 0
 )

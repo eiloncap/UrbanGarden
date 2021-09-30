@@ -148,7 +148,7 @@ class ForumItemFragment : Fragment() {
     }
 
     private fun setupAnswerListAdapter(answers: List<Answer>) {
-        val context = requireContext()
+        val context = requireActivity()
         val adapter = AnswersAdapter()
 
         adapter.setAnswers(answers)

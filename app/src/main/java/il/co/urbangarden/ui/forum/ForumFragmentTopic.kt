@@ -70,7 +70,7 @@ class ForumFragmentTopic : Fragment() {
     }
 
     private fun setupQuestionListAdapter(questions: List<Question>) {
-        val context = requireContext()
+        val context = requireActivity()
         val adapter = QuestionAdapter()
 
         adapter.setQuestions(questions)
