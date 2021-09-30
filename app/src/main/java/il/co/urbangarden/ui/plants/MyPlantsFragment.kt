@@ -66,6 +66,7 @@ class MyPlantsFragment : Fragment() {
 
         adapter.onDropClick = { plant: PlantInstance->
             plant.lastWatered = Date()
+            adapter.setPlantList(plants)
             mainViewModel.uploadObject(plant)
         }
 
