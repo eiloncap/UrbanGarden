@@ -283,6 +283,7 @@ class MainViewModel : ViewModel() {
         mutableList.remove(plant.uid)
         if (location != null) {
             location.plants = mutableList
+            uploadObject(location)
         }
     }
 
@@ -290,6 +291,7 @@ class MainViewModel : ViewModel() {
         val plantsByLocation = getPlantsByLocation(location)
         plantsByLocation.forEach {
             it.locationUid = ""
+            uploadObject(it)
         }
     }
 }
