@@ -65,8 +65,6 @@ class CameraNavigationFragment : Fragment() {
         val newPlant: Button = view.findViewById(R.id.new_plant_button)
         val newLocation: Button = view.findViewById(R.id.new_location_button)
 
-//        prepareCameraIntent()
-
         newPlant.setOnClickListener {
             val newPlant = PlantInstance()
             plantsViewModel.plant = newPlant

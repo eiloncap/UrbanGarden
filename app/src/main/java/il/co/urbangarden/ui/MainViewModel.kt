@@ -23,6 +23,7 @@ import il.co.urbangarden.data.location.Location
 import il.co.urbangarden.data.plant.Plant
 import il.co.urbangarden.data.plant.PlantInstance
 import il.co.urbangarden.utils.ImageCropOption
+import il.co.urbangarden.utils.ImageUriConverter
 import java.io.ByteArrayOutputStream
 import java.io.File
 
@@ -44,6 +45,20 @@ class MainViewModel : ViewModel() {
         private const val USERS_COLLECTION_TAG = "Users"
         private const val USER_PLANTS_COLLECTION_TAG = "plants"
         private const val USER_LOCATIONS_COLLECTION_TAG = "locations"
+    }
+
+    private fun getObjectImageDirectory(obj: FirebaseViewableObject): String {
+        return when (obj) {
+            is Plant -> {
+                PLANTS_IMAGES_STORAGE_TAG
+            }
+            is Question -> {
+                FORUM_IMAGES_STORAGE_TAG
+            }
+            else -> {
+                userUid!!.toString()
+            }
+        }
     }
 
     fun loadDb() {
@@ -151,20 +166,6 @@ class MainViewModel : ViewModel() {
             .document(item.uid).delete()
     }
 
-    private fun getObjectImageDirectory(obj: FirebaseViewableObject): String {
-        return when (obj) {
-            is Plant -> {
-                PLANTS_IMAGES_STORAGE_TAG
-            }
-            is Question -> {
-                FORUM_IMAGES_STORAGE_TAG
-            }
-            else -> {
-                userUid!!.toString()
-            }
-        }
-    }
-
     fun setImgFromPath(
         item: FirebaseViewableObject,
         imageView: ImageView,
@@ -187,27 +188,28 @@ class MainViewModel : ViewModel() {
             .into(imageView)
     }
 
-    fun callbackOnFirebaseImageUri(obj: FirebaseViewableObject, callback: (Uri) -> Unit) {
-        val dir = getObjectImageDirectory(obj)
-        storage.reference.child("$dir/${obj.imgFileName}")
-            .downloadUrl.addOnSuccessListener { uri ->
-                callback(uri)
-            }
-    }
+    fun callbackOnImageDownloadedFromStorage(
+        ctx: Context,
+        item: FirebaseViewableObject,
+        callback: (Uri) -> Unit
+    ) {
+        val dir = getObjectImageDirectory(item)
 
-    fun getImageUri(inContext: Context, inImage: Bitmap): Uri? {
-        val file = File(inContext.cacheDir, "lcl_urban_garden") // Get Access to a local file.
-        file.delete() // Delete the File, just in Case, that there was still another File
-        file.createNewFile()
-        val fileOutputStream = file.outputStream()
-        val bytes = ByteArrayOutputStream()
-        inImage.compress(CompressFormat.JPEG, 100, bytes)
-        val bytearray = bytes.toByteArray()
-        fileOutputStream.write(bytearray)
-        fileOutputStream.flush()
-        fileOutputStream.close()
-        bytes.close()
-        return Uri.fromFile(file)
+        // Reference to an image file in Firebase Storage
+        val storageReference: StorageReference =
+            storage.reference.child("$dir/${item.imgFileName}")
+        val thread: Thread = object : Thread() {
+            override fun run() {
+                // Download directly from StorageReference using Glide
+                val bm = GlideApp.with(ctx)
+                    .asBitmap()
+                    .load(storageReference)
+                    .submit()
+                    .get()
+                callback(ImageUriConverter.getImageUri(ctx, bm))
+            }
+        }
+        thread.start()
     }
 
     fun uploadImage(
@@ -217,7 +219,8 @@ class MainViewModel : ViewModel() {
         dir: String = userUid.toString()
     ) {
         if (imgBitmap != null && inContext != null) {
-            val img = getImageUri(inContext, imgBitmap) ?: return // TODO: deal better
+            val img =
+                ImageUriConverter.getImageUri(inContext, imgBitmap) ?: return // TODO: deal better
             // Defining the child of storageReference
             val ref: StorageReference = storage.reference
                 .child("$dir/$filename.jpeg")
@@ -252,7 +255,7 @@ class MainViewModel : ViewModel() {
     fun getPlantsByLocation(loc: Location): ArrayList<PlantInstance> {
         val res = ArrayList<PlantInstance>()
         _plantsList.value?.forEach {
-            if (it.locationUid == loc.uid){
+            if (it.locationUid == loc.uid) {
                 res.add(it)
             }
         }
