@@ -198,7 +198,7 @@ class LocationInfo : Fragment() {
             }
 
             adapter.setImg = { plant: FirebaseViewableObject, img: ImageView ->
-                mainViewModel.setImgFromPath(plant, img, ImageCropOption.SQUARE)
+                mainViewModel.setImgFromPath(plant, img)
             }
 
             adapter.setPlantList(mainViewModel.getPlantsByLocation(locationViewModel.location))
@@ -296,7 +296,7 @@ class LocationInfo : Fragment() {
             }
 
             adapter.setImg = { plant: FirebaseViewableObject, img: ImageView ->
-                mainViewModel.setImgFromPath(plant, img, ImageCropOption.SQUARE)
+                mainViewModel.setImgFromPath(plant, img)
             }
 
             recyclerView.adapter = adapter
@@ -325,11 +325,10 @@ class LocationInfo : Fragment() {
 
             val imgView: ImageView = view.findViewById(R.id.plant_photo)
             val name: TextView = view.findViewById(R.id.name)
-            val care: TextView = view.findViewById(R.id.care)
 
             mainViewModel.setImgFromPath(plant, imgView)
             name.text = plant.name
-            care.text = plant.care
+
 
             // Inflate and set the layout for the dialog
             // Pass null as the parent view because its going in the dialog layout

@@ -9,6 +9,19 @@
         <entry key="..\:/Eilon/CS/year_2/semesterB/POST_PC/UrbanGarden/app/src/main/res/layout/location_info_fragment.xml" value="0.36102564102564105" />
         <entry key="..\:/Eilon/CS/year_2/semesterB/POST_PC/UrbanGarden/app/src/main/res/layout/my_plants_fragment.xml" value="0.36102564102564105" />
         <entry key="..\:/Eilon/CS/year_2/semesterB/POST_PC/UrbanGarden/app/src/main/res/menu/bottom_nav_menu.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/drawable/corner_down_rounded_bg.xml" value="0.1734375" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/drawable/frame.xml" value="0.3067708333333333" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.22135416666666666" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/drawable/image_bg.xml" value="0.3067708333333333" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/drawable/round_corners_mask.xml" value="0.3067708333333333" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/drawable/rounded_bg.xml" value="0.28125" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/activity_main.xml" value="0.20520833333333333" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/dialog_new_answer.xml" value="0.20520833333333333" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/dialog_plant.xml" value="0.18" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/dialog_plant_classification_from_plant_info.xml" value="0.5" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/dialog_plant_classification_result.xml" value="0.18" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/dialog_recycler.xml" value="0.18" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/fragment_camera.xml" value="0.25" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/fragment_camera.xml" value="0.18" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/fragment_camera2.xml" value="0.15" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/location_info_fragment.xml" value="0.3182291666666667" />
@@ -40,6 +53,13 @@
         <entry key="..\:/Users/inbal/AndroidStudioProjects/huji_post_pc/UrbanGarden2/app/src/main/res/layout/one_plant.xml" value="0.3255208333333333" />
         <entry key="..\:/Users/inbal/AndroidStudioProjects/huji_post_pc/UrbanGarden2/app/src/main/res/layout/plant_info_fragment.xml" value="0.3255208333333333" />
         <entry key="..\:/Users/inbal/AndroidStudioProjects/huji_post_pc/UrbanGarden2/app/src/main/res/layout/preview_image.xml" value="0.3255208333333333" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/one_plant.xml" value="0.25" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/one_seggest_plant.xml" value="0.25" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/one_sub_plant.xml" value="0.33" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/plant_info_fragment.xml" value="0.2832618025751073" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/preview_image.xml" value="0.103125" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/recognize_plant.xml" value="0.33" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/urban/app/src/main/res/layout/rounded_bg.xml" value="0.36770833333333336" />
       </map>
     </option>
   </component>

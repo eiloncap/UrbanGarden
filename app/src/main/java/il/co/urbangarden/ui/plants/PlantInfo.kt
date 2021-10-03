@@ -6,8 +6,12 @@ import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,9 +27,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.Timestamp
 import il.co.urbangarden.R
 import il.co.urbangarden.data.FirebaseViewableObject
 import il.co.urbangarden.data.location.Location
+import il.co.urbangarden.data.plant.Plant
 import il.co.urbangarden.ui.MainViewModel
 import il.co.urbangarden.ui.home.HomeViewModel
 import il.co.urbangarden.ui.location.LocationAdapter
@@ -49,9 +55,8 @@ class PlantInfo : Fragment() {
     private lateinit var imgView: ImageView
     private lateinit var nameText: TextView
     private lateinit var nameEdit: EditText
-
-    //        val speciesText: TextView = view.findViewById(R.id.species)
-//        val speciesEdit: EditText = view.findViewById(R.id.species_edit)
+    private lateinit var speciesText: TextView
+    private lateinit var speciesEdit: EditText
     private lateinit var lastWatringTitle: TextView
     private lateinit var lastStamp: TextView
     private lateinit var nextWatering: TextView
@@ -66,6 +71,7 @@ class PlantInfo : Fragment() {
     private lateinit var delete: ImageView
     private lateinit var locationImg: ImageView
     private lateinit var locationName: TextView
+
 
 
     override fun onCreateView(
@@ -88,8 +94,8 @@ class PlantInfo : Fragment() {
         imgView = view.findViewById(R.id.plant_photo)
         nameText = view.findViewById(R.id.name)
         nameEdit = view.findViewById(R.id.edit_name)
-//        val speciesText: TextView = view.findViewById(R.id.species)
-//        val speciesEdit: EditText = view.findViewById(R.id.species_edit)
+        speciesText = view.findViewById(R.id.species)
+        speciesEdit = view.findViewById(R.id.species_edit)
         lastWatringTitle = view.findViewById(R.id.last_watering)
         lastStamp = view.findViewById(R.id.time)
         dropButton = view.findViewById(R.id.watering_button)
@@ -122,6 +128,29 @@ class PlantInfo : Fragment() {
 
                 val imageBitmap = result.data?.extras?.get("data") as Bitmap
                 imgView.setImageBitmap(imageBitmap)
+
+                val model = Model.newInstance(requireContext())
+
+                // Creates inputs for reference.
+                val image = TensorImage.fromBitmap(imageBitmap)
+
+                // Runs model inference and gets result.
+                val outputs = model.process(image)
+                val probability = outputs.probabilityAsCategoryList
+                val res = probability.apply {
+                    sortByDescending { it.score }
+                }.take(1)
+
+                // Releases model resources if no longer used.
+                model.close()
+
+                mainViewModel.getPlant(res[0].label).let {
+                    Log.d("eilon-re", "gor plant $it")
+                    if (it != null) {
+                       classifiedPlantDialog(it).show()
+                    }
+                }
+
             }
         }
 
@@ -133,12 +162,14 @@ class PlantInfo : Fragment() {
 
 
         saveButton.setOnClickListener {
-            if (nameEdit.text.toString().isEmpty()) {
+            if (nameEdit.text.toString().isEmpty()){
                 Toast.makeText(context, "Please Enter Plant Name", Toast.LENGTH_SHORT).show()
-            } else if (inputDays.text.toString().toInt() == 0) {
+            }
+            else if (inputDays.text.toString().toInt() == 0){
                 Toast.makeText(context, "Please enter ", Toast.LENGTH_SHORT).show()
-            } else {
-                plantsViewModel.plant.watering = inputDays.text.toString().toInt()
+            }
+            else {
+                plantsViewModel.plant.wateringDays = inputDays.text.toString().toInt()
                 plantsViewModel.plant.name = nameEdit.text.toString()
                 plantsViewModel.plant.notes = notesEdit.text.toString()
                 mainViewModel.uploadObject(plantsViewModel.plant)
@@ -152,7 +183,7 @@ class PlantInfo : Fragment() {
             view.findNavController().navigate(R.id.action_plantInfo_to_navigation_home)
         }
 
-        imgView.setOnClickListener {
+        imgView.setOnClickListener{
             val imgFileName: String = plantsViewModel.plant.uid + ".jpeg"
             plantsViewModel.plant.imgFileName = imgFileName
 
@@ -172,35 +203,39 @@ class PlantInfo : Fragment() {
         locationImg.setOnClickListener {
             showDialog().show()
         }
+
         //todo share button on click
     }
 
-    private fun setViews() {
+    private fun setViews(){
         val dateFormat: DateFormat = SimpleDateFormat("dd-MM-yy  hh:mm")
         lastStamp.text = dateFormat.format(plantsViewModel.plant.lastWatered).toString()
 
-        if (plantsViewModel.plant.locationUid.isNotEmpty()) {
+
+        if (plantsViewModel.plant.locationUid.isNotEmpty()){
             val location: Location? = mainViewModel.getLocation(plantsViewModel.plant.locationUid)
-            location.let {
-                mainViewModel.setImgFromPath(location!!, locationImg)
-                locationName.text = location.name
+            location.let{ mainViewModel.setImgFromPath(location!!, locationImg)
+            locationName.text = location.name
             }
         }
 
-        if (plantsViewModel.plant.imgFileName.isNotEmpty()) {
-            mainViewModel.setImgFromPath(plantsViewModel.plant, imgView)
+        if(plantsViewModel.plant.imgFileName.isNotEmpty()){
+            mainViewModel.setImgFromPath(plantsViewModel.plant, imgView, ImageCropOption.SQUARE)
         }
-        if (plantsViewModel.plant.name.isEmpty()) {
+
+
+        if (plantsViewModel.plant.name.isEmpty()){
             editMode()
-        } else {
+        }
+        else {
             showMode()
 
         }
     }
 
-    private fun editMode() {
+    private fun editMode(){
         nameText.visibility = View.GONE
-//        speciesText.visibility = View.GONE
+        speciesText.visibility = View.GONE
         notesText.visibility = View.GONE
         pencil.visibility = View.GONE
         dropButton.visibility = View.GONE
@@ -216,18 +251,19 @@ class PlantInfo : Fragment() {
         inputDays.visibility = View.VISIBLE
         days.visibility = View.VISIBLE
         nameEdit.visibility = View.VISIBLE
-//        editSpecies.visibility = View.VISIBLE
+        speciesEdit.visibility = View.VISIBLE
         notesEdit.visibility = View.VISIBLE
 
+        inputDays.setText(plantsViewModel.plant.wateringDays.toString())
         nameEdit.setText(plantsViewModel.plant.name)
-//        editSpecies.setText(plantsViewModel.plant.species)
+        speciesEdit.setText(plantsViewModel.plant.species)
         notesEdit.setText(plantsViewModel.plant.notes)
 
     }
 
-    private fun showMode() {
+    private fun showMode(){
         nameText.visibility = View.VISIBLE
-//        speciesText.visibility = View.VISIBLE
+        speciesText.visibility = View.VISIBLE
         notesText.visibility = View.VISIBLE
         pencil.visibility = View.VISIBLE
         dropButton.visibility = View.VISIBLE
@@ -238,7 +274,7 @@ class PlantInfo : Fragment() {
         lastWatringTitle.visibility = View.VISIBLE
 
         nameEdit.visibility = View.GONE
-//        editSpecies.visibility = View.GONE
+        speciesEdit.visibility = View.GONE
         notesEdit.visibility = View.GONE
         saveButton.visibility = View.GONE
         saveButton.isClickable = false
@@ -246,6 +282,7 @@ class PlantInfo : Fragment() {
         inputDays.visibility = View.GONE
         days.visibility = View.GONE
 
+        speciesText.text = plantsViewModel.plant.species
         nameText.text = plantsViewModel.plant.name
 //        speciesText.text = plantsViewModel.plant.species
         notesText.text = plantsViewModel.plant.notes
@@ -293,6 +330,34 @@ class PlantInfo : Fragment() {
             )
 
             dialog
+        }
+    }
+
+    private fun classifiedPlantDialog(plant: Plant): Dialog {
+        return this.let {
+            val builder = androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            // Get the layout inflater
+            val view = LayoutInflater.from(requireContext())
+                .inflate(R.layout.dialog_plant_classification_from_plant_info, null)
+            val plantImg: ImageView = view.findViewById(R.id.plant_img)
+            val title: TextView = view.findViewById(R.id.title)
+
+            mainViewModel.setImgFromPath(plant, plantImg, ImageCropOption.SQUARE)
+            title.text = "Looks like ${plant.name}!"
+
+            // Inflate and set the layout for the dialog
+            // Pass null as the parent view because its going in the dialog layout
+            builder.setView(view)
+                .setPositiveButton("Yes") { dialog, id ->
+                    plantsViewModel.plant.speciesUid = plant.uid
+                    plantsViewModel.plant.wateringDays = plant.daysWatering
+                    plantsViewModel.plant.species = plant.name
+                    setViews()
+                }
+                .setNegativeButton("No") { dialog, id ->
+                    dialog.dismiss()
+                }
+            builder.create()
         }
     }
 }

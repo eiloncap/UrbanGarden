@@ -4,6 +4,7 @@ package il.co.urbangarden.ui.plants
 import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
@@ -31,7 +32,7 @@ class PlantInstanceAdapter : RecyclerView.Adapter<PlantInstanceHolder>() {
             plantsList.clear()
             plantsList.addAll(dataList)
             plantsList.sortBy {
-                it.watering - TimeUnit.DAYS.convert(
+                it.wateringDays - TimeUnit.DAYS.convert(
                     Date().time - it.lastWatered.time, TimeUnit.MILLISECONDS
                 )
             }
@@ -59,8 +60,10 @@ class PlantInstanceAdapter : RecyclerView.Adapter<PlantInstanceHolder>() {
             val callback = onDropClick ?: return@setOnClickListener
             val plant = plantsList[holder.bindingAdapterPosition]
             callback(plant)
-            val dateFormat: DateFormat = SimpleDateFormat("dd-MM-yy  hh:mm")
-            holder.lastWatering.text = dateFormat.format(plant.lastWatered).toString()
+            plant.lastWatered = Date()
+            holder.nextWatering.text = (plant.wateringDays - TimeUnit.DAYS.convert(
+                Date().time - plant.lastWatered.time, TimeUnit.MILLISECONDS
+            )).toString()
         }
         return holder
     }
@@ -73,7 +76,17 @@ class PlantInstanceAdapter : RecyclerView.Adapter<PlantInstanceHolder>() {
         // Set item views based on your views and data model
         instanceHolder.name.text = item.name
         val dateFormat: DateFormat = SimpleDateFormat("dd-MM-yy  hh:mm")
-        instanceHolder.lastWatering.text = dateFormat.format(item.lastWatered).toString()
+        val days = (item.wateringDays - TimeUnit.DAYS.convert(
+            Date().time - item.lastWatered.time, TimeUnit.MILLISECONDS
+        )).toString()
+        if (days == "0"){
+            instanceHolder.nextWatering.text = "today"
+            instanceHolder.days.visibility = View.GONE
+        }
+        else{
+            instanceHolder.nextWatering.text = days
+            instanceHolder.days.visibility = View.VISIBLE
+        }
         setImg?.let { it(item, instanceHolder.image) }
     }
 
