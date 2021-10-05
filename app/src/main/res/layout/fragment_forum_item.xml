@@ -93,6 +93,7 @@
                     android:layout_column="1"
                     android:layout_weight="12"
                     android:text="INB"
+                    android:textDirection="locale"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -102,9 +103,9 @@
 
                     <TextView
                         android:id="@+id/date3"
-                        android:gravity="end"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="end"
                         android:text="asked"
                         android:textStyle="bold" />
 
@@ -150,7 +151,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="15"
-                    android:text="Answers:"
+                    android:text="Answers"
+                    android:textDirection="locale"
                     android:textStyle="bold" />
 
             </LinearLayout>
