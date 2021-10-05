@@ -26,11 +26,11 @@ import il.co.urbangarden.data.plant.Plant
 import il.co.urbangarden.data.plant.PlantInstance
 import il.co.urbangarden.databinding.FragmentCameraBinding
 import il.co.urbangarden.ml.Model
-import org.tensorflow.lite.support.image.TensorImage
 import il.co.urbangarden.ui.MainViewModel
 import il.co.urbangarden.ui.location.MyLocationsViewModel
 import il.co.urbangarden.ui.plants.MyPlantsViewModel
 import il.co.urbangarden.utils.ImageCropOption
+import org.tensorflow.lite.support.image.TensorImage
 import java.util.*
 
 
@@ -223,7 +223,7 @@ class CameraNavigationFragment : Fragment() {
                     val newPlant = PlantInstance()
                     newPlant.species = plant.name
                     newPlant.speciesUid = plant.uid
-                    plantsViewModel.plant  = newPlant
+                    plantsViewModel.plant = newPlant
                     view.findNavController().navigate(R.id.action_navigation_camera_to_plantInfo)
 
                 }

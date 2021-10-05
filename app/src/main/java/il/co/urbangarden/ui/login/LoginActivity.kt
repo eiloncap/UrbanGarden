@@ -34,6 +34,14 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         val googleSignInButton = findViewById<ImageView>(R.id.google_sign_in)
+        val logoImg = findViewById<ImageView>(R.id.app_logo)
+        logoImg.scaleX = 2f
+        logoImg.scaleY = 2f
+        logoImg.animate()
+            .alpha(1f)
+            .scaleX(0.8f)
+            .scaleY(0.8f)
+            .duration = 1000
 
         // Configure Google Sign In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
