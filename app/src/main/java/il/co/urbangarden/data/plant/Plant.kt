@@ -13,7 +13,7 @@ data class Plant(
     val season: String ="",
     val info: String ="",
     val placing: String="",
-    val sun: Int = 0,
+    val sun: String = "",
     val daysWatering: Int = 0
 
 ) : FirebaseViewableObject

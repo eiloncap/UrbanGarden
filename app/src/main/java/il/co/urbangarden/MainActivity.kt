@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val toolbar: androidx.appcompat.widget.Toolbar = binding.toolbar
-        val icon : Drawable? = ResourcesCompat.getDrawable(this.resources, R.drawable.urban_garden_logo, null)
+        val icon : Drawable? = ResourcesCompat.getDrawable(this.resources, R.drawable.ic_ug_logo, null)
         setSupportActionBar(toolbar)
         actionBar?.setDisplayShowHomeEnabled(false)
         actionBar?.setIcon(icon)
