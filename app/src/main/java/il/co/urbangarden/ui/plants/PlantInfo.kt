@@ -9,8 +9,7 @@ import android.graphics.Bitmap
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.provider.MediaStore
-import android.text.Editable
-import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -20,14 +19,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.firebase.Timestamp
 import il.co.urbangarden.R
 import il.co.urbangarden.data.FirebaseViewableObject
 import il.co.urbangarden.data.location.Location
@@ -40,6 +36,9 @@ import il.co.urbangarden.utils.ImageCropOption
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import il.co.urbangarden.ml.Model
+import org.tensorflow.lite.support.image.TensorImage
+
 
 class PlantInfo : Fragment() {
 
@@ -145,7 +144,6 @@ class PlantInfo : Fragment() {
                 model.close()
 
                 mainViewModel.getPlant(res[0].label).let {
-                    Log.d("eilon-re", "gor plant $it")
                     if (it != null) {
                        classifiedPlantDialog(it).show()
                     }
@@ -350,7 +348,6 @@ class PlantInfo : Fragment() {
             builder.setView(view)
                 .setPositiveButton("Yes") { dialog, id ->
                     plantsViewModel.plant.speciesUid = plant.uid
-                    plantsViewModel.plant.wateringDays = plant.daysWatering
                     plantsViewModel.plant.species = plant.name
                     setViews()
                 }

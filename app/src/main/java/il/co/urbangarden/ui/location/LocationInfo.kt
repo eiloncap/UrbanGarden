@@ -325,9 +325,19 @@ class LocationInfo : Fragment() {
 
             val imgView: ImageView = view.findViewById(R.id.plant_photo)
             val name: TextView = view.findViewById(R.id.name)
+            val sun: TextView = view.findViewById(R.id.sun_text)
+            val water: TextView = view.findViewById(R.id.water_text)
+            val season: TextView = view.findViewById(R.id.season_text)
+            val placing: TextView = view.findViewById(R.id.placinf_text)
+            val information: TextView = view.findViewById(R.id.information_text)
 
             mainViewModel.setImgFromPath(plant, imgView)
             name.text = plant.name
+            sun.text = plant.sun.toString()
+            water.text = plant.watering
+            season.text = plant.season
+            placing.text = plant.placing
+            information.text = plant.info
 
 
             // Inflate and set the layout for the dialog

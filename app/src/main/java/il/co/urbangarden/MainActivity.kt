@@ -1,8 +1,11 @@
 package il.co.urbangarden
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -20,7 +23,14 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        supportActionBar?.hide()
+        val toolbar: androidx.appcompat.widget.Toolbar = binding.toolbar
+        val icon : Drawable? = ResourcesCompat.getDrawable(this.resources, R.drawable.urban_garden_logo, null)
+        setSupportActionBar(toolbar)
+        actionBar?.setDisplayShowHomeEnabled(false)
+        actionBar?.setIcon(icon)
+
+
+
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         val navView: BottomNavigationView = binding.navView

@@ -24,9 +24,9 @@
 
     <TextView
         android:id="@+id/dialog_text"
-        android:layout_width="200dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:text="Do you to set species property as this species?"
+        android:text="Do you want to set plant's species as this species?"
         />
 </LinearLayout>

@@ -6,7 +6,7 @@ import il.co.urbangarden.data.FirebaseViewableObject
 import java.util.*
 
 data class PlantInstance(
-    override val uid: String = UUID.randomUUID().toString(),
+    override var uid: String = UUID.randomUUID().toString(),
     override var imgFileName: String = "",
     var lastWatered: Date = Date(),
     var name: String = "",

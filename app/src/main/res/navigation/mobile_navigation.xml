@@ -26,6 +26,12 @@
         <action
             android:id="@+id/action_navigation_camera_to_cameraFragment"
             app:destination="@id/cameraFragment" />
+        <action
+            android:id="@+id/action_navigation_camera_to_plantInfo"
+            app:destination="@id/plantInfo" />
+        <action
+            android:id="@+id/action_navigation_camera_to_locationInfo"
+            app:destination="@id/locationInfo" />
     </fragment>
 
     <fragment
