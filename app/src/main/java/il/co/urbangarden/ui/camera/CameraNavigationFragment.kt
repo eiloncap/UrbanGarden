@@ -31,7 +31,7 @@ import il.co.urbangarden.ui.MainViewModel
 import il.co.urbangarden.ui.location.MyLocationsViewModel
 import il.co.urbangarden.ui.plants.MyPlantsViewModel
 import il.co.urbangarden.utils.ImageCropOption
-
+import java.util.*
 
 
 class CameraNavigationFragment : Fragment() {
@@ -41,9 +41,9 @@ class CameraNavigationFragment : Fragment() {
 
     private lateinit var locationViewModel: MyLocationsViewModel
     private lateinit var plantsViewModel: MyPlantsViewModel
-    private lateinit var cameraViewModel: CameraViewModel
     private lateinit var mainViewModel: MainViewModel
     private lateinit var launcher: ActivityResultLauncher<Intent>
+    private lateinit var uid: String
 
     private var _binding: FragmentCameraBinding? = null
 
@@ -54,31 +54,54 @@ class CameraNavigationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-        cameraViewModel = ViewModelProvider(requireActivity()).get(CameraViewModel::class.java)
         locationViewModel =
             ViewModelProvider(requireActivity()).get(MyLocationsViewModel::class.java)
         plantsViewModel = ViewModelProvider(requireActivity()).get(MyPlantsViewModel::class.java)
+        uid = UUID.randomUUID().toString()
 
         val recognizeButton: Button = view.findViewById(R.id.recognize_button)
         val newPlant: Button = view.findViewById(R.id.new_plant_button)
         val newLocation: Button = view.findViewById(R.id.new_location_button)
 
+        val resultLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK
+                && result.data != null
+                && result?.data?.extras != null
+            ) {
+                mainViewModel.uploadImage(
+                    result.data?.extras?.get("data") as Bitmap,
+                    activity?.baseContext,
+                    uid //todo put uid
+                )
+
+            }
+        }
+
         newPlant.setOnClickListener {
-            val newPlant = PlantInstance()
-            plantsViewModel.plant = newPlant
-            val imgFileName = newPlant.uid
-            cameraViewModel.fileName = imgFileName
-            cameraViewModel.state = "plant"
-            view.findNavController().navigate(R.id.action_navigation_camera_to_cameraFragment)
+            val plant = PlantInstance()
+            plant.uid = uid
+            plant.imgFileName = plant.uid + ".jpeg"
+            plantsViewModel.plant = plant
+            Log.d("amitUid", plant.uid)
+            if (activity?.packageManager?.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY) == true) {
+                val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                resultLauncher.launch(takePictureIntent)
+            }
+            view.findNavController().navigate(R.id.action_navigation_camera_to_plantInfo)
         }
 
         newLocation.setOnClickListener {
-            val newLocation = Location()
-            locationViewModel.location = newLocation
-            val imgFileName = newLocation.uid
-            cameraViewModel.fileName = imgFileName
-            cameraViewModel.state = "location"
-            view.findNavController().navigate(R.id.action_navigation_camera_to_cameraFragment)
+            val location = Location()
+            location.uid = uid
+            location.imgFileName = location.uid + ".jpeg"
+            locationViewModel.location = location
+            if (activity?.packageManager?.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY) == true) {
+                val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                resultLauncher.launch(takePictureIntent)
+            }
+            view.findNavController().navigate(R.id.action_navigation_camera_to_locationInfo)
         }
         prepareCameraIntent()
 
@@ -129,7 +152,6 @@ class CameraNavigationFragment : Fragment() {
                 model.close()
 
                 mainViewModel.getPlant(res[0].label).let {
-                    Log.d("eilon-re", "gor plant $it")
                     if (it != null) {
                         classifiedPlantDialog(it).show()
                     }
@@ -161,10 +183,57 @@ class CameraNavigationFragment : Fragment() {
             // Pass null as the parent view because its going in the dialog layout
             builder.setView(view)
                 .setPositiveButton("More Info") { dialog, id ->
+                    newPlantDialog(plant).show()
                 }
                 .setNegativeButton("Ok") { dialog, id ->
+                    dialog.dismiss()
                 }
             builder.create()
         }
     }
+
+    private fun newPlantDialog(plant: Plant): Dialog {
+        return this.let {
+            val builder = androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            // Get the layout inflater
+            val view = LayoutInflater.from(requireContext())
+                .inflate(R.layout.dialog_plant, null)
+
+            val imgView: ImageView = view.findViewById(R.id.plant_photo)
+            val name: TextView = view.findViewById(R.id.name)
+            val sun: TextView = view.findViewById(R.id.sun_text)
+            val water: TextView = view.findViewById(R.id.water_text)
+            val season: TextView = view.findViewById(R.id.season_text)
+            val placing: TextView = view.findViewById(R.id.placinf_text)
+            val information: TextView = view.findViewById(R.id.information_text)
+
+            mainViewModel.setImgFromPath(plant, imgView)
+            name.text = plant.name
+            sun.text = plant.sun.toString()
+            water.text = plant.watering
+            season.text = plant.season
+            placing.text = plant.placing
+            information.text = plant.info
+
+
+            // Inflate and set the layout for the dialog
+            // Pass null as the parent view because its going in the dialog layout
+            builder.setView(view)
+                .setPositiveButton("Add to My Planys") { dialog, id ->
+                    val newPlant = PlantInstance()
+                    newPlant.species = plant.name
+                    newPlant.speciesUid = plant.uid
+                    plantsViewModel.plant  = newPlant
+                    view.findNavController().navigate(R.id.action_navigation_camera_to_plantInfo)
+
+                }
+                .setNegativeButton("Cancel") { dialog, id ->
+
+                }
+
+            builder.setCancelable(false);
+            builder.create()
+        }
+    }
+
 }

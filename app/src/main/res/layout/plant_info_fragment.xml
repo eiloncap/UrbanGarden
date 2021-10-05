@@ -327,23 +327,32 @@
                             app:layout_constraintTop_toBottomOf="@id/location_title"
                             />
 
-                        <ImageView
-                            android:id="@+id/location_photo"
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
-                            android:adjustViewBounds="true"
-                            android:padding="5dp"
-                            android:scaleType="center"
-                            android:src="@android:drawable/ic_input_add"
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/image_card"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toRightOf="@id/location_title"
                             app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:cardCornerRadius="12dp">
+
+                            <ImageView
+                                android:id="@+id/location_photo"
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                android:adjustViewBounds="true"
+                                android:scaleType="center"
+                                android:src="@android:drawable/ic_input_add"
+                                 />
+
+                        </androidx.cardview.widget.CardView>
+
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/location_frame"
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
+                            android:layout_width="110dp"
+                            android:layout_height="110dp"
                             app:layout_constraintLeft_toRightOf="@id/location_title"
                             app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -399,24 +408,30 @@
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-                <ImageView
-                    android:id="@+id/plant_photo"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintBottom_toBottomOf="@id/title_layout"
                     app:layout_constraintTop_toBottomOf="@id/title_layout"
-                    app:layout_constraintHorizontal_bias="0.9"
+                    app:layout_constraintHorizontal_bias="0.88"
+                    app:cardCornerRadius="12dp">
+
+                <ImageView
+                    android:id="@+id/plant_photo"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
                     android:adjustViewBounds="true"
                     android:scaleType="center"
-                    android:padding="5dp"
                     android:src="@drawable/flower" />
+                </androidx.cardview.widget.CardView>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/image_layout"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintBottom_toBottomOf="@id/title_layout"
