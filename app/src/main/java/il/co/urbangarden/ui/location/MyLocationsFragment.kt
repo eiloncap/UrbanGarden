@@ -37,7 +37,6 @@ class MyLocationsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         _binding = MyLocationsFragmentBinding.inflate(inflater, container, false)
         val root: View = _binding!!.root
         return root

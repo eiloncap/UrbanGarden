@@ -21,8 +21,10 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import il.co.urbangarden.GlideApp
 import il.co.urbangarden.R
 import il.co.urbangarden.data.FirebaseViewableObject
 import il.co.urbangarden.data.plant.Plant
@@ -181,6 +183,15 @@ class LocationInfo : Fragment() {
 
     private fun setViews() {
         if (locationViewModel.location.name.isEmpty()) {
+            if (locationViewModel.locationImg != null) {
+                Log.d("eilon-cam-d", "locationImg exist")
+                locationImgView.setImageBitmap(locationViewModel.locationImg)
+                GlideApp.with(requireContext())
+                    .load(locationViewModel.locationImg)
+                    .apply(RequestOptions.centerCropTransform())
+                    .into(locationImgView)
+                locationViewModel.locationImg = null
+            }
             editMode()
         } else {
             if (locationViewModel.location.imgFileName.isNotEmpty()) {

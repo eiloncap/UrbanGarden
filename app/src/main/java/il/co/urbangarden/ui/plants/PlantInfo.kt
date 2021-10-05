@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,8 +22,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import il.co.urbangarden.GlideApp
 import il.co.urbangarden.R
 import il.co.urbangarden.data.FirebaseViewableObject
 import il.co.urbangarden.data.location.Location
@@ -43,6 +46,7 @@ class PlantInfo : Fragment() {
 
     companion object {
         fun newInstance() = LocationInfo()
+        private val dateFormatter = SimpleDateFormat("dd-MM-yy  hh:mm")
     }
 
     private lateinit var mainViewModel: MainViewModel
@@ -55,7 +59,7 @@ class PlantInfo : Fragment() {
     private lateinit var nameEdit: EditText
     private lateinit var speciesText: TextView
     private lateinit var speciesEdit: EditText
-    private lateinit var lastWatringTitle: TextView
+    private lateinit var lastWateringTitle: TextView
     private lateinit var lastStamp: TextView
     private lateinit var nextWatering: TextView
     private lateinit var inputDays: EditText
@@ -70,6 +74,8 @@ class PlantInfo : Fragment() {
     private lateinit var locationImg: ImageView
     private lateinit var locationName: TextView
 
+    // todo: delete image from storage if not saved
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -78,7 +84,6 @@ class PlantInfo : Fragment() {
         return inflater.inflate(R.layout.plant_info_fragment, container, false)
     }
 
-    @SuppressLint("SimpleDateFormat")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -86,6 +91,7 @@ class PlantInfo : Fragment() {
         plantsViewModel = ViewModelProvider(requireActivity()).get(MyPlantsViewModel::class.java)
         homeViewModel = ViewModelProvider(requireActivity()).get(HomeViewModel::class.java)
         adapter = LocationAdapter()
+        Log.d("eilon-cam-d", "uid of plants is ${plantsViewModel.plant.uid}")
 
         //finds views
         imgView = view.findViewById(R.id.plant_photo)
@@ -93,7 +99,7 @@ class PlantInfo : Fragment() {
         nameEdit = view.findViewById(R.id.edit_name)
         speciesText = view.findViewById(R.id.species)
         speciesEdit = view.findViewById(R.id.species_edit)
-        lastWatringTitle = view.findViewById(R.id.last_watering)
+        lastWateringTitle = view.findViewById(R.id.last_watering)
         lastStamp = view.findViewById(R.id.time)
         dropButton = view.findViewById(R.id.watering_button)
         nextWatering = view.findViewById(R.id.next_watering)
@@ -108,7 +114,6 @@ class PlantInfo : Fragment() {
         locationImg = view.findViewById(R.id.location_photo)
         locationName = view.findViewById(R.id.location_name)
 
-
         //init the camera launcher
         val resultLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
@@ -121,10 +126,12 @@ class PlantInfo : Fragment() {
                     result.data?.extras?.get("data") as Bitmap,
                     activity?.baseContext,
                     plantsViewModel.plant.uid
-                )
+                ) {
+                    mainViewModel.setImgFromPath(plantsViewModel.plant, imgView, ImageCropOption.SQUARE)
+                }
 
                 val imageBitmap = result.data?.extras?.get("data") as Bitmap
-                imgView.setImageBitmap(imageBitmap)
+//                imgView.setImageBitmap(imageBitmap)
 
                 val model = Model.newInstance(requireContext())
 
@@ -146,7 +153,6 @@ class PlantInfo : Fragment() {
                         classifiedPlantDialog(it).show()
                     }
                 }
-
             }
         }
 
@@ -190,8 +196,7 @@ class PlantInfo : Fragment() {
 
         dropButton.setOnClickListener {
             plantsViewModel.plant.lastWatered = Date()
-            val dateFormat: DateFormat = SimpleDateFormat("dd-MM-yy  hh:mm")
-            lastStamp.text = dateFormat.format(plantsViewModel.plant.lastWatered).toString()
+            lastStamp.text = dateFormatter.format(plantsViewModel.plant.lastWatered).toString()
         }
 
         locationImg.setOnClickListener {
@@ -202,9 +207,7 @@ class PlantInfo : Fragment() {
     }
 
     private fun setViews() {
-        val dateFormat: DateFormat = SimpleDateFormat("dd-MM-yy  hh:mm")
-        lastStamp.text = dateFormat.format(plantsViewModel.plant.lastWatered).toString()
-
+        lastStamp.text = dateFormatter.format(plantsViewModel.plant.lastWatered).toString()
 
         if (plantsViewModel.plant.locationUid.isNotEmpty()) {
             val location: Location? = mainViewModel.getLocation(plantsViewModel.plant.locationUid)
@@ -214,10 +217,17 @@ class PlantInfo : Fragment() {
             }
         }
 
-        if (plantsViewModel.plant.imgFileName.isNotEmpty()) {
+        if (plantsViewModel.plantImg != null) {
+            Log.d("eilon-cam-d", "plantImg exist")
+            imgView.setImageBitmap(plantsViewModel.plantImg)
+            GlideApp.with(requireContext())
+                .load(plantsViewModel.plantImg)
+                .apply(RequestOptions.centerCropTransform())
+                .into(imgView)
+            plantsViewModel.plantImg = null
+        } else if (plantsViewModel.plant.imgFileName.isNotEmpty()) {
             mainViewModel.setImgFromPath(plantsViewModel.plant, imgView, ImageCropOption.SQUARE)
         }
-
 
         if (plantsViewModel.plant.name.isEmpty()) {
             editMode()
@@ -235,7 +245,7 @@ class PlantInfo : Fragment() {
         dropButton.visibility = View.GONE
         dropButton.isClickable = false
         lastStamp.visibility = View.GONE
-        lastWatringTitle.visibility = View.GONE
+        lastWateringTitle.visibility = View.GONE
         shareButton.visibility = View.GONE
         shareButton.isClickable = false
 
@@ -265,7 +275,7 @@ class PlantInfo : Fragment() {
         shareButton.visibility = View.VISIBLE
         shareButton.isClickable = true
         lastStamp.visibility = View.VISIBLE
-        lastWatringTitle.visibility = View.VISIBLE
+        lastWateringTitle.visibility = View.VISIBLE
 
         nameEdit.visibility = View.GONE
         speciesEdit.visibility = View.GONE

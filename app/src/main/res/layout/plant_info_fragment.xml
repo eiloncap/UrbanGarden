@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     android:scrollbars="vertical">
 
-
-
         <ScrollView
             android:id="@+id/scrollview"
             android:layout_width="match_parent"
