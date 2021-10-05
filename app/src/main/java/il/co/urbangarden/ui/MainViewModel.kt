@@ -1,15 +1,19 @@
 package il.co.urbangarden.ui
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Bitmap.CompressFormat
 import android.net.Uri
 import android.util.Log
 import android.widget.ImageView
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelStore
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
@@ -29,8 +33,8 @@ import java.io.File
 
 
 class MainViewModel : ViewModel() {
-    val user = Firebase.auth.currentUser
-    private val userUid: String? = user?.uid
+    var user = Firebase.auth.currentUser
+    private var userUid: String? = user?.uid
     private val storage = FirebaseStorage.getInstance()
     val db = FirebaseFirestore.getInstance()
     val plantsLiveData: MutableLiveData<ArrayList<Plant>> = MutableLiveData()
@@ -45,6 +49,13 @@ class MainViewModel : ViewModel() {
         private const val USERS_COLLECTION_TAG = "Users"
         private const val USER_PLANTS_COLLECTION_TAG = "plants"
         private const val USER_LOCATIONS_COLLECTION_TAG = "locations"
+    }
+
+    fun signOut(act: FragmentActivity) {
+        userUid = null
+        user = null
+        Firebase.auth.signOut()
+        act.viewModelStore.clear()
     }
 
     private fun getObjectImageDirectory(obj: FirebaseViewableObject): String {
@@ -216,9 +227,11 @@ class MainViewModel : ViewModel() {
         imgBitmap: Bitmap?,
         inContext: Context?,
         filename: String,
-        dir: String = userUid.toString()
+        dir: String = userUid.toString(),
+        callback: (() -> Unit)? = null
     ) {
         if (imgBitmap != null && inContext != null) {
+            Log.d("eilon-cam-d", "uploading $filename to $dir")
             val img = ImageUriConverter.getImageUri(inContext, imgBitmap)
 
             // Defining the child of storageReference
@@ -231,7 +244,10 @@ class MainViewModel : ViewModel() {
                 .addOnSuccessListener { // Image uploaded successfully
                     // TODO: implement
                     Log.d("eilon", "succeed uploading")
-                    _locationsList.value = _locationsList.value
+//                    _locationsList.value = _locationsList.value
+                    if(callback != null) {
+                        callback()
+                    }
                 }
                 .addOnFailureListener { e -> // Error, Image not uploaded
                     // TODO: implement
