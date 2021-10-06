@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -110,6 +111,7 @@ class ForumItemFragment : Fragment() {
                         //delete from firebase
                         forumViewModel.currTopic!!.questions!!.document(currQuestion.uid).delete()
                         val navController = Navigation.findNavController(requireView())
+                        forumViewModel.currTopic!!.numOfQuestions -= 1
                         navController.navigateUp()
                     }
                     .setNegativeButton("Cancel") { dialog, id ->
@@ -156,16 +158,18 @@ class ForumItemFragment : Fragment() {
                 .circleCrop()
                 .into(imageView)
         }
-
-        val answersRecycler = binding.answerViewRecyclerView
-        answersRecycler.adapter = adapter
-        val manager = object : LinearLayoutManager(context, RecyclerView.VERTICAL, false) {
-            override fun canScrollVertically(): Boolean {
-                return false
+        if (_binding != null) {
+            val answersRecycler = binding.answerViewRecyclerView
+            answersRecycler.adapter = adapter
+            val manager = object : LinearLayoutManager(context, RecyclerView.VERTICAL, false) {
+                override fun canScrollVertically(): Boolean {
+                    return false
+                }
             }
-        }
+
 //        answersRecycler.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        answersRecycler.layoutManager = manager
+            answersRecycler.layoutManager = manager
+        }
     }
 
     private fun setShareButton(currQuestion: Question) {
@@ -237,8 +241,7 @@ class ForumItemFragment : Fragment() {
             currQuestion?.let {
                 mainViewModel.setImgFromPath(
                     it,
-                    ivPreview,
-                    ImageCropOption.SQUARE
+                    ivPreview
                 )
             }
 
@@ -247,7 +250,10 @@ class ForumItemFragment : Fragment() {
             ivPreview.setOnClickListener {
                 ad.dismiss()
             }
-
+            ad.getWindow()!!.setLayout(
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT
+            )
             ad
         }
     }

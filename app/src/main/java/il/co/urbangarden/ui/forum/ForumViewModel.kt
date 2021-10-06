@@ -143,7 +143,7 @@ class ForumViewModel : ViewModel() {
 
     fun addNewTopic(topic: Topic) {
         val id = UUID.randomUUID().toString()
-        Log.d("TAG_Q new ans id", id)
+        topic.uid = id
         val add = firebase.collection("Forum").document(id).set(topic)
         add.addOnSuccessListener {
             Log.d("TAG_Q SUCS", id)
@@ -158,6 +158,11 @@ class ForumViewModel : ViewModel() {
             Log.d("TAG_Q SUCS", idStr)
             currTopic!!.numOfQuestions += 1
             currTopic!!.date = Date()
+            val questions = currTopic!!.questions
+            currTopic!!.questions = null
+            Log.d("TAG_Q SUCS", currTopic.toString())
+            firebase.collection("Forum").document(currTopic!!.uid).set(currTopic!!)
+            currTopic!!.questions = questions
         }
     }
 

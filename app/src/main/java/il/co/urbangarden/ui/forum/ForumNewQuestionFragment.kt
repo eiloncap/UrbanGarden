@@ -75,7 +75,6 @@ class ForumNewQuestionFragment : Fragment() {
             Log.d( "Tag_q_user","user: ${mainViewModel.user?.displayName}\n" +
                     "photo: ${mainViewModel.user?.photoUrl}")
 
-            //todo check not empty
             if (newQuestion.title == "") {
                 Toast.makeText(requireContext(), "Please enter a title", Toast.LENGTH_SHORT)
                     .show()

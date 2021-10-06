@@ -78,11 +78,12 @@ class ForumFragment : Fragment() {
             // navigate to forum item
             view?.findNavController()?.navigate(R.id.action_navigation_forum_to_placeholder)
         }
-
-        val topicRecycler = _binding!!.recycleView
-        topicRecycler.adapter = adapter
-        topicRecycler.layoutManager =
-            LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        if (_binding != null) {
+            val topicRecycler = _binding!!.recycleView
+            topicRecycler.adapter = adapter
+            topicRecycler.layoutManager =
+                LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        }
     }
 
     private fun newTopicDialog(): Dialog {

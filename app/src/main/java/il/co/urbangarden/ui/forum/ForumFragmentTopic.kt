@@ -93,10 +93,11 @@ class ForumFragmentTopic : Fragment() {
                 .circleCrop()
                 .into(imageView)
         }
-
-        val questionRecycler = _binding!!.recycleView
-        questionRecycler.adapter = adapter
-        questionRecycler.layoutManager =
-            LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        if (_binding != null) {
+            val questionRecycler = _binding!!.recycleView
+            questionRecycler.adapter = adapter
+            questionRecycler.layoutManager =
+                LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        }
     }
 }
