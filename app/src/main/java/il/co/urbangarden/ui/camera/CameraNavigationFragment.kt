@@ -75,7 +75,6 @@ class CameraNavigationFragment : Fragment() {
         _binding = null
     }
 
-
     private fun setRecognizeButton(b: Button) {
         prepareCameraIntent()
         b.setOnClickListener {

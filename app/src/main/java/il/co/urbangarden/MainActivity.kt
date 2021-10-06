@@ -1,8 +1,8 @@
 package il.co.urbangarden
 
-import android.graphics.drawable.Drawable
+import android.graphics.Color
+import android.graphics.ColorFilter
 import android.os.Bundle
-import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.res.ResourcesCompat
@@ -23,7 +23,11 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setSupportActionBar(binding.toolbar)
+        val toolbar = binding.toolbar
+        setSupportActionBar(toolbar)
+//        val color = ResourcesCompat.getColor(resources, R.color.white, null)
+//        toolbar.navigationIcon?.colorFilter = Color.BLACK
+//        toolbar.navigationIcon?.setColorFilter(color)
         actionBar?.setDisplayShowHomeEnabled(false)
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -31,6 +35,7 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = binding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
+        toolbar.setupWithNavController(navController)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
