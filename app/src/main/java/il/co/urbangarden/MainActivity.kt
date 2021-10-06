@@ -23,13 +23,8 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val toolbar: androidx.appcompat.widget.Toolbar = binding.toolbar
-        val icon : Drawable? = ResourcesCompat.getDrawable(this.resources, R.drawable.ic_ug_logo, null)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         actionBar?.setDisplayShowHomeEnabled(false)
-        actionBar?.setIcon(icon)
-
-
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 

@@ -2,11 +2,13 @@ package il.co.urbangarden.ui.plants
 
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import il.co.urbangarden.R
 import il.co.urbangarden.data.FirebaseViewableObject
@@ -81,12 +83,12 @@ class PlantInstanceAdapter : RecyclerView.Adapter<PlantInstanceHolder>() {
         )).toString()
         if (days == "0"){
             instanceHolder.nextWatering.text = "today"
-            instanceHolder.days.visibility = View.GONE
         }
         else{
-            instanceHolder.nextWatering.text = days
-            instanceHolder.days.visibility = View.VISIBLE
+            val str = "in " + days + " days"
+            instanceHolder.nextWatering.text = str
         }
+
         setImg?.let { it(item, instanceHolder.image) }
     }
 

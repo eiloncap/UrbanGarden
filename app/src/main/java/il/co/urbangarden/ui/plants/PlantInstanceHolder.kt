@@ -12,7 +12,6 @@ class PlantInstanceHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var image: ImageView
     var name: TextView
     var nextWatering: TextView
-    var days: TextView
     var dropButton: FloatingActionButton
 
 
@@ -23,6 +22,5 @@ class PlantInstanceHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         name = itemView.findViewById(R.id.title)
         nextWatering = itemView.findViewById(R.id.time)
         dropButton = itemView.findViewById(R.id.watering_button)
-        days = itemView.findViewById(R.id.days)
     }
 }

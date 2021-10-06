@@ -223,7 +223,7 @@ class ForumItemFragment : Fragment() {
                 }
                 .setNegativeButton("Cancel") { dialog, id ->
                 }
-            builder.setCancelable(false);
+            builder.setCancelable(false)
 //            builder.setCanceledOnTouchOutside(false);
 //            builder.set
             builder.create()
