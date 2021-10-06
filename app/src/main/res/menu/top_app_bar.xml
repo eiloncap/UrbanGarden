@@ -6,7 +6,7 @@
         android:id="@+id/logo"
         android:icon="@drawable/ic_ug_logo"
         android:title="logo"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/sign_out"

@@ -39,8 +39,8 @@ class LoginActivity : AppCompatActivity() {
         logoImg.scaleY = 2f
         logoImg.animate()
             .alpha(1f)
-            .scaleX(0.8f)
-            .scaleY(0.8f)
+            .scaleX(0.5f)
+            .scaleY(0.5f)
             .duration = 1000
 
         // Configure Google Sign In
