@@ -6,8 +6,6 @@
         android:color="@color/white"/>
 
     <corners
-        android:bottomLeftRadius="16dp"
-        android:bottomRightRadius="16dp"
         android:topLeftRadius="16dp"
         android:topRightRadius="16dp" />
 

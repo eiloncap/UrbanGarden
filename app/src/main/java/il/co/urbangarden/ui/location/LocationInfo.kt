@@ -27,6 +27,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import il.co.urbangarden.GlideApp
 import il.co.urbangarden.R
 import il.co.urbangarden.data.FirebaseViewableObject
+import il.co.urbangarden.data.forum.Question
+import il.co.urbangarden.data.location.Location
 import il.co.urbangarden.data.plant.Plant
 import il.co.urbangarden.data.plant.PlantInstance
 import il.co.urbangarden.ui.MainViewModel
@@ -35,6 +37,7 @@ import il.co.urbangarden.ui.location.locationPlants.SubPlantAdapter
 import il.co.urbangarden.ui.location.suggestPlants.PlantAdapter
 import il.co.urbangarden.ui.plants.MyPlantsViewModel
 import il.co.urbangarden.utils.ImageCropOption
+import il.co.urbangarden.utils.ShareExecutor
 import kotlinx.android.synthetic.main.location_info_fragment.*
 import kotlin.math.min
 
@@ -225,6 +228,7 @@ class LocationInfo : Fragment() {
     }
 
     private fun showMode() {
+        setShareButton(locationViewModel.location)
         minus.visibility = View.GONE
         plus.visibility = View.GONE
         nameEdit.visibility = View.GONE
@@ -322,7 +326,7 @@ class LocationInfo : Fragment() {
             builder.setView(view)
                 .setNegativeButton("Cancel") { dialog, id ->
                 }
-            builder.setCancelable(false);
+            builder.setCancelable(false)
             builder.create()
         }
     }
@@ -344,7 +348,7 @@ class LocationInfo : Fragment() {
 
             mainViewModel.setImgFromPath(plant, imgView)
             name.text = plant.name
-            sun.text = plant.sun.toString()
+            sun.text = plant.sun
             water.text = plant.watering
             season.text = plant.season
             placing.text = plant.placing
@@ -358,8 +362,25 @@ class LocationInfo : Fragment() {
 
                 }
 
-            builder.setCancelable(false);
+            builder.setCancelable(false)
             builder.create()
+        }
+    }
+
+    private fun setShareButton(location: Location) {
+        if (locationViewModel.location != null) {
+            shareButton.setOnClickListener {
+                mainViewModel.callbackOnImageDownloadedFromStorage(
+                    requireContext(),
+                    location
+                ) { uri ->
+                    ShareExecutor.shareContent(
+                        requireContext(),
+                        "Check my great location for plants:\n\n" +
+                                "${location.name}\n", uri
+                    )
+                }
+            }
         }
     }
 

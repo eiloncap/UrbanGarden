@@ -28,14 +28,17 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import il.co.urbangarden.GlideApp
 import il.co.urbangarden.R
 import il.co.urbangarden.data.FirebaseViewableObject
+import il.co.urbangarden.data.forum.Question
 import il.co.urbangarden.data.location.Location
 import il.co.urbangarden.data.plant.Plant
+import il.co.urbangarden.data.plant.PlantInstance
 import il.co.urbangarden.ml.Model
 import il.co.urbangarden.ui.MainViewModel
 import il.co.urbangarden.ui.home.HomeViewModel
 import il.co.urbangarden.ui.location.LocationAdapter
 import il.co.urbangarden.ui.location.LocationInfo
 import il.co.urbangarden.utils.ImageCropOption
+import il.co.urbangarden.utils.ShareExecutor
 import org.tensorflow.lite.support.image.TensorImage
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -169,6 +172,7 @@ class PlantInfo : Fragment() {
             } else if (inputDays.text.toString().toInt() == 0) {
                 Toast.makeText(context, "Please enter ", Toast.LENGTH_SHORT).show()
             } else {
+                plantsViewModel.plant.species = speciesEdit.text.toString()
                 plantsViewModel.plant.wateringDays = inputDays.text.toString().toInt()
                 plantsViewModel.plant.name = nameEdit.text.toString()
                 plantsViewModel.plant.notes = notesEdit.text.toString()
@@ -266,6 +270,7 @@ class PlantInfo : Fragment() {
     }
 
     private fun showMode() {
+        setShareButton(plantsViewModel.plant)
         nameText.visibility = View.VISIBLE
         speciesText.visibility = View.VISIBLE
         notesText.visibility = View.VISIBLE
@@ -288,7 +293,6 @@ class PlantInfo : Fragment() {
 
         speciesText.text = plantsViewModel.plant.species
         nameText.text = plantsViewModel.plant.name
-//        speciesText.text = plantsViewModel.plant.species
         notesText.text = plantsViewModel.plant.notes
     }
 
@@ -309,7 +313,7 @@ class PlantInfo : Fragment() {
                 .setNegativeButton("Cancel") { dialog, id ->
                     dialog.dismiss()
                 }
-            builder.setCancelable(false);
+            builder.setCancelable(false)
             val dialog = builder.create()
 
             adapter.setLocationList(mainViewModel.locationsList.value)
@@ -361,6 +365,24 @@ class PlantInfo : Fragment() {
                     dialog.dismiss()
                 }
             builder.create()
+        }
+    }
+
+    private fun setShareButton(plant: PlantInstance) {
+        if (plantsViewModel.plant != null) {
+            shareButton.setOnClickListener {
+                mainViewModel.callbackOnImageDownloadedFromStorage(
+                    requireContext(),
+                    plant
+                ) { uri ->
+                    ShareExecutor.shareContent(
+                        requireContext(),
+                        "Check my "+ "${plant.species}" + " plant:\n\n" +
+                                "${plant.name}\n" + " "
+                               , uri
+                    )
+                }
+            }
         }
     }
 }

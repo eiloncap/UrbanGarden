@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/navigation_camera"
@@ -15,5 +16,12 @@
         android:id="@+id/navigation_forum"
         android:icon="@drawable/ic_baseline_forum_24"
         android:title="@string/title_forum" />
+
+    <item
+        android:id="@+id/user"
+        android:icon="@drawable/ic_baseline_account_circle_24"
+        app:showAsAction="always"
+        android:title="Account"/>
+
 
 </menu>

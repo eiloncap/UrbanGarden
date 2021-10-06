@@ -115,7 +115,7 @@ class ForumFragment : Fragment() {
                 }
                 .setNegativeButton("Cancel") { dialog, id ->
                 }
-            builder.setCancelable(false);
+            builder.setCancelable(false)
             builder.create()
         }
     }

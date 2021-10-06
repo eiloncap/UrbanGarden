@@ -24,9 +24,6 @@
         android:label="@string/title_camera"
         tools:layout="@layout/fragment_camera">
         <action
-            android:id="@+id/action_navigation_camera_to_cameraFragment"
-            app:destination="@id/cameraFragment" />
-        <action
             android:id="@+id/action_navigation_camera_to_plantInfo"
             app:destination="@id/plantInfo" />
         <action
@@ -73,17 +70,6 @@
         <action
             android:id="@+id/action_plantInfo_to_navigation_home"
             app:destination="@id/navigation_home" />
-    </fragment>
-    <fragment
-        android:id="@+id/cameraFragment"
-        android:name="il.co.urbangarden.ui.camera.CameraFragment"
-        android:label="CameraFragment">
-        <action
-            android:id="@+id/action_cameraFragment_to_plantInfo"
-            app:destination="@id/plantInfo" />
-        <action
-            android:id="@+id/action_cameraFragment_to_locationInfo"
-            app:destination="@id/locationInfo" />
     </fragment>
     <fragment
         android:id="@+id/topicFragment"

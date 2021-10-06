@@ -81,11 +81,10 @@ class PlantInstanceAdapter : RecyclerView.Adapter<PlantInstanceHolder>() {
         )).toString()
         if (days == "0"){
             instanceHolder.nextWatering.text = "today"
-            instanceHolder.days.visibility = View.GONE
         }
         else{
-            instanceHolder.nextWatering.text = days
-            instanceHolder.days.visibility = View.VISIBLE
+            val str = "in " + days + " days"
+            instanceHolder.nextWatering.text = str
         }
         setImg?.let { it(item, instanceHolder.image) }
     }
