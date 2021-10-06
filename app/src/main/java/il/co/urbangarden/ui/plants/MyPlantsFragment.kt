@@ -64,6 +64,7 @@ class MyPlantsFragment : Fragment() {
             plant.lastWatered = Date()
             adapter.setPlantList(plants)
             mainViewModel.uploadObject(plant)
+
         }
 
         adapter.setImg = { plant: FirebaseViewableObject, img: ImageView ->
