@@ -1,6 +1,5 @@
 package il.co.urbangarden.ui.plants
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
@@ -28,7 +27,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import il.co.urbangarden.GlideApp
 import il.co.urbangarden.R
 import il.co.urbangarden.data.FirebaseViewableObject
-import il.co.urbangarden.data.forum.Question
 import il.co.urbangarden.data.location.Location
 import il.co.urbangarden.data.plant.Plant
 import il.co.urbangarden.data.plant.PlantInstance
@@ -40,9 +38,12 @@ import il.co.urbangarden.ui.location.LocationInfo
 import il.co.urbangarden.utils.ImageCropOption
 import il.co.urbangarden.utils.ShareExecutor
 import org.tensorflow.lite.support.image.TensorImage
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.appcompat.app.AppCompatActivity
+
+
+
 
 
 class PlantInfo : Fragment() {
@@ -94,7 +95,6 @@ class PlantInfo : Fragment() {
         plantsViewModel = ViewModelProvider(requireActivity()).get(MyPlantsViewModel::class.java)
         homeViewModel = ViewModelProvider(requireActivity()).get(HomeViewModel::class.java)
         adapter = LocationAdapter()
-        Log.d("eilon-cam-d", "uid of plants is ${plantsViewModel.plant.uid}")
 
         //finds views
         imgView = view.findViewById(R.id.plant_photo)
@@ -130,7 +130,11 @@ class PlantInfo : Fragment() {
                     activity?.baseContext,
                     plantsViewModel.plant.uid
                 ) {
-                    mainViewModel.setImgFromPath(plantsViewModel.plant, imgView, ImageCropOption.SQUARE)
+                    mainViewModel.setImgFromPath(
+                        plantsViewModel.plant,
+                        imgView,
+                        ImageCropOption.SQUARE
+                    )
                 }
 
                 val imageBitmap = result.data?.extras?.get("data") as Bitmap
@@ -377,9 +381,8 @@ class PlantInfo : Fragment() {
                 ) { uri ->
                     ShareExecutor.shareContent(
                         requireContext(),
-                        "Check my "+ "${plant.species}" + " plant:\n\n" +
-                                "${plant.name}\n" + " "
-                               , uri
+                        "Check my " + "${plant.species}" + " plant:\n\n" +
+                                "${plant.name}\n" + " ", uri
                     )
                 }
             }

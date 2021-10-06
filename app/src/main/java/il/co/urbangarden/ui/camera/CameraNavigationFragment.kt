@@ -75,7 +75,6 @@ class CameraNavigationFragment : Fragment() {
         _binding = null
     }
 
-
     private fun setRecognizeButton(b: Button) {
         prepareCameraIntent()
         b.setOnClickListener {
@@ -154,12 +153,12 @@ class CameraNavigationFragment : Fragment() {
                 && result.data != null
                 && result?.data?.extras != null
             ) {
-                val imageBitmap = (result.data?.extras?.get("data") as Bitmap).scale(224, 224)
+                val imageBitmap = (result.data?.extras?.get("data") as Bitmap)
 
                 val model = Model.newInstance(requireContext())
 
                 // Creates inputs for reference.
-                val image = TensorImage.fromBitmap(imageBitmap)
+                val image = TensorImage.fromBitmap(imageBitmap.scale(224, 224))
 
                 // Runs model inference and gets result.
                 val outputs = model.process(image)
@@ -173,7 +172,7 @@ class CameraNavigationFragment : Fragment() {
 
                 mainViewModel.getPlant(res[0].label).let {
                     if (it != null) {
-                        classifiedPlantDialog(it).show()
+                        classifiedPlantDialog(it, imageBitmap).show()
                     }
                 }
             }
@@ -187,7 +186,7 @@ class CameraNavigationFragment : Fragment() {
     }
 
 
-    private fun classifiedPlantDialog(plant: Plant): Dialog {
+    private fun classifiedPlantDialog(plant: Plant, bitmap: Bitmap): Dialog {
         return this.let {
             val builder = androidx.appcompat.app.AlertDialog.Builder(requireContext())
             // Get the layout inflater
@@ -203,7 +202,7 @@ class CameraNavigationFragment : Fragment() {
             // Pass null as the parent view because its going in the dialog layout
             builder.setView(view)
                 .setPositiveButton("More Info") { dialog, id ->
-                    newPlantDialog(plant).show()
+                    newPlantDialog(plant, bitmap).show()
                 }
                 .setNegativeButton("Ok") { dialog, id ->
                     dialog.dismiss()
@@ -212,7 +211,7 @@ class CameraNavigationFragment : Fragment() {
         }
     }
 
-    private fun newPlantDialog(plant: Plant): Dialog {
+    private fun newPlantDialog(plant: Plant, bitmap: Bitmap): Dialog {
         return this.let {
             val builder = androidx.appcompat.app.AlertDialog.Builder(requireContext())
             // Get the layout inflater
@@ -229,7 +228,7 @@ class CameraNavigationFragment : Fragment() {
 
             mainViewModel.setImgFromPath(plant, imgView)
             name.text = plant.name
-            sun.text = plant.sun.toString()
+            sun.text = plant.sun
             water.text = plant.watering
             season.text = plant.season
             placing.text = plant.placing
@@ -239,16 +238,25 @@ class CameraNavigationFragment : Fragment() {
             // Inflate and set the layout for the dialog
             // Pass null as the parent view because its going in the dialog layout
             builder.setView(view)
-                .setPositiveButton("Add to My Planys") { dialog, id ->
-                    val newPlant = PlantInstance()
-                    newPlant.species = plant.name
-                    newPlant.speciesUid = plant.uid
+                .setPositiveButton("Add to My Plants") { dialog, id ->
+                    val uid = UUID.randomUUID().toString()
+                    val newPlant = PlantInstance(
+                        uid = uid,
+                        imgFileName = "$uid.jpeg",
+                        species = plant.name,
+                        speciesUid = plant.uid
+                    )
                     plantsViewModel.plant = newPlant
-                    view.findNavController().navigate(R.id.action_navigation_camera_to_plantInfo)
-
+                    mainViewModel.uploadImage(
+                        bitmap,
+                        activity?.baseContext,
+                        plant.uid
+                    )
+                    plantsViewModel.plantImg = bitmap
+                    requireView().findNavController()
+                        .navigate(R.id.action_navigation_camera_to_plantInfo)
                 }
                 .setNegativeButton("Cancel") { dialog, id ->
-
                 }
 
             builder.setCancelable(false);

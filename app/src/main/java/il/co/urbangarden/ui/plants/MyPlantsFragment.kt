@@ -11,15 +11,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
-import il.co.urbangarden.R
-import il.co.urbangarden.data.FirebaseViewableObject
-import il.co.urbangarden.ui.MainViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import il.co.urbangarden.R
+import il.co.urbangarden.data.FirebaseViewableObject
 import il.co.urbangarden.data.plant.PlantInstance
 import il.co.urbangarden.databinding.MyPlantsFragmentBinding
-
+import il.co.urbangarden.ui.MainViewModel
 import il.co.urbangarden.utils.ImageCropOption
 import java.util.*
 
@@ -51,18 +49,18 @@ class MyPlantsFragment : Fragment() {
         return mainViewModel.plantsList.value
     }
 
-    private fun setUpPlantsAdapter(plants: List<PlantInstance>?){
+    private fun setUpPlantsAdapter(plants: List<PlantInstance>?) {
         val context = requireContext()
         val adapter = PlantInstanceAdapter()
 
         adapter.setPlantList(plants)
 
-        adapter.onItemClick = { plant: PlantInstance->
+        adapter.onItemClick = { plant: PlantInstance ->
             plantsViewModel.plant = plant
             view?.findNavController()?.navigate(R.id.action_navigation_home_to_plantInfo)
         }
 
-        adapter.onDropClick = { plant: PlantInstance->
+        adapter.onDropClick = { plant: PlantInstance ->
             plant.lastWatered = Date()
             adapter.setPlantList(plants)
             mainViewModel.uploadObject(plant)
@@ -76,7 +74,8 @@ class MyPlantsFragment : Fragment() {
 
         val plantsRecyclerView = binding.recyclerViewMyPlants
         plantsRecyclerView.adapter = adapter
-        plantsRecyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        plantsRecyclerView.layoutManager =
+            LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
     }
 
@@ -101,8 +100,5 @@ class MyPlantsFragment : Fragment() {
             plantsViewModel.plant = newPlant
             view.findNavController().navigate(R.id.action_navigation_home_to_plantInfo)
         }
-
-
     }
-
 }
