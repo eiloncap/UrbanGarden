@@ -83,7 +83,6 @@ class LocationInfo : Fragment() {
         homeViewModel = ViewModelProvider(requireActivity()).get(HomeViewModel::class.java)
         plantViewModel = ViewModelProvider(requireActivity()).get(MyPlantsViewModel::class.java)
 
-
         //finds views
         locationImgView = view.findViewById(R.id.location_photo)
         sunHours = view.findViewById(R.id.num_hours)

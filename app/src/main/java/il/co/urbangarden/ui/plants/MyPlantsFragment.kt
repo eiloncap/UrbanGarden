@@ -21,7 +21,6 @@ import il.co.urbangarden.data.plant.PlantInstance
 import il.co.urbangarden.databinding.MyPlantsFragmentBinding
 
 import il.co.urbangarden.utils.ImageCropOption
-import kotlinx.android.synthetic.main.one_seggest_plant.*
 import java.util.*
 
 
@@ -55,7 +54,6 @@ class MyPlantsFragment : Fragment() {
     private fun setUpPlantsAdapter(plants: List<PlantInstance>?){
         val context = requireContext()
         val adapter = PlantInstanceAdapter()
-        Log.d("setup", "locationAdapter")
 
         adapter.setPlantList(plants)
 
@@ -96,7 +94,7 @@ class MyPlantsFragment : Fragment() {
         }
         mainViewModel.plantsList.observe(viewLifecycleOwner, plantsObserver)
 
-        val addButton: ExtendedFloatingActionButton = view.findViewById(R.id.add_new_plant)
+        val addButton: Button = view.findViewById(R.id.add_new_plant)
 
         addButton.setOnClickListener {
             val newPlant = PlantInstance()
