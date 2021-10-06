@@ -80,7 +80,6 @@ class MyPlantsFragment : Fragment() {
 
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         plantsViewModel = ViewModelProvider(requireActivity()).get(MyPlantsViewModel::class.java)

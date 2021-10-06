@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -26,15 +25,11 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val toolbar = binding.topAppBar
-//        setSupportActionBar(toolbar)
-
-//        val color = ResourcesCompat.getColor(resources, R.color.white, null)
-//        toolbar.navigationIcon?.colorFilter = Color.BLACK
-//        toolbar.navigationIcon?.setColorFilter(color)
         actionBar?.setDisplayShowHomeEnabled(false)
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
+        val toolbar = binding.topAppBar
         toolbar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.sign_out -> {
@@ -64,15 +59,9 @@ class MainActivity : AppCompatActivity() {
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_home, R.id.navigation_camera, R.id.navigation_forum
-            )
-        )
         val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.loadDb()
         binding.topBar
-//        setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }
 }
