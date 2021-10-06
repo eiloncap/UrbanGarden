@@ -19,7 +19,9 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.UrbanGarden.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+<!--    <style name="Theme.UrbanGarden.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />-->
 
-    <style name="Theme.UrbanGarden.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Theme.UrbanGarden.ActionBar" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <item name="colorControlNormal">@color/purple_200</item>
+    </style>
 </resources>
