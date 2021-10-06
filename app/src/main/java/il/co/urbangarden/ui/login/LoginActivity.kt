@@ -39,8 +39,8 @@ class LoginActivity : AppCompatActivity() {
         logoImg.scaleY = 2f
         logoImg.animate()
             .alpha(1f)
-            .scaleX(0.8f)
-            .scaleY(0.8f)
+            .scaleX(0.5f)
+            .scaleY(0.5f)
             .duration = 1000
 
         // Configure Google Sign In
@@ -79,8 +79,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser = auth.currentUser
-        if (currentUser != null) {
+        if (auth.currentUser != null) {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }

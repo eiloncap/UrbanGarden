@@ -15,4 +15,5 @@
     <string name="new_plant_button">add to my plants</string>
     <string name="new_location_button">add to my locations</string>
     <string name="title">Title</string>
+    <string name="sign_out">sign out</string>
 </resources>
